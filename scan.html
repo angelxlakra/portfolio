@@ -49,6 +49,7 @@
         flex: none;
       }
     </style>
+    <script src="/content.js"></script>
   </head>
   <body>
     <title>Angel Lakra, Scanned</title>
@@ -468,6 +469,13 @@
           transition: none;
         }
       }
+      .info img {
+        display: block;
+        width: 100%;
+        margin: 12px 0;
+        border-radius: 8px;
+        border: 1px solid rgba(128, 128, 128, 0.35);
+      }
     </style>
     <div class="app">
       <header class="bar">
@@ -476,21 +484,30 @@
           <div>
             <h1>Angel Lakra</h1>
             <div class="sub">
-              Full-stack engineer · Bengaluru · scanned Oct 2026
+              <span data-c="profile.role"></span> ·
+              <span data-c="profile.city"></span> · scanned
+              <span data-c="profile.asOf"></span>
             </div>
           </div>
         </div>
         <div class="usage" aria-label="Time by period">
           <div class="track" id="track"></div>
           <div class="legend">
-            <span>67 months used</span><span>Free space: open to work</span>
+            <span><span data-c="months"></span> months used</span
+            ><span
+              >Free space:
+              <span
+                data-c="profile.status"
+                style="text-transform: lowercase"
+              ></span
+            ></span>
           </div>
         </div>
       </header>
       <section class="hero">
         <div>
           <div class="status">
-            <i></i>Open to contract · freelance · full-time
+            <i></i>Open to <span data-c="profile.rolesDots"></span>
           </div>
           <h2>Five years of shipping, mapped. <span>Click any slice.</span></h2>
         </div>
@@ -547,209 +564,53 @@
       </section>
       <section class="panel">
         <span class="kind">Toolbox</span>
-        <div class="tools">
-          <div>
-            <b>Backend</b>Python, FastAPI, SQLAlchemy, PostgreSQL, SQLite, Redis
-          </div>
-          <div>
-            <b>Frontend</b>TypeScript, React, Next.js, Vite, Tailwind, GSAP
-          </div>
-          <div><b>AI</b>LLM routing and tool use, agents, MCP servers, n8n</div>
-          <div>
-            <b>Shipping</b>Docker Compose, Nginx, Fly.io, Vercel, uv, pytest
-          </div>
-        </div>
+        <div class="tools" id="tools"></div>
       </section>
       <section class="panel contact" aria-labelledby="c-h">
         <div>
           <span class="kind">Free space available</span>
           <h3 id="c-h">Got a role or a problem to solve?</h3>
         </div>
-        <dl>
-          <dt>LinkedIn</dt>
-          <dd>
-            <a
-              href="https://www.linkedin.com/in/ngllakra"
-              target="_blank"
-              rel="noopener"
-              >linkedin.com/in/ngllakra</a
-            >
-          </dd>
-          <dt>GitHub</dt>
-          <dd>
-            <a
-              href="https://github.com/angelxlakra"
-              target="_blank"
-              rel="noopener"
-              >github.com/angelxlakra</a
-            >
-          </dd>
-          <dt>Studied</dt>
-          <dd>Birla Institute of Technology, Mesra</dd>
-        </dl>
+        <dl id="contact"></dl>
       </section>
     </div>
     <script>
+      const LOOK = {
+        intern: ["var(--c-yc)", "#E9A23B"],
+        lead: ["var(--c-cl)", "#4FB3BF"],
+        now: ["var(--c-now)", "#E0607E"],
+      };
       const T = {
         id: "root",
-        name: "Angel Lakra",
+        name: CONTENT.profile.name,
         kind: "Whole career",
-        months: 67,
+        months: CONTENT.months,
         text: "Three periods, from an internship in 2021 to building for my own clients today. Pick a slice or a row to look inside.",
-        children: [
-          {
-            id: "yc",
-            name: "Yellow Class",
-            kind: "Frontend Developer · internship",
-            when: "Jan – Jun 2021",
-            months: 6,
-            color: "var(--c-yc)",
-            hex: "#E9A23B",
-            text: "My first professional frontend role, at an ed-tech startup.",
-            children: [],
-          },
-          {
-            id: "cl",
-            name: "Chain Labs",
-            kind: "Frontend Tech Lead · full-time",
-            when: "Jul 2021 – Feb 2025",
-            months: 44,
-            color: "var(--c-cl)",
-            hex: "#4FB3BF",
-            text: "Led frontend at a blockchain product studio for three years and eight months: dApp frontends, minting pages and event platforms in TypeScript, React and Next.js.",
-            children: [
-              {
-                id: "mint",
-                name: "Simplr collection mint",
-                kind: "Repo",
-                text: "The minting page for the Simplr collection dApp.",
-              },
-              {
-                id: "events",
-                name: "Simplr events",
-                kind: "Repo",
-                text: "Event platform server work for Simplr.",
-              },
-              {
-                id: "smac",
-                name: "SMAC website",
-                kind: "Repo",
-                text: "Frontend for the SMAC website.",
-              },
-              {
-                id: "anti",
-                name: "Antigravity Era 3",
-                kind: "Repo",
-                text: "The beta repository for Antigravity Era 3.",
-              },
-              {
-                id: "dsafe",
-                name: "dSafe",
-                kind: "Repo",
-                text: "Frontend for dSafe.",
-              },
-              {
-                id: "wagmi",
-                name: "wagmi Magic connector",
-                kind: "Repo",
-                text: "A wagmi connector for signing in with the Magic SDK.",
-              },
-            ],
-          },
-          {
-            id: "now",
-            name: "Own clients + Chain Labs",
-            kind: "Senior Software Developer · freelance",
-            when: "Jun 2025 – now",
-            months: 17,
-            color: "var(--c-now)",
-            hex: "#E0607E",
-            text: "Python and LLM work for Chain Labs on a freelance basis, alongside systems I build for my own clients and my own Mac apps.",
-            children: [
-              {
-                id: "lily",
-                name: "Lily Cafe POS",
-                kind: "Point of sale · in daily use",
-                client: "Lily Cafe by Mary's Kitchen, Ranchi",
-                text: "The cafe's whole counter in one system. Waiters order from their phones, the kitchen gets a printed chit, and the owner closes the day with a cash count.",
-                facts: [
-                  "Split payments across UPI, cash and card",
-                  "GST billing with a CGST/SGST split; amounts stored in paise",
-                  "A Windows print agent for 80mm receipts and kitchen chits",
-                  "“Ask” in English, Hindi or Hinglish. The model picks the report; the backend computes every figure",
-                ],
-                tags: [
-                  "FastAPI",
-                  "React",
-                  "TypeScript",
-                  "Fly.io",
-                  "Vercel",
-                  "MCP",
-                ],
-                links: [
-                  ["Source", "https://github.com/angelxlakra/lily-cafe-pos"],
-                ],
-              },
-              {
-                id: "salon",
-                name: "SalonOS",
-                kind: "Salon management · in development",
-                text: "A local-first POS, appointments, inventory and accounting system that runs on the salon's own network.",
-                facts: [
-                  "Owner, receptionist and staff roles",
-                  "Appointment conflict detection",
-                  "Nightly reports and backups",
-                ],
-                tags: ["FastAPI", "PostgreSQL", "Redis", "Next.js", "Docker"],
-                links: [
-                  ["Source", "https://github.com/angelxlakra/efs-salon-os"],
-                ],
-              },
-              {
-                id: "marys",
-                name: "Mary's Kitchen site",
-                kind: "Brand website · prototypes live",
-                text: "A scroll story for two Ranchi cafes, from night at the roadside stall to sunrise in the second cafe, drawn as generated ink linework.",
-                facts: [
-                  "Ink drawings generated in Python, layered as SVG",
-                  "A ramen bowl that comes apart as you scroll",
-                  "A 3D stall under the trees",
-                ],
-                tags: ["GSAP", "SVG", "Python", "Vercel"],
-                links: [
-                  ["Ramen bowl", "https://marys-ramen-unfolded.vercel.app"],
-                  ["3D stall", "https://marys-kitchen-3d.vercel.app"],
-                ],
-              },
-              {
-                id: "sop",
-                name: "Staff checklists",
-                kind: "Operations",
-                text: "Daily, weekly and monthly checklists for every post at both cafes, in English and Hindi.",
-              },
-              {
-                id: "aanka",
-                name: "Aanka",
-                kind: "Product · early stage",
-                text: "A business partner for shop owners that lives in WhatsApp. It leads with this week's figure, points out one thing and suggests one action.",
-                links: [["Brand", "https://aanka.vercel.app"]],
-              },
-              {
-                id: "disk",
-                name: "DiskMap",
-                kind: "macOS app · side project",
-                text: "My own DaisyDisk, in Python and pywebview. This page borrows its look.",
-                tags: ["Python", "pywebview"],
-              },
-              {
-                id: "notch",
-                name: "Notch app",
-                kind: "macOS app · side project",
-                text: "A take on Boring Notch, built with my brother, that turns the MacBook notch into a live surface.",
-              },
-            ],
-          },
-        ],
+        // oldest first, clockwise from the top
+        children: [...CONTENT.experience].reverse().map((e) => ({
+          id: e.id,
+          name: e.id === "now" ? "Own clients + " + e.company : e.company,
+          kind: `${e.title} · ${e.type.toLowerCase()}`,
+          when: e.when,
+          months: e.months,
+          color: LOOK[e.id][0],
+          hex: LOOK[e.id][1],
+          text: e.text,
+          children:
+            e.id === "now"
+              ? CONTENT.projects.map((p) => ({
+                  id: p.id,
+                  name: p.name,
+                  kind: p.label,
+                  client: p.client,
+                  text: p.text,
+                  facts: p.facts.slice(0, 4),
+                  tags: p.stack,
+                  links: p.links,
+                  image: p.image,
+                }))
+              : (e.repos || []).map((r) => ({ ...r, kind: "Repo" })),
+        })),
       };
       // parent links + colours
       T.children.forEach((p) =>
@@ -912,9 +773,10 @@
           .join("");
         info.innerHTML = `<div class="kind">${esc(n.kind || "")}${n.when ? " · " + esc(n.when) : ""}</div><h3>${esc(n.name)}</h3>
 ${n.client ? `<p style="color:var(--muted)">${esc(n.client)}</p>` : ""}<p>${esc(n.text || "")}</p>
-${n.facts ? `<ul>${n.facts.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>` : ""}
-${n.tags ? `<div class="tags">${n.tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
-${n.links ? `<div class="go">${n.links.map((l) => `<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} →</a>`).join("")}</div>` : ""}`;
+${n.image ? `<img src="${n.image.src}" alt="${esc(n.image.alt)}" loading="lazy">` : ""}
+${n.facts?.length ? `<ul>${n.facts.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>` : ""}
+${n.tags?.length ? `<div class="tags">${n.tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
+${n.links?.length ? `<div class="go">${n.links.map((l) => `<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} →</a>`).join("")}</div>` : ""}`;
         const list =
           n.children && n.children.length
             ? n.children
@@ -948,6 +810,13 @@ ${n.links ? `<div class="go">${n.links.map((l) => `<a href="${l[1]}" target="_bl
         el.addEventListener("mouseleave", () => render(selected));
       });
       render("root");
+      document.getElementById("tools").innerHTML = CONTENT.toolbox
+        .map((g) => `<div><b>${g.name}</b>${esc(g.items.join(", "))}</div>`)
+        .join("");
+      document.getElementById("contact").innerHTML = CONTENT.contactRows([
+        ["Studied", CONTENT.education.school],
+      ]);
+      CONTENT.bind();
     </script>
     <a class="lib-back" href="/" aria-label="Back to the library"
       ><svg

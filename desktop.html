@@ -49,6 +49,7 @@
         flex: none;
       }
     </style>
+    <script src="/content.js"></script>
   </head>
   <body>
     <title>Angel's Desktop</title>
@@ -733,6 +734,13 @@
           grid-template-columns: minmax(0, 1fr);
         }
       }
+      .detail img {
+        display: block;
+        width: 100%;
+        margin: 12px 0;
+        border-radius: 8px;
+        border: 1px solid rgba(128, 128, 128, 0.35);
+      }
     </style>
     <div class="desk" id="desk">
       <div class="menubar">
@@ -743,7 +751,7 @@
           <button data-open-win="tools">Toolbox</button>
         </div>
         <div class="right">
-          <span><i class="dot"></i>Open to work</span>
+          <span><i class="dot"></i><span data-c="profile.status"></span></span>
           <span id="clock">Bengaluru</span>
         </div>
       </div>
@@ -759,11 +767,17 @@
         >
         <span class="open">
           <span class="k">Status</span
-          ><span class="v">Open to work, starting now</span>
+          ><span class="v"
+            ><span data-c="profile.status"></span>, starting now</span
+          >
           <span class="k">Roles</span
-          ><span class="v">Contract · freelance · full-time</span>
+          ><span class="v" data-c="profile.rolesDots"></span>
           <span class="k">Where</span
-          ><span class="v">Bengaluru · remote or hybrid · IST</span>
+          ><span class="v"
+            ><span data-c="profile.city"></span> ·
+            <span data-c="profile.where"></span> ·
+            <span data-c="profile.timezone"></span
+          ></span>
           <span class="k">Built</span
           ><span class="v"
             >This notch is a nod to the notch app I'm making</span
@@ -775,13 +789,10 @@
         ><span>python · ai automation · small-business software</span>
       </div>
       <nav class="icons" aria-label="Links">
-        <a href="https://github.com/angelxlakra" target="_blank" rel="noopener"
+        <a data-c-href="links.github" target="_blank" rel="noopener"
           ><span class="ic folder"></span>GitHub</a
         >
-        <a
-          href="https://www.linkedin.com/in/ngllakra"
-          target="_blank"
-          rel="noopener"
+        <a data-c-href="links.linkedin" target="_blank" rel="noopener"
           ><span class="ic link">in</span>LinkedIn</a
         >
         <a
@@ -826,20 +837,7 @@
               shop works.
             </div>
           </div>
-          <div class="links">
-            <a
-              href="https://github.com/angelxlakra"
-              target="_blank"
-              rel="noopener"
-              >GitHub</a
-            >
-            <a
-              href="https://www.linkedin.com/in/ngllakra"
-              target="_blank"
-              rel="noopener"
-              >LinkedIn</a
-            >
-          </div>
+          <div class="links" id="links"></div>
         </div>
       </section>
       <!-- Projects -->
@@ -893,41 +891,7 @@
                 <th>When</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>
-                  Senior Software Developer<br /><span
-                    style="color: var(--muted)"
-                    >Python and LLM work, freelance</span
-                  >
-                </td>
-                <td>Chain Labs</td>
-                <td class="when">Jun 2025 – now</td>
-              </tr>
-              <tr>
-                <td>
-                  Frontend Tech Lead<br /><span style="color: var(--muted)"
-                    >dApp frontends, minting and event pages</span
-                  >
-                </td>
-                <td>Chain Labs</td>
-                <td class="when">Jul 2021 – Feb 2025</td>
-              </tr>
-              <tr>
-                <td>
-                  Frontend Developer<br /><span style="color: var(--muted)"
-                    >Internship</span
-                  >
-                </td>
-                <td>Yellow Class</td>
-                <td class="when">Jan – Jun 2021</td>
-              </tr>
-              <tr>
-                <td>Education</td>
-                <td>BIT Mesra</td>
-                <td class="when"></td>
-              </tr>
-            </tbody>
+            <tbody id="exp-rows"></tbody>
           </table>
         </div>
       </section>
@@ -947,24 +911,7 @@
           </div>
           <h2 id="tools-t">Toolbox</h2>
         </div>
-        <div class="body chips">
-          <div>
-            <h3>Backend</h3>
-            <p>Python, FastAPI, SQLAlchemy, PostgreSQL, SQLite, Redis</p>
-          </div>
-          <div>
-            <h3>Frontend</h3>
-            <p>TypeScript, React, Next.js, Vite, Tailwind, GSAP</p>
-          </div>
-          <div>
-            <h3>AI</h3>
-            <p>LLM routing and tool use, agents, MCP servers, n8n</p>
-          </div>
-          <div>
-            <h3>Shipping</h3>
-            <p>Docker Compose, Nginx, Fly.io, Vercel, uv, pytest</p>
-          </div>
-        </div>
+        <div class="body chips" id="tool-rows"></div>
       </section>
       <div class="dock" role="toolbar" aria-label="Dock">
         <button
@@ -1002,9 +949,10 @@
         >
           <span style="display: grid; line-height: 1; text-align: center"
             ><span style="font-size: 8px; font-weight: 700">YEARS</span
-            ><span style="font: 800 20px var(--font-display); color: #1c1d1f"
-              >5+</span
-            ></span
+            ><span
+              style="font: 800 20px var(--font-display); color: #1c1d1f"
+              data-c="profile.years"
+            ></span></span
           ><span class="tip">Experience</span>
         </button>
         <button
@@ -1026,132 +974,7 @@
       </div>
     </div>
     <script>
-      const projects = [
-        {
-          id: "lily",
-          group: "Client work",
-          name: "Lily Cafe POS",
-          kicker: "Point of sale · in daily use",
-          badge: ["Live", "live"],
-          client: "Lily Cafe by Mary's Kitchen, Ranchi",
-          text: "The cafe's whole counter in one system. Waiters order from their phones, the kitchen gets a printed chit, and the owner closes the day with a cash count.",
-          facts: [
-            "Table orders, partial serving, split payments across UPI, cash and card",
-            "GST billing with a CGST/SGST split; every amount stored in paise",
-            "A Windows print agent drives 80mm receipts and kitchen chits",
-            "“Ask” answers questions in English, Hindi or Hinglish. The model only picks the report and period; the backend computes every figure",
-            "A deploy script that ships only a clean origin/main and checks production runs that exact commit",
-          ],
-          tags: [
-            "FastAPI",
-            "SQLAlchemy 2",
-            "React 18",
-            "TypeScript",
-            "Tailwind v4",
-            "Fly.io",
-            "Vercel",
-            "MCP",
-          ],
-          links: [
-            [
-              "Source on GitHub",
-              "https://github.com/angelxlakra/lily-cafe-pos",
-            ],
-          ],
-        },
-        {
-          id: "salon",
-          group: "Client work",
-          name: "SalonOS",
-          kicker: "Salon management",
-          badge: ["In development", ""],
-          client: "For unisex beauty salons",
-          text: "A local-first POS, appointments, inventory and accounting system. It runs on the salon's own network, so a bad internet day doesn't stop billing.",
-          facts: [
-            "Owner, receptionist and staff roles with different powers",
-            "Appointment conflict detection",
-            "Scheduled reports and nightly backups from background workers",
-          ],
-          tags: [
-            "FastAPI",
-            "PostgreSQL",
-            "Redis + RQ",
-            "Next.js 14",
-            "Docker Compose",
-            "Nginx",
-          ],
-          links: [
-            ["Source on GitHub", "https://github.com/angelxlakra/efs-salon-os"],
-          ],
-        },
-        {
-          id: "marys",
-          group: "Client work",
-          name: "Mary's Kitchen",
-          kicker: "Brand website",
-          badge: ["Prototypes live", "live"],
-          client: "Mary's Kitchen and Lily Cafe, Ranchi",
-          text: "A scroll-driven site for two cafes. It opens at night at the roadside stall and turns to sunrise inside the second cafe, drawn as generated pen-and-ink linework.",
-          facts: [
-            "Ink illustrations generated in Python and layered as SVG",
-            "An “exploded” ramen bowl that comes apart as you scroll",
-            "A 3D model of the stall under the trees",
-          ],
-          tags: ["GSAP", "SVG", "Python", "Vercel"],
-          links: [
-            ["Ramen bowl", "https://marys-ramen-unfolded.vercel.app"],
-            ["3D stall", "https://marys-kitchen-3d.vercel.app"],
-          ],
-        },
-        {
-          id: "sop",
-          group: "Client work",
-          name: "Staff SOP checklists",
-          kicker: "Operations",
-          badge: null,
-          client: "Both cafes",
-          text: "Daily, weekly and monthly checklists for every post at both cafes, in English and Hindi, so new staff know exactly what their shift owes.",
-          facts: [],
-          tags: ["Excel", "Process design"],
-          links: [],
-        },
-        {
-          id: "disk",
-          group: "My apps",
-          name: "DiskMap",
-          kicker: "macOS app",
-          badge: ["Side project", ""],
-          client: "For my own Mac",
-          text: "My own DaisyDisk: a visual map of what's filling a Mac's drive, built because I didn't want to pay for one.",
-          facts: [],
-          tags: ["Python", "pywebview"],
-          links: [],
-        },
-        {
-          id: "notch",
-          group: "My apps",
-          name: "Notch app",
-          kicker: "macOS app",
-          badge: ["Side project", ""],
-          client: "Built with my brother",
-          text: "A take on Boring Notch that turns the MacBook notch into a small live surface. The black notch at the top of this page is a tribute.",
-          facts: [],
-          tags: ["macOS"],
-          links: [],
-        },
-        {
-          id: "aanka",
-          group: "My apps",
-          name: "Aanka",
-          kicker: "Product · early stage",
-          badge: ["Brand ready", ""],
-          client: "For shop and salon owners",
-          text: "A business partner that lives in WhatsApp. It reads the numbers, leads with this week's figure, points out one thing and suggests one action, in warm Hinglish.",
-          facts: [],
-          tags: ["WhatsApp", "LLM"],
-          links: [["Brand identity", "https://aanka.vercel.app"]],
-        },
-      ];
+      const projects = CONTENT.projects;
       const side = document.getElementById("side"),
         detail = document.getElementById("detail");
       const esc = (s) =>
@@ -1183,13 +1006,35 @@
           .forEach((t) =>
             t.setAttribute("aria-selected", t.id === "tab-" + id),
           );
-        detail.innerHTML = `<div class="kicker">${esc(p.kicker)}</div>
-<h2>${esc(p.name)}${p.badge ? `<span class="badge ${p.badge[1]}">${esc(p.badge[0])}</span>` : ""}</h2>
-<p class="client">${esc(p.client)}</p><p>${esc(p.text)}</p>
+        detail.innerHTML = `<div class="kicker">${esc(p.kind)}</div>
+<h2>${esc(p.name)}${p.status ? `<span class="badge ${p.live ? "live" : ""}">${esc(p.status)}</span>` : ""}</h2>
+${p.client ? `<p class="client">${esc(p.client)}</p>` : ""}<p>${esc(p.text)}</p>
+${p.image ? `<img src="${p.image.src}" alt="${esc(p.image.alt)}" loading="lazy">` : ""}
 ${p.facts.length ? `<ul>${p.facts.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>` : ""}
-<div class="tags">${p.tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
+<div class="tags">${p.stack.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
 ${p.links.length ? `<div class="golinks">${p.links.map((l) => `<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} →</a>`).join("")}</div>` : ""}`;
       }
+      document.getElementById("links").innerHTML = CONTENT.contacts
+        .map(
+          (c) =>
+            `<a href="${c.href}"${c.label === "Email" ? "" : ' target="_blank" rel="noopener"'}>${c.label === "Email" ? esc(c.text) : c.label}</a>`,
+        )
+        .join("");
+      document.getElementById("exp-rows").innerHTML =
+        CONTENT.experience
+          .map(
+            (e) =>
+              `<tr><td>${esc(e.title)}<br /><span style="color: var(--muted)">${esc(e.note)}</span></td><td>${esc(e.company)}</td><td class="when">${e.when}</td></tr>`,
+          )
+          .join("") +
+        `<tr><td>Education</td><td>${esc(CONTENT.education.short)}</td><td class="when"></td></tr>`;
+      document.getElementById("tool-rows").innerHTML = CONTENT.toolbox
+        .map(
+          (g) =>
+            `<div><h3>${g.name}</h3><p>${esc(g.items.join(", "))}</p></div>`,
+        )
+        .join("");
+      CONTENT.bind();
       show("lily");
       // windows
       const narrow = matchMedia("(max-width:900px)");

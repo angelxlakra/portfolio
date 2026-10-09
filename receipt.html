@@ -49,6 +49,7 @@
         flex: none;
       }
     </style>
+    <script src="/content.js"></script>
   </head>
   <body>
     <title>Angel Lakra</title>
@@ -662,6 +663,16 @@
           padding: 22px;
         }
       }
+      .ticket.full {
+        grid-column: span 6;
+      }
+      .ticket img {
+        display: block;
+        width: 100%;
+        max-width: 560px;
+        border-radius: 8px;
+        border: 1px solid rgba(128, 128, 128, 0.35);
+      }
     </style>
     <div class="wrap">
       <header class="top">
@@ -674,8 +685,9 @@
       <section class="hero" style="padding-top: clamp(48px, 8vw, 96px)">
         <div>
           <div class="status">
-            <i aria-hidden="true"></i>Open to work · Bengaluru · remote or
-            hybrid
+            <i aria-hidden="true"></i><span data-c="profile.status"></span> ·
+            <span data-c="profile.city"></span> ·
+            <span data-c="profile.where"></span>
           </div>
           <h1>
             I build the software a <em>small business</em> actually runs on.
@@ -692,7 +704,10 @@
         </div>
         <aside class="receipt" aria-label="Summary as a receipt">
           <div class="c big">ANGEL LAKRA</div>
-          <div class="c small">Full-stack engineer · Bengaluru</div>
+          <div class="c small">
+            <span data-c="profile.role"></span> ·
+            <span data-c="profile.city"></span>
+          </div>
           <div class="c small">GSTIN: not applicable</div>
           <hr />
           <div class="row"><span>Python · FastAPI</span><span>1</span></div>
@@ -703,13 +718,14 @@
             <span>React · TypeScript · Next.js</span><span>1</span>
           </div>
           <div class="row">
-            <span>Frontend team lead</span><span>3y 8m</span>
+            <span>Frontend team lead</span><span data-c="lead.short"></span>
           </div>
           <div class="row"><span>Web3 frontends</span><span>2021–25</span></div>
           <div class="row"><span>POS systems built</span><span>2</span></div>
           <hr />
           <div class="row tot">
-            <span>TOTAL EXPERIENCE</span><span>5+ YRS</span>
+            <span>TOTAL EXPERIENCE</span
+            ><span><span data-c="profile.years"></span> YRS</span>
           </div>
           <div class="row">
             <span>Paid by</span><span>Contract / Freelance / FT</span>
@@ -754,68 +770,17 @@
           <h2>Selected work</h2>
           <span class="label">2025 – 2026</span>
         </div>
-        <div class="work">
+        <div class="work" id="work-list">
           <article class="ticket feature">
             <div
+              id="t-lily"
               style="
                 display: flex;
                 flex-direction: column;
                 gap: 14px;
                 min-width: 0;
               "
-            >
-              <div class="meta">
-                <span class="label">Point of sale · in daily use</span
-                ><span class="pill live">Live</span>
-              </div>
-              <h3>Lily Cafe POS</h3>
-              <span class="client"
-                >For Lily Cafe by Mary's Kitchen, Ranchi</span
-              >
-              <p>
-                The cafe's whole counter in one system: waiters take orders on
-                their phones, the kitchen gets a printed chit, and the owner
-                closes the day with a cash count and a report.
-              </p>
-              <ul class="facts">
-                <li>
-                  Table orders, partial serving, and split payments across UPI,
-                  cash and card
-                </li>
-                <li>
-                  GST billing with a CGST/SGST split; every amount stored in
-                  paise
-                </li>
-                <li>
-                  A Windows print agent drives 80mm receipts and kitchen chits
-                  from the cloud backend
-                </li>
-                <li>
-                  "Ask" answers questions in English, Hindi or Hinglish. The
-                  model only picks the report and the period; the backend
-                  computes every figure, so it can't invent a number
-                </li>
-                <li>
-                  A deploy script that refuses to ship anything except a clean
-                  origin/main, then checks production is running that exact
-                  commit
-                </li>
-              </ul>
-              <div class="stack">
-                <span>FastAPI</span><span>SQLAlchemy 2</span
-                ><span>React 18</span><span>TypeScript</span
-                ><span>Tailwind v4</span><span>Fly.io</span><span>Vercel</span
-                ><span>MCP</span>
-              </div>
-              <div class="links">
-                <a
-                  href="https://github.com/angelxlakra/lily-cafe-pos"
-                  target="_blank"
-                  rel="noopener"
-                  >Source on GitHub →</a
-                >
-              </div>
-            </div>
+            ></div>
             <div class="chit" aria-label="Example of the Ask feature">
               <div class="row"><b>KOT #0418</b><span>T6 · 19:12</span></div>
               <hr />
@@ -834,125 +799,6 @@
               </div>
             </div>
           </article>
-          <article class="ticket">
-            <div class="meta">
-              <span class="label">Salon management</span
-              ><span class="pill">In development</span>
-            </div>
-            <h3>SalonOS</h3>
-            <p>
-              A local-first POS, appointments, inventory and accounting system
-              for unisex salons. It runs entirely on the salon's own network, so
-              a bad internet day doesn't stop billing.
-            </p>
-            <ul class="facts">
-              <li>Owner, receptionist and staff roles with different powers</li>
-              <li>Appointment conflict detection and nightly backups</li>
-              <li>Reports generated on a schedule by background workers</li>
-            </ul>
-            <div class="stack">
-              <span>FastAPI</span><span>PostgreSQL</span><span>Redis + RQ</span
-              ><span>Next.js 14</span><span>Docker Compose</span
-              ><span>Nginx</span>
-            </div>
-            <div class="links">
-              <a
-                href="https://github.com/angelxlakra/efs-salon-os"
-                target="_blank"
-                rel="noopener"
-                >Source on GitHub →</a
-              >
-            </div>
-          </article>
-          <article class="ticket">
-            <div class="meta">
-              <span class="label">Brand website</span
-              ><span class="pill live">Prototypes live</span>
-            </div>
-            <h3>Mary's Kitchen</h3>
-            <p>
-              A scroll-driven site for two Ranchi cafes. The story opens at
-              night at the roadside stall and turns to sunrise inside the second
-              cafe, drawn as generated pen-and-ink linework.
-            </p>
-            <ul class="facts">
-              <li>Ink illustrations generated in Python and layered as SVG</li>
-              <li>An "exploded" ramen bowl that comes apart as you scroll</li>
-              <li>A 3D model of the stall under the trees</li>
-            </ul>
-            <div class="stack">
-              <span>GSAP</span><span>SVG</span><span>Python</span
-              ><span>Vercel</span>
-            </div>
-            <div class="links">
-              <a
-                href="https://marys-ramen-unfolded.vercel.app"
-                target="_blank"
-                rel="noopener"
-                >Ramen bowl →</a
-              >
-              <a
-                href="https://marys-kitchen-3d.vercel.app"
-                target="_blank"
-                rel="noopener"
-                >3D stall →</a
-              >
-            </div>
-          </article>
-          <article class="ticket third">
-            <div class="meta"><span class="label">Operations</span></div>
-            <h3>Staff SOP checklists</h3>
-            <p>
-              Daily, weekly and monthly checklists for every post at both cafes,
-              in English and Hindi, so new staff know exactly what their shift
-              owes.
-            </p>
-            <div class="stack">
-              <span>Excel</span><span>Process design</span>
-            </div>
-          </article>
-          <article class="ticket third">
-            <div class="meta">
-              <span class="label">macOS app</span
-              ><span class="pill">Side project</span>
-            </div>
-            <h3>DiskMap</h3>
-            <p>
-              My own DaisyDisk: a visual map of what's filling a Mac's drive,
-              built because I didn't want to pay for one.
-            </p>
-            <div class="stack"><span>Python</span><span>pywebview</span></div>
-          </article>
-          <article class="ticket third">
-            <div class="meta">
-              <span class="label">macOS app</span
-              ><span class="pill">Side project</span>
-            </div>
-            <h3>Notch app</h3>
-            <p>
-              A take on Boring Notch, built with my brother, that turns the
-              MacBook notch into a small live surface.
-            </p>
-            <div class="stack"><span>macOS</span></div>
-          </article>
-          <article class="ticket" style="grid-column: span 6">
-            <div class="meta">
-              <span class="label">Product · early stage</span
-              ><span class="pill">Brand ready</span>
-            </div>
-            <h3>Aanka</h3>
-            <p>
-              A business partner for shop and salon owners that lives in
-              WhatsApp: it reads the numbers, tells you this week's figure
-              first, points out one thing, and suggests one action, in warm
-              Hinglish.
-            </p>
-            <div class="links">
-              <a href="https://aanka.vercel.app" target="_blank" rel="noopener"
-                >Brand identity →</a
-              >
-            </div>
-          </article>
         </div>
       </section>
       <section id="experience">
@@ -960,111 +806,70 @@
           <h2>Experience</h2>
           <span class="label">2021 – now</span>
         </div>
-        <div class="timeline">
-          <div class="job">
-            <span class="when">Jun 2025 – now</span>
-            <div>
-              <h3>Senior Software Developer · Chain Labs</h3>
-              <p>
-                Python and LLM work for the team on a freelance basis, alongside
-                my own clients.
-              </p>
-            </div>
-            <span class="type">Freelance · remote</span>
-          </div>
-          <div class="job">
-            <span class="when">Jul 2021 – Feb 2025</span>
-            <div>
-              <h3>Frontend Tech Lead · Chain Labs</h3>
-              <p>
-                Led frontend for a blockchain product studio: minting pages,
-                event platforms and dApp frontends in TypeScript, React and
-                Next.js.
-              </p>
-            </div>
-            <span class="type">Full-time</span>
-          </div>
-          <div class="job">
-            <span class="when">Jan – Jun 2021</span>
-            <div>
-              <h3>Frontend Developer · Yellow Class</h3>
-              <p>Frontend internship at an ed-tech startup.</p>
-            </div>
-            <span class="type">Internship</span>
-          </div>
-          <div class="job">
-            <span class="when">Education</span>
-            <div><h3>Birla Institute of Technology, Mesra</h3></div>
-            <span class="type"></span>
-          </div>
-        </div>
+        <div class="timeline" id="timeline"></div>
       </section>
       <section>
         <div class="shead"><h2>Toolbox</h2></div>
-        <div class="skills">
-          <div>
-            <h3>Backend</h3>
-            <ul>
-              <li>Python 3.11+</li>
-              <li>FastAPI, Pydantic</li>
-              <li>SQLAlchemy, Alembic</li>
-              <li>PostgreSQL, SQLite, Redis</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Frontend</h3>
-            <ul>
-              <li>TypeScript, React</li>
-              <li>Next.js, Vite</li>
-              <li>Tailwind CSS</li>
-              <li>GSAP, SVG animation</li>
-            </ul>
-          </div>
-          <div>
-            <h3>AI</h3>
-            <ul>
-              <li>LLM routing and tool use</li>
-              <li>Agents and MCP servers</li>
-              <li>n8n automation</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Shipping</h3>
-            <ul>
-              <li>Docker Compose, Nginx</li>
-              <li>Fly.io, Vercel</li>
-              <li>uv, pytest, ruff</li>
-            </ul>
-          </div>
-        </div>
+        <div class="skills" id="skills"></div>
       </section>
       <section id="contact" class="contact" style="padding-top: 56px">
         <h2>Got a role or a problem? Let's talk.</h2>
-        <dl>
-          <dt>LinkedIn</dt>
-          <dd>
-            <a
-              href="https://www.linkedin.com/in/ngllakra"
-              target="_blank"
-              rel="noopener"
-              >linkedin.com/in/ngllakra</a
-            >
-          </dd>
-          <dt>GitHub</dt>
-          <dd>
-            <a
-              href="https://github.com/angelxlakra"
-              target="_blank"
-              rel="noopener"
-              >github.com/angelxlakra</a
-            >
-          </dd>
-          <dt>Based in</dt>
-          <dd>Bengaluru · IST (UTC+5:30)</dd>
-        </dl>
+        <dl id="contact-rows"></dl>
       </section>
       <footer>© 2026 Angel Lakra</footer>
     </div>
+    <script>
+      {
+        const C = CONTENT,
+          esc = C.esc;
+        const ticket = (
+          p,
+        ) => `<div class="meta"><span class="label">${esc(p.kind)}</span>${p.status ? `<span class="pill ${p.live ? "live" : ""}">${esc(p.status)}</span>` : ""}</div>
+<h3>${esc(p.name)}</h3>
+${p.client ? `<span class="client">For ${esc(p.client)}</span>` : ""}
+<p>${esc(p.text)}</p>
+${p.image ? `<img src="${p.image.src}" alt="${esc(p.image.alt)}" loading="lazy">` : ""}
+${p.facts.length ? `<ul class="facts">${p.facts.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>` : ""}
+${p.stack.length ? `<div class="stack">${p.stack.map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
+${p.links.length ? `<div class="links">${p.links.map((l) => `<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} →</a>`).join("")}</div>` : ""}`;
+        // how each ticket sits in the grid; anything not listed is a half-width ticket
+        const size = {
+          sop: "third",
+          disk: "third",
+          notch: "third",
+          aanka: "full",
+        };
+        document.getElementById("t-lily").innerHTML = ticket(C.project.lily);
+        document.getElementById("work-list").insertAdjacentHTML(
+          "beforeend",
+          C.projects
+            .filter((p) => p.id !== "lily")
+            .map(
+              (p) =>
+                `<article class="ticket ${size[p.id] || ""}">${ticket(p)}</article>`,
+            )
+            .join(""),
+        );
+        document.getElementById("timeline").innerHTML =
+          C.experience
+            .map(
+              (e) =>
+                `<div class="job"><span class="when">${e.when}</span><div><h3>${esc(e.title)} · ${esc(e.company)}</h3><p>${esc(e.text)}</p></div><span class="type">${esc(e.type)}${e.place ? " · " + esc(e.place) : ""}</span></div>`,
+            )
+            .join("") +
+          `<div class="job"><span class="when">Education</span><div><h3>${esc(C.education.school)}</h3></div><span class="type"></span></div>`;
+        document.getElementById("skills").innerHTML = C.toolbox
+          .map(
+            (g) =>
+              `<div><h3>${g.name}</h3><ul>${g.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul></div>`,
+          )
+          .join("");
+        document.getElementById("contact-rows").innerHTML = C.contactRows([
+          ["Based in", `${C.profile.city} · ${C.profile.timezone} (UTC+5:30)`],
+        ]);
+        C.bind();
+      }
+    </script>
     <a class="lib-back" href="/" aria-label="Back to the library"
       ><svg
         width="13"

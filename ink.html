@@ -49,6 +49,7 @@
         flex: none;
       }
     </style>
+    <script src="/content.js"></script>
   </head>
   <body>
     <title>Angel Lakra, After Hours</title>
@@ -304,7 +305,14 @@
       </div>
       <div class="chapters">
         <section class="ch" data-ch="0">
-          <span class="status">● open to work · Bengaluru</span>
+          <span class="status"
+            >●
+            <span
+              data-c="profile.status"
+              style="text-transform: lowercase"
+            ></span>
+            · <span data-c="profile.city"></span
+          ></span>
           <h1>Angel Lakra builds software after the lamp comes on.</h1>
           <p>
             I'm a full-stack engineer, Python first. I led frontend at Chain
@@ -314,127 +322,24 @@
           <p>Scroll, and each project gets drawn onto the desk.</p>
           <span class="scrollhint">↓ keep going</span>
         </section>
-        <section class="ch" data-ch="1">
+        <section class="ch" data-ch="1" data-p="lily">
           <span class="num">i. the receipt printer</span>
-          <h2>Lily Cafe POS</h2>
-          <p>
-            The whole counter of a Ranchi cafe in one system, in use every day.
-            Waiters order from their phones, the kitchen gets a printed chit,
-            and the owner closes the day with a cash count.
-          </p>
-          <ul>
-            <li>Split payments across UPI, cash and card</li>
-            <li>GST bills with a CGST/SGST split, amounts stored in paise</li>
-            <li>
-              An Ask box in English, Hindi or Hinglish where the model only
-              picks the report and the backend does every sum
-            </li>
-          </ul>
-          <span class="stack"
-            >FastAPI · React · TypeScript · Fly.io · Vercel · MCP</span
-          >
-          <div class="go">
-            <a
-              href="https://github.com/angelxlakra/lily-cafe-pos"
-              target="_blank"
-              rel="noopener"
-              >Source →</a
-            >
-          </div>
         </section>
-        <section class="ch" data-ch="2">
+        <section class="ch" data-ch="2" data-p="salon">
           <span class="num">ii. scissors and a little server</span>
-          <h2>SalonOS</h2>
-          <p>
-            Billing, appointments, stock and accounts for unisex salons, still
-            in development. It runs on the salon's own network, so a bad
-            internet day doesn't stop billing.
-          </p>
-          <ul>
-            <li>Owner, receptionist and staff roles</li>
-            <li>No double-booked chairs</li>
-            <li>Reports and backups every night</li>
-          </ul>
-          <span class="stack"
-            >FastAPI · PostgreSQL · Redis · Next.js · Docker</span
-          >
-          <div class="go">
-            <a
-              href="https://github.com/angelxlakra/efs-salon-os"
-              target="_blank"
-              rel="noopener"
-              >Source →</a
-            >
-          </div>
         </section>
-        <section class="ch" data-ch="3">
+        <section class="ch" data-ch="3" data-p="marys">
           <span class="num">iii. a bowl of ramen</span>
-          <h2>Mary's Kitchen</h2>
-          <p>
-            A website for two cafes, drawn exactly like this page: generated ink
-            linework, a night scene at the roadside stall that turns to sunrise.
-            Plus a ramen bowl that comes apart as you scroll, and a 3D model of
-            the stall.
-          </p>
-          <span class="stack">GSAP · SVG · Python</span>
-          <div class="go">
-            <a
-              href="https://marys-ramen-unfolded.vercel.app"
-              target="_blank"
-              rel="noopener"
-              >Ramen bowl →</a
-            ><a
-              href="https://marys-kitchen-3d.vercel.app"
-              target="_blank"
-              rel="noopener"
-              >3D stall →</a
-            >
-          </div>
         </section>
         <section class="ch" data-ch="4">
           <span class="num">iv. the phone and the screen</span>
           <h2>The things I make for myself</h2>
-          <div class="two">
-            <div>
-              <h3>Aanka</h3>
-              <p>
-                An early-stage business partner for shop owners that lives in
-                WhatsApp, in warm Hinglish.
-                <a
-                  href="https://aanka.vercel.app"
-                  target="_blank"
-                  rel="noopener"
-                  >Brand →</a
-                >
-              </p>
-            </div>
-            <div>
-              <h3>DiskMap &amp; notch</h3>
-              <p>
-                My own DaisyDisk in Python, now on the laptop screen, and a
-                notch app built with my brother.
-              </p>
-            </div>
-          </div>
-          <p style="margin-top: 8px">
-            Also on the shelf earlier: bilingual staff checklists for every post
-            at both cafes.
-          </p>
+          <div class="two" id="own"></div>
         </section>
         <section class="ch" data-ch="5">
           <span class="num">v. the notebooks</span>
           <h2>Where I've worked</h2>
-          <ul>
-            <li>
-              <b>Chain Labs</b>, Senior Software Developer (freelance) · Jun
-              2025 – now
-            </li>
-            <li><b>Chain Labs</b>, Frontend Tech Lead · Jul 2021 – Feb 2025</li>
-            <li>
-              <b>Yellow Class</b>, Frontend Developer intern · Jan – Jun 2021
-            </li>
-            <li><b>BIT Mesra</b>, studies</li>
-          </ul>
+          <ul id="exp"></ul>
           <span class="stack"
             >Python · FastAPI · React · TypeScript · Next.js · LLM agents ·
             n8n</span
@@ -444,32 +349,55 @@
           <span class="num">vi. morning</span>
           <h2>Ready when you are.</h2>
           <p>
-            Hiring for a contract, freelance or full-time role? Running a shop
-            or cafe that needs better software? Either way, let's talk.
+            Hiring for a <span data-c="profile.rolesLine"></span> role? Running
+            a shop or cafe that needs better software? Either way, let's talk.
           </p>
-          <dl>
-            <dt>linkedin</dt>
-            <dd>
-              <a
-                href="https://www.linkedin.com/in/ngllakra"
-                target="_blank"
-                rel="noopener"
-                >linkedin.com/in/ngllakra</a
-              >
-            </dd>
-            <dt>github</dt>
-            <dd>
-              <a
-                href="https://github.com/angelxlakra"
-                target="_blank"
-                rel="noopener"
-                >github.com/angelxlakra</a
-              >
-            </dd>
-          </dl>
+          <dl id="contact-rows" style="text-transform: lowercase"></dl>
         </section>
       </div>
     </div>
+    <script>
+      {
+        const C = CONTENT,
+          esc = C.esc;
+        // each project chapter keeps its own title line; the facts come from content.js
+        document.querySelectorAll(".ch[data-p]").forEach((ch) => {
+          const p = C.project[ch.dataset.p];
+          ch.insertAdjacentHTML(
+            "beforeend",
+            `<h2>${esc(p.name)}</h2><p>${esc(p.text)}</p>
+${
+  p.facts.length
+    ? `<ul>${p.facts
+        .slice(0, 4)
+        .map((f) => `<li>${esc(f)}</li>`)
+        .join("")}</ul>`
+    : ""
+}
+<span class="stack">${esc(p.stack.join(" · "))}</span>
+<div class="go">${p.links.map((l) => `<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} →</a>`).join("")}</div>`,
+          );
+        });
+        document.getElementById("own").innerHTML = [
+          "aanka",
+          "disk",
+          "notch",
+          "sop",
+        ]
+          .map((id) => C.project[id])
+          .map((p) => `<div><h3>${esc(p.name)}</h3><p>${esc(p.text)}</p></div>`)
+          .join("");
+        document.getElementById("exp").innerHTML =
+          C.experience
+            .map(
+              (e) =>
+                `<li><b>${esc(e.company)}</b>, ${esc(e.title)}${e.type === "Full-time" ? "" : ` (${e.type.toLowerCase()})`} · ${e.when}</li>`,
+            )
+            .join("") + `<li><b>${esc(C.education.short)}</b>, studies</li>`;
+        document.getElementById("contact-rows").innerHTML = C.contactRows();
+        C.bind();
+      }
+    </script>
     <script>
       const svg = document.getElementById("svg"),
         NS = "http://www.w3.org/2000/svg";
@@ -969,11 +897,17 @@
           true,
         ),
       );
+      // spine labels: "2021", "2021–25", "2025–"
+      const yr = (e) => {
+        const s = e.start.slice(0, 4),
+          en = e.end && e.end.slice(0, 4);
+        return !e.end ? s + "–" : en === s ? s : s + "–" + en.slice(2);
+      };
       const labels = [
-        T(g, 318, 182, "2021", -90),
-        T(g, 349, 182, "2021–25", -90),
-        T(g, 384, 182, "2025–", -90),
-      ];
+        [318, "intern"],
+        [349, "lead"],
+        [384, "now"],
+      ].map(([x, id]) => T(g, x, 182, yr(CONTENT.exp[id]), -90));
       /* chapter 6: sun */
       const sunG = G(6);
       sunG.setAttribute("clip-path", "url(#win)");

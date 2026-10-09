@@ -49,6 +49,7 @@
         flex: none;
       }
     </style>
+    <script src="/content.js"></script>
   </head>
   <body>
     <title>Ask Angel</title>
@@ -410,11 +411,26 @@
           border-top: 1px solid var(--line);
         }
       }
+      .cardbody img {
+        display: block;
+        width: 100%;
+        max-width: 520px;
+        margin: 12px 0;
+        border-radius: 8px;
+        border: 1px solid rgba(128, 128, 128, 0.35);
+      }
     </style>
     <div class="page">
       <div class="top">
         <span class="who">Angel Lakra</span
-        ><span class="st">● open to work · Bengaluru</span>
+        ><span class="st"
+          >●
+          <span
+            data-c="profile.status"
+            style="text-transform: lowercase"
+          ></span>
+          · <span data-c="profile.city"></span
+        ></span>
       </div>
       <header>
         <h1>Ask me <em>anything</em> about my work.</h1>
@@ -462,19 +478,41 @@
       <p class="index" id="index"></p>
     </div>
     <script>
+      const C = CONTENT,
+        P = C.profile,
+        pr = C.project;
+      const paren = (e) =>
+        e.type === "Full-time" ? "" : ` (${e.type.toLowerCase()})`;
+      // a project's card: every word comes from content.js
+      const pcard = (p, rel) => ({
+        k: p.label,
+        t: p.name,
+        hi: p.hinglish,
+        body: `<p>${p.client ? `For ${C.esc(p.client)}. ` : ""}${C.esc(p.text)}</p>${p.image ? `<img src="${p.image.src}" alt="${C.esc(p.image.alt)}" loading="lazy">` : ""}${
+          p.facts.length
+            ? `<ul>${p.facts
+                .slice(0, 4)
+                .map((f) => `<li>${C.esc(f)}</li>`)
+                .join("")}</ul>`
+            : ""
+        }`,
+        tags: p.stack,
+        links: p.links,
+        rel,
+      });
       const CARDS = {
         intro: {
           k: "About",
-          t: "Full-stack engineer, Python first.",
+          t: P.roleLine,
           hi: "Main ek full-stack engineer hoon. Chhote business ke liye software banata hoon.",
-          body: `<p>I've been shipping software for 5+ years. I led frontend at Chain Labs for nearly four, and now I build POS systems, back-office tools and LLM features that small businesses run on every day.</p>`,
+          body: `<p>I've been shipping software for ${P.years} years. I led frontend at ${C.exp.lead.company} for nearly four, and now I build POS systems, back-office tools and LLM features that small businesses run on every day.</p>`,
           rel: ["hire", "work", "contact"],
         },
         hire: {
           k: "For recruiters",
           t: "What I'd bring to your team",
           hi: "Team lead raha hoon, aur akele poora system bana sakta hoon.",
-          body: `<ul><li>3 years 8 months as Frontend Tech Lead at Chain Labs</li><li>Whole systems on my own now: schema, API, UI, deploy</li><li>Python backends with FastAPI, SQLAlchemy and tests</li><li>LLM features with guardrails</li></ul><p>Open to contract, freelance or full-time. Bengaluru, remote or hybrid.</p>`,
+          body: `<ul><li>${C.lead.long} as ${C.exp.lead.title} at ${C.exp.lead.company}</li><li>Whole systems on my own now: schema, API, UI, deploy</li><li>Python backends with FastAPI, SQLAlchemy and tests</li><li>LLM features with guardrails</li></ul><p>Open to ${P.rolesLine}. ${P.city}, ${P.where}.</p>`,
           rel: ["experience", "ai", "contact"],
         },
         business: {
@@ -488,80 +526,27 @@
           k: "Index",
           t: "Everything I've built recently",
           hi: "Ye raha mera kaam.",
-          body: `<ul><li><b>Lily Cafe POS</b>: point of sale in daily use</li><li><b>SalonOS</b>: local-first salon management</li><li><b>Mary's Kitchen</b>: an ink-drawn scroll website</li><li><b>Staff checklists</b>: SOPs in English and Hindi</li><li><b>Aanka</b>: a WhatsApp business partner, early stage</li><li><b>DiskMap</b> and a <b>notch app</b>: my own Mac apps</li></ul>`,
+          body: `<ul>${C.projects.map((p) => `<li><b>${C.esc(p.name)}</b>: ${C.esc(p.label.toLowerCase())}</li>`).join("")}</ul>`,
           rel: ["lily", "salon", "marys", "aanka", "mac"],
         },
-        lily: {
-          k: "Point of sale · in daily use",
-          t: "Lily Cafe POS",
-          hi: "Ek cafe ka poora counter, ek system mein.",
-          body: `<p>For Lily Cafe by Mary's Kitchen in Ranchi. Waiters order from their phones, the kitchen gets a printed chit, and the owner closes the day with a cash count.</p><ul><li>Split payments across UPI, cash and card</li><li>GST billing with a CGST/SGST split; amounts stored in paise</li><li>A Windows print agent for receipts and kitchen chits</li><li>An Ask box built on the same rule as this page</li></ul>`,
-          tags: [
-            "FastAPI",
-            "SQLAlchemy 2",
-            "React 18",
-            "TypeScript",
-            "Fly.io",
-            "Vercel",
-            "MCP",
-          ],
-          links: [
-            [
-              "Source on GitHub",
-              "https://github.com/angelxlakra/lily-cafe-pos",
-            ],
-          ],
-          rel: ["ai", "salon", "business"],
-        },
-        salon: {
-          k: "Salon management · in development",
-          t: "SalonOS",
-          hi: "Salon ke liye billing aur appointments, bina internet ke bhi.",
-          body: `<p>A local-first POS, appointments, inventory and accounting system for unisex salons. It runs on the salon's own network, so billing keeps working when the internet doesn't.</p><ul><li>Owner, receptionist and staff roles</li><li>Appointment conflict detection</li><li>Nightly reports and backups</li></ul>`,
-          tags: [
-            "FastAPI",
-            "PostgreSQL",
-            "Redis + RQ",
-            "Next.js 14",
-            "Docker Compose",
-          ],
-          links: [
-            ["Source on GitHub", "https://github.com/angelxlakra/efs-salon-os"],
-          ],
-          rel: ["lily", "stack", "business"],
-        },
-        marys: {
-          k: "Brand website",
-          t: "Mary's Kitchen",
-          hi: "Do cafe ki kahani, ink drawing mein.",
-          body: `<p>A scroll story for two Ranchi cafes. It opens at night at the roadside stall and turns to sunrise inside the second cafe, drawn as pen-and-ink linework generated in Python.</p><ul><li>A ramen bowl that comes apart as you scroll</li><li>A 3D model of the stall under the trees</li></ul>`,
-          tags: ["GSAP", "SVG", "Python", "Vercel"],
-          links: [
-            ["Ramen bowl", "https://marys-ramen-unfolded.vercel.app"],
-            ["3D stall", "https://marys-kitchen-3d.vercel.app"],
-          ],
-          rel: ["lily", "frontend", "business"],
-        },
-        aanka: {
-          k: "Product · early stage",
-          t: "Aanka",
-          hi: "Aapke business ka partner, WhatsApp par.",
-          body: `<p>A business partner for shop and salon owners that lives in WhatsApp. It leads with this week's figure, points out one thing, and suggests one action, in warm Hinglish.</p>`,
-          links: [["Brand identity", "https://aanka.vercel.app"]],
-          rel: ["ai", "business", "work"],
-        },
+        lily: pcard(pr.lily, ["ai", "salon", "business"]),
+        salon: pcard(pr.salon, ["lily", "stack", "business"]),
+        marys: pcard(pr.marys, ["lily", "frontend", "business"]),
+        aanka: pcard(pr.aanka, ["ai", "business", "work"]),
         mac: {
           k: "Side projects",
-          t: "DiskMap and a notch app",
+          t: `${pr.disk.name} and a notch app`,
           hi: "Apne Mac ke liye khud ke apps.",
-          body: `<p><b>DiskMap</b> is my own DaisyDisk, a visual map of what's filling a Mac's drive, built in Python and pywebview because I didn't want to pay for one.</p><p>The <b>notch app</b> is a take on Boring Notch, built with my brother, that turns the MacBook notch into a small live surface.</p>`,
+          body: [pr.disk, pr.notch]
+            .map((p) => `<p><b>${C.esc(p.name)}.</b> ${C.esc(p.text)}</p>`)
+            .join(""),
           rel: ["work", "stack"],
         },
         ai: {
           k: "AI, done carefully",
           t: "How I use LLMs",
           hi: "AI sirf sahi report chunta hai. Hisaab backend karta hai.",
-          body: `<p>In the Lily Cafe POS the owner can ask "kal ka cash counter" or "which dish did best since August". The model only picks which report and which dates; the backend computes every number. This page works the same way.</p><ul><li>LLM routing and tool use</li><li>Agents and MCP servers, including a read-only MCP server for the POS</li><li>n8n automation</li></ul>`,
+          body: `<p>In the ${C.esc(pr.lily.name)} the owner can ask "kal ka cash counter" or "which dish did best since August". The model only picks which report and which dates; the backend computes every number. This page works the same way.</p><ul><li>LLM routing and tool use</li><li>Agents and MCP servers, including a read-only MCP server for the POS</li><li>n8n automation</li></ul>`,
           rel: ["lily", "hire", "stack"],
         },
         stack: {
@@ -575,21 +560,21 @@
           k: "Frontend",
           t: "React, TypeScript and Next.js",
           hi: "Frontend mein chaar saal team lead raha hoon.",
-          body: `<p>Most of my career is frontend: nearly four years leading it at Chain Labs, building dApp frontends, minting pages and event platforms. I still write React and TypeScript for every system I build, plus GSAP for scroll-driven sites.</p>`,
+          body: `<p>Most of my career is frontend: nearly four years leading it at ${C.exp.lead.company}, building dApp frontends, minting pages and event platforms. I still write React and TypeScript for every system I build, plus GSAP for scroll-driven sites.</p>`,
           rel: ["experience", "marys", "stack"],
         },
         experience: {
           k: "Experience",
           t: "Where I've worked",
           hi: "Mera kaam ka anubhav.",
-          body: `<ul><li><b>Chain Labs</b>, Senior Software Developer (freelance), Jun 2025 – now</li><li><b>Chain Labs</b>, Frontend Tech Lead, Jul 2021 – Feb 2025</li><li><b>Yellow Class</b>, Frontend Developer intern, Jan – Jun 2021</li><li><b>BIT Mesra</b>, studies</li></ul>`,
+          body: `<ul>${C.experience.map((e) => `<li><b>${C.esc(e.company)}</b>, ${C.esc(e.title)}${paren(e)}, ${e.when}</li>`).join("")}<li><b>${C.esc(C.education.short)}</b>, studies</li></ul>`,
           rel: ["hire", "frontend", "contact"],
         },
         contact: {
           k: "Contact",
           t: "Let's talk",
           hi: "Baat karni ho toh yahan likhiye.",
-          body: `<dl class="c"><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/ngllakra" target="_blank" rel="noopener">linkedin.com/in/ngllakra</a></dd><dt>GitHub</dt><dd><a href="https://github.com/angelxlakra" target="_blank" rel="noopener">github.com/angelxlakra</a></dd><dt>Based in</dt><dd>Bengaluru, IST · remote or hybrid</dd></dl>`,
+          body: `<dl class="c">${C.contactRows([["Based in", `${P.city}, ${P.timezone} · ${P.where}`]])}</dl>`,
           rel: ["hire", "business"],
         },
         none: {
@@ -605,10 +590,10 @@
         hire: "Hiring",
         business: "For businesses",
         work: "All work",
-        lily: "Lily Cafe POS",
-        salon: "SalonOS",
-        marys: "Mary's Kitchen",
-        aanka: "Aanka",
+        lily: pr.lily.name,
+        salon: pr.salon.name,
+        marys: pr.marys.name,
+        aanka: pr.aanka.name,
         mac: "Mac apps",
         ai: "AI",
         stack: "Python",
@@ -636,6 +621,7 @@
         ],
         salon: [
           "salon",
+          "aasan",
           "parlour",
           "parlor",
           "appointment",
@@ -830,8 +816,8 @@ Reply with JSON only: {"card":"<id>","hinglish":true|false}`,
         const c = CARDS[id];
         ans.innerHTML = `<div class="route">${q ? `<span>asked <b>"${esc(q)}"</b></span><span class="arrow">→</span><span>routed by <b>${esc(by)}</b></span><span class="arrow">→</span>` : `<span>opened</span><span class="arrow">→</span>`}<span class="pill">card: ${id}</span>${hinglish ? `<span class="pill">hinglish</span>` : ""}</div>
 <div class="cardbody"><div class="k">${c.k}</div><h2>${c.t}</h2>${hinglish && c.hi ? `<p class="hi" lang="hi-Latn">${c.hi}</p>` : ""}${c.body}
-${c.tags ? `<div class="tags">${c.tags.map((t) => `<span>${t}</span>`).join("")}</div>` : ""}
-${c.links ? `<div class="go">${c.links.map((l) => `<a href="${l[1]}" target="_blank" rel="noopener">${l[0]} →</a>`).join("")}</div>` : ""}
+${c.tags?.length ? `<div class="tags">${c.tags.map((t) => `<span>${t}</span>`).join("")}</div>` : ""}
+${c.links?.length ? `<div class="go">${c.links.map((l) => `<a href="${l[1]}" target="_blank" rel="noopener">${l[0]} →</a>`).join("")}</div>` : ""}
 <div class="rel"><span>related</span>${c.rel.map((r) => `<button data-card="${r}">${LABEL[r]}</button>`).join("")}</div></div>`;
       }
       async function ask(q) {
@@ -873,6 +859,7 @@ ${c.links ? `<div class="go">${c.links.map((l) => `<a href="${l[1]}" target="_bl
           .filter((k) => k !== "none")
           .map((k) => `<button data-card="${k}">${LABEL[k]}</button>`)
           .join(" · ");
+      C.bind();
       show("intro");
     </script>
     <a class="lib-back" href="/" aria-label="Back to the library"

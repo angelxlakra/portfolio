@@ -49,6 +49,7 @@
         flex: none;
       }
     </style>
+    <script src="/content.js"></script>
   </head>
   <body>
     <title>Chat with Angel</title>
@@ -598,9 +599,10 @@
             ><span class="tm">19:12</span>
           </li>
           <li>
-            <span class="av" style="background: #6a4c93">SO</span
+            <span class="av" style="background: #6a4c93">As</span
             ><span style="min-width: 0"
-              ><span class="nm" style="display: block">SalonOS backups</span
+              ><span class="nm" style="display: block"
+                ><span data-c="project.salon.name"></span> backups</span
               ><span class="pv" style="display: block"
                 >Nightly backup done ✓</span
               ></span
@@ -620,10 +622,7 @@
       <main class="chat">
         <div class="chead">
           <span class="av" style="background: #3b7a6a">AL</span>
-          <div>
-            <b>Angel Lakra</b
-            ><small id="status">online · full-stack engineer · Bengaluru</small>
-          </div>
+          <div><b>Angel Lakra</b><small id="status"></small></div>
         </div>
         <div class="log" id="log" aria-live="polite">
           <div class="day">TODAY</div>
@@ -661,6 +660,26 @@
       document.getElementById("t-side").textContent = now();
       const card = (k, t, d, u, href, art) =>
         `<a class="lcard" href="${href}" target="_blank" rel="noopener">${art ? `<div class="lc-art" style="background:${art[0]}">${art[1]}</div>` : ""}<div class="lc-body"><div class="lc-k">${k}</div><div class="lc-t">${t}</div><div class="lc-d">${d}</div><div class="lc-u">${u}</div></div></a>`;
+      const C = CONTENT,
+        esc = C.esc,
+        P = C.profile,
+        pr = C.project;
+      const ONLINE = `online · ${P.role.toLowerCase()} · ${P.city}`;
+      // card colour and caption per project; the words come from content.js
+      const ART = {
+        lily: ["#B5651D", "₹ · GST · KOT"],
+        salon: ["#6A4C93", "LAN · NO CLOUD"],
+        marys: ["#1D1D1D", "WITH LOVE FROM MARY"],
+      };
+      const pcard = (p) =>
+        card(
+          esc(p.label),
+          esc(p.name),
+          esc(p.short),
+          esc(p.links[0][0]),
+          p.links[0][1],
+          ART[p.id],
+        );
       const S = {
         start: {
           bot: [
@@ -673,8 +692,8 @@
         hire: {
           me: "I'm hiring",
           bot: [
-            `<p>Great, thanks for stopping by. Short version:</p><ul><li><b>5+ years</b> shipping production software</li><li><b>3 yrs 8 mo</b> as Frontend Tech Lead at Chain Labs</li><li>Now <b>Python first</b>: FastAPI backends, LLM features, whole systems on my own</li></ul>`,
-            `<p>I'm open to contract, freelance or full-time. Bengaluru, remote or hybrid.</p>`,
+            `<p>Great, thanks for stopping by. Short version:</p><ul><li><b>${P.years} years</b> shipping production software</li><li><b>${C.lead.mid}</b> as ${esc(C.exp.lead.title)} at ${esc(C.exp.lead.company)}</li><li>Now <b>Python first</b>: FastAPI backends, LLM features, whole systems on my own</li></ul>`,
+            `<p>I'm open to ${P.rolesLine}. ${P.city}, ${P.where}.</p>`,
           ],
           next: ["exp", "work", "ai", "contact"],
         },
@@ -682,24 +701,24 @@
           me: "I run a business",
           bot: [
             `<p>Then we'll get along 😄 I build systems around how your shop already works:</p><ul><li>Billing with GST, kitchen chits and receipts</li><li>Stock, purchases and a daily cash count</li><li>A website that gives your brand a real presence</li><li>Automation for jobs you repeat every week</li></ul>`,
-            `<p>Here's one that's running in a cafe right now:</p>${card("Point of sale · in daily use", "Lily Cafe POS", "Waiters order from phones, the kitchen gets a printed chit, the owner closes the day with a cash count.", "github.com/angelxlakra", "https://github.com/angelxlakra/lily-cafe-pos", ["#B5651D", "KOT #0418 · T6"])}`,
+            `<p>Here's one that's running in a cafe right now:</p>${pcard(pr.lily)}`,
           ],
           next: ["hindi", "work", "contact"],
         },
         work: {
           me: "Show me your work",
           bot: [
-            `${card("Point of sale", "Lily Cafe POS", "Orders, split UPI/cash/card payments, GST bills, 80mm printing, cash counts, and an Ask box for the owner.", "Source on GitHub", "https://github.com/angelxlakra/lily-cafe-pos", ["#B5651D", "₹ · GST · KOT"])}`,
-            `${card("Salon management · in development", "SalonOS", "Local-first billing, appointments and stock that keep working when the internet doesn't.", "Source on GitHub", "https://github.com/angelxlakra/efs-salon-os", ["#6A4C93", "LAN · NO CLOUD"])}`,
-            `${card("Brand website", "Mary's Kitchen", "A scroll story for two Ranchi cafes, drawn in pen and ink, with a ramen bowl that comes apart as you scroll.", "marys-ramen-unfolded.vercel.app", "https://marys-ramen-unfolded.vercel.app", ["#1D1D1D", "WITH LOVE FROM MARY"])}`,
-            `<p>After hours I make Mac apps: <b>DiskMap</b>, my own DaisyDisk in Python, and a <b>notch app</b> with my brother. I'm also early on <b>Aanka</b>, a business partner for shop owners that lives in WhatsApp. Like this chat, actually.</p>`,
+            pcard(pr.lily),
+            pcard(pr.salon),
+            pcard(pr.marys),
+            `<p>After hours I make Mac apps: <b>${esc(pr.disk.name)}</b>, my own DaisyDisk in Python, and a <b>notch app</b> with my brother. I'm also early on <b>${esc(pr.aanka.name)}</b>, my personal startup project: a business partner for shop owners that lives in WhatsApp. Like this chat, actually.</p>`,
           ],
           next: ["ai", "exp", "contact"],
         },
         ai: {
           me: "How do you use AI?",
           bot: [
-            `<p>Carefully 🙂 In the Lily Cafe POS the owner can ask <i>"kal ka cash counter"</i> or <i>"which dish did best since August"</i>.</p>`,
+            `<p>Carefully 🙂 In the ${esc(pr.lily.name)} the owner can ask <i>"kal ka cash counter"</i> or <i>"which dish did best since August"</i>.</p>`,
             `<p>The model only picks <b>which report</b> and <b>which dates</b>. The backend computes every number. So it can't invent a figure, and the owner can trust what they read.</p>`,
             `<p>I also build agents and MCP servers, and the POS has an optional read-only MCP server so the owner can connect their own assistant.</p>`,
           ],
@@ -708,9 +727,11 @@
         exp: {
           me: "Where have you worked?",
           bot: [
-            `<p><b>Chain Labs</b><br>Senior Software Developer, freelance · Jun 2025 – now<br>Frontend Tech Lead · Jul 2021 – Feb 2025</p>`,
-            `<p><b>Yellow Class</b><br>Frontend Developer intern · Jan – Jun 2021</p>`,
-            `<p><b>BIT Mesra</b> for my studies.</p>`,
+            ...C.experience.map(
+              (e) =>
+                `<p><b>${esc(e.company)}</b><br>${esc(e.title)}${e.type === "Full-time" ? "" : ", " + e.type.toLowerCase()} · ${e.when}</p>`,
+            ),
+            `<p><b>${esc(C.education.short)}</b> for my studies.</p>`,
           ],
           next: ["work", "ai", "contact"],
         },
@@ -725,10 +746,9 @@
         contact: {
           me: "How do I reach you?",
           bot: [
-            `<div class="vcard"><span class="av" style="background:#3B7A6A">AL</span><div><b>Angel Lakra</b><div style="color:var(--muted);font-size:13px">Full-stack engineer · Bengaluru</div></div></div>
-<div class="vrows"><span>LinkedIn</span><a href="https://www.linkedin.com/in/ngllakra" target="_blank" rel="noopener">linkedin.com/in/ngllakra</a>
-<span>GitHub</span><a href="https://github.com/angelxlakra" target="_blank" rel="noopener">github.com/angelxlakra</a></div>`,
-            `<p>I usually reply the same day, IST. Looking forward to it!</p>`,
+            `<div class="vcard"><span class="av" style="background:#3B7A6A">${P.initials}</span><div><b>${esc(P.name)}</b><div style="color:var(--muted);font-size:13px">${esc(P.role)} · ${esc(P.city)}</div></div></div>
+<div class="vrows">${C.contacts.map((c) => `<span>${c.label}</span><a href="${c.href}"${c.label === "Email" ? "" : ' target="_blank" rel="noopener"'}>${esc(c.text)}</a>`).join("\n")}</div>`,
+            `<p>I usually reply the same day, ${P.timezone}. Looking forward to it!</p>`,
           ],
           next: ["work", "hire", "biz"],
         },
@@ -787,7 +807,7 @@
             .trim()
             .slice(0, 60);
         }
-        statusEl.textContent = "online · full-stack engineer · Bengaluru";
+        statusEl.textContent = ONLINE;
         seen.add(key);
         const fresh = s.next.filter((k) => !seen.has(k));
         setReplies(
@@ -796,6 +816,8 @@
             : ["work", "hire", "biz", "contact"].filter((k) => k !== key),
         );
       }
+      statusEl.textContent = ONLINE;
+      C.bind();
       go("start", true);
     </script>
     <a class="lib-back" href="/" aria-label="Back to the library"

@@ -49,6 +49,7 @@
         flex: none;
       }
     </style>
+    <script src="/content.js"></script>
   </head>
   <body>
     <title>Angel Lakra Software Works</title>
@@ -508,6 +509,13 @@
           }
         }
       }
+      .chalk img {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+      }
     </style>
     <main class="street">
       <header class="sign hero">
@@ -540,7 +548,7 @@
               <li>LLM features with guardrails</li>
             </ul>
             <p class="dim" style="margin-top: 10px">
-              Open to contract, freelance or full-time.
+              Open to <span data-c="profile.rolesLine"></span>.
             </p>
           </div>
         </div>
@@ -570,166 +578,7 @@
           <span class="deva" lang="hi">हमारा काम</span>
           <h2 id="work-h">Work done here</h2>
         </div>
-        <div class="shops">
-          <article class="shop wide">
-            <div class="sign s-red">
-              <span class="kind">Point of sale · in daily use</span
-              ><span class="en painted">Lily Cafe POS</span
-              ><span class="deva" lang="hi">लिली कैफ़े, राँची</span>
-            </div>
-            <div class="chalk">
-              <div>
-                <h3>Today's specials</h3>
-                <ul>
-                  <li>
-                    Waiters order from phones, the kitchen gets a printed chit
-                  </li>
-                  <li>Split payments across UPI, cash and card</li>
-                  <li>
-                    GST bills with CGST/SGST split, every rupee stored in paise
-                  </li>
-                  <li>
-                    Daily cash count down to the last note, verified by the
-                    owner
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h3>House favourite: "Ask"</h3>
-                <p>
-                  The owner types <em>"kal ka cash counter"</em> or
-                  <em>"which dish did best since August"</em>. The model only
-                  picks which report and which dates. The backend does every
-                  sum, so it can't make up a number.
-                </p>
-                <p class="stack">
-                  FastAPI · React · TypeScript · Fly.io · Vercel · MCP
-                </p>
-                <a
-                  href="https://github.com/angelxlakra/lily-cafe-pos"
-                  target="_blank"
-                  rel="noopener"
-                  >See the source →</a
-                >
-              </div>
-            </div>
-          </article>
-          <article class="shop">
-            <div class="sign s-blue">
-              <span class="kind"
-                >Salon management <span class="stamp">coming soon</span></span
-              ><span class="en painted">SalonOS</span>
-            </div>
-            <div class="chalk">
-              <p>
-                Billing, appointments, stock and accounts for unisex salons. It
-                runs on the salon's own network, so a bad internet day doesn't
-                stop billing.
-              </p>
-              <ul>
-                <li>Owner, receptionist and staff roles</li>
-                <li>No double-booked chairs</li>
-                <li>Reports and backups every night</li>
-              </ul>
-              <p class="stack">
-                FastAPI · PostgreSQL · Redis · Next.js · Docker
-              </p>
-              <a
-                href="https://github.com/angelxlakra/efs-salon-os"
-                target="_blank"
-                rel="noopener"
-                >See the source →</a
-              >
-            </div>
-          </article>
-          <article class="shop">
-            <div class="sign s-cream">
-              <span class="kind" style="color: var(--ink)">Brand website</span
-              ><span class="en">Mary's Kitchen</span
-              ><span class="deva" lang="hi">विद लव फ़्रॉम मैरी</span>
-            </div>
-            <div class="chalk">
-              <p>
-                A scroll story for two Ranchi cafes. Night at the roadside stall
-                turns to sunrise inside the second cafe, drawn in pen and ink.
-              </p>
-              <ul>
-                <li>Ink drawings generated in Python</li>
-                <li>A ramen bowl that comes apart as you scroll</li>
-                <li>A 3D stall under the trees</li>
-              </ul>
-              <p class="stack">GSAP · SVG · Python · Vercel</p>
-              <a
-                href="https://marys-ramen-unfolded.vercel.app"
-                target="_blank"
-                rel="noopener"
-                >Ramen bowl →</a
-              >
-              &nbsp;
-              <a
-                href="https://marys-kitchen-3d.vercel.app"
-                target="_blank"
-                rel="noopener"
-                >3D stall →</a
-              >
-            </div>
-          </article>
-          <article class="shop">
-            <div class="sign s-yellow">
-              <span class="kind">Operations</span
-              ><span class="en">Staff Checklists</span
-              ><span class="deva" lang="hi">रोज़ का काम</span>
-            </div>
-            <div class="chalk">
-              <p>
-                Daily, weekly and monthly checklists for every post at both
-                cafes, in English and Hindi, so new staff know exactly what
-                their shift owes.
-              </p>
-            </div>
-          </article>
-          <article class="shop">
-            <div class="sign s-green">
-              <span class="kind"
-                >Product <span class="stamp">early stage</span></span
-              ><span class="en painted">Aanka</span
-              ><span class="deva" lang="hi">आपका हिसाब, समझ में</span>
-            </div>
-            <div class="chalk">
-              <p>
-                A business partner for shop owners that lives in WhatsApp. It
-                leads with this week's figure, points out one thing and suggests
-                one action.
-              </p>
-              <a href="https://aanka.vercel.app" target="_blank" rel="noopener"
-                >See the brand →</a
-              >
-            </div>
-          </article>
-          <article class="shop wide">
-            <div class="sign s-ink">
-              <span class="kind">After hours · my own Mac apps</span
-              ><span class="en">DiskMap &amp; Notch</span>
-            </div>
-            <div class="chalk">
-              <div>
-                <h3>DiskMap</h3>
-                <p>
-                  My own DaisyDisk: a visual map of what fills a Mac's drive, in
-                  Python and pywebview. Built because I didn't want to pay for
-                  one.
-                </p>
-              </div>
-              <div>
-                <h3>Notch app</h3>
-                <p>
-                  A take on Boring Notch, built with my brother, that turns the
-                  MacBook notch into a small live surface.
-                </p>
-              </div>
-            </div>
-          </article>
-        </div>
+        <div class="shops" id="shops"></div>
       </section>
       <section aria-labelledby="exp-h">
         <div class="wallpaint">
@@ -738,72 +587,85 @@
         </div>
         <div class="sign since" style="margin-top: 28px">
           <div class="tablewrap">
-            <table>
-              <tr>
-                <td class="yr">2025 – now</td>
-                <td>
-                  <b>Senior Software Developer, Chain Labs</b><br /><span
-                    class="muted"
-                    >Python and LLM work on a freelance basis, alongside my own
-                    clients.</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td class="yr">2021 – 2025</td>
-                <td>
-                  <b>Frontend Tech Lead, Chain Labs</b><br /><span class="muted"
-                    >Led frontend for a blockchain product studio: dApps,
-                    minting pages, event platforms. July 2021 to February
-                    2025.</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td class="yr">2021</td>
-                <td>
-                  <b>Frontend Developer intern, Yellow Class</b><br /><span
-                    class="muted"
-                    >January to June 2021.</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td class="yr">Studied</td>
-                <td><b>Birla Institute of Technology, Mesra</b></td>
-              </tr>
-            </table>
+            <table id="exp"></table>
           </div>
         </div>
       </section>
       <section class="sign contact" aria-labelledby="c-h">
         <span class="deva" lang="hi">संपर्क करें</span>
         <h2 class="en" id="c-h">Enquire within</h2>
-        <dl>
-          <dt>LinkedIn</dt>
-          <dd>
-            <a
-              href="https://www.linkedin.com/in/ngllakra"
-              target="_blank"
-              rel="noopener"
-              >linkedin.com/in/ngllakra</a
-            >
-          </dd>
-          <dt>GitHub</dt>
-          <dd>
-            <a
-              href="https://github.com/angelxlakra"
-              target="_blank"
-              rel="noopener"
-              >github.com/angelxlakra</a
-            >
-          </dd>
-          <dt>Based in</dt>
-          <dd>Bengaluru, IST. Remote or hybrid.</dd>
-        </dl>
+        <dl id="contact-rows"></dl>
       </section>
       <p class="foot" lang="hi">धन्यवाद, फिर आइए</p>
     </main>
+    <script>
+      {
+        const C = CONTENT,
+          esc = C.esc;
+        // board colour, and whether the name is in the painted display face
+        const look = {
+          lily: ["s-red", true],
+          salon: ["s-blue", true],
+          marys: ["s-cream", false],
+          sop: ["s-yellow", false],
+          aanka: ["s-green", true],
+        };
+        const sign = (p) => {
+          const [cls, painted] = look[p.id] || ["s-ink", false];
+          const kind =
+            p.live || !p.status
+              ? esc(p.label)
+              : `${esc(p.kind)} <span class="stamp">${esc(p.status.toLowerCase())}</span>`;
+          return `<div class="sign ${cls}"><span class="kind"${cls === "s-cream" ? ' style="color: var(--ink)"' : ""}>${kind}</span><span class="en ${painted ? "painted" : ""}">${esc(p.name)}</span>${p.hi ? `<span class="deva" lang="hi">${p.hi}</span>` : ""}</div>`;
+        };
+        const facts = (p, n) =>
+          p.facts.length
+            ? `<ul>${p.facts
+                .slice(0, n)
+                .map((f) => `<li>${esc(f)}</li>`)
+                .join("")}</ul>`
+            : "";
+        const stack = (p) =>
+          p.stack.length
+            ? `<p class="stack">${esc(p.stack.join(" · "))}</p>`
+            : "";
+        const links = (p) =>
+          p.links
+            .map(
+              (l) =>
+                `<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} →</a>`,
+            )
+            .join(" &nbsp; ");
+        const shop = (p) =>
+          p.id === "lily"
+            ? `<article class="shop wide">${sign(p)}<div class="chalk"><div><h3>Today's specials</h3>${facts(p, 3)}</div>
+<div><h3>House favourite: "Ask"</h3><p>The owner types <em>"kal ka cash counter"</em> or <em>"which dish did best since August"</em>. The model only picks which report and which dates. The backend does every sum, so it can't make up a number.</p>${stack(p)}${links(p)}</div></div></article>`
+            : `<article class="shop">${sign(p)}<div class="chalk"><p>${esc(p.text)}</p>${p.image ? `<img src="${p.image.src}" alt="${esc(p.image.alt)}" loading="lazy">` : ""}${facts(p, 3)}${stack(p)}${links(p)}</div></article>`;
+        const mac = ["disk", "notch"].map((id) => C.project[id]);
+        document.getElementById("shops").innerHTML =
+          C.projects
+            .filter((p) => !mac.includes(p))
+            .map(shop)
+            .join("") +
+          `<article class="shop wide"><div class="sign s-ink"><span class="kind">After hours · my own Mac apps</span><span class="en">DiskMap &amp; Notch</span></div><div class="chalk">${mac.map((p) => `<div><h3>${esc(p.name)}</h3><p>${esc(p.text)}</p></div>`).join("")}</div></article>`;
+        document.getElementById("exp").innerHTML =
+          C.experience
+            .map(
+              (e) =>
+                `<tr><td class="yr">${e.years}</td><td><b>${esc(e.title)}, ${esc(e.company)}</b><br /><span class="muted">${esc(e.text)}</span></td></tr>`,
+            )
+            .join("") +
+          `<tr><td class="yr">Studied</td><td><b>${esc(C.education.school)}</b></td></tr>`;
+        const where = C.profile.where;
+        document.getElementById("contact-rows").innerHTML = C.contactRows([
+          [
+            "Based in",
+            `${C.profile.city}, ${C.profile.timezone}. ${where[0].toUpperCase() + where.slice(1)}.`,
+          ],
+        ]);
+        C.bind();
+      }
+    </script>
     <a class="lib-back" href="/" aria-label="Back to the library"
       ><svg
         width="13"

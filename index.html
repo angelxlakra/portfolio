@@ -41,6 +41,7 @@
         display: none !important;
       }
     </style>
+    <script src="/content.js"></script>
   </head>
   <body>
     <title>Angel Lakra · Portfolio</title>
@@ -1391,23 +1392,18 @@
         >
         <nav>
           <a href="#wall">Work</a
-          ><a
-            href="https://github.com/angelxlakra"
-            target="_blank"
-            rel="noopener"
+          ><a data-c-href="links.github" target="_blank" rel="noopener"
             >GitHub</a
-          ><a
-            href="https://www.linkedin.com/in/ngllakra"
-            target="_blank"
-            rel="noopener"
+          ><a data-c-href="links.linkedin" target="_blank" rel="noopener"
             >LinkedIn</a
           ><a href="#contact" class="hire">Contact</a>
         </nav>
       </div>
       <header class="hero">
         <div class="avail">
-          <i></i>Open to work · contract, freelance or full-time · Bengaluru /
-          remote
+          <i></i><span data-c="profile.status"></span> ·
+          <span data-c="profile.rolesLine"></span> ·
+          <span data-c="profile.city"></span> / remote
         </div>
         <p class="owner">The portfolio of <b>Angel Lakra</b></p>
         <h1>Infinite <i>Angels</i><span class="inf">∞</span></h1>
@@ -1415,12 +1411,7 @@
           Full-stack engineer. Python, AI and the software small businesses run
           on. Told seven different ways.
         </p>
-        <ul class="facts">
-          <li><b>5+ yrs</b>shipping production software</li>
-          <li><b>3 yrs 8 mo</b>Frontend Tech Lead, Chain Labs</li>
-          <li><b>2 POS systems</b>for a cafe and for salons</li>
-          <li><b>LLM features</b>with guardrails, in Hindi and English</li>
-        </ul>
+        <ul class="facts" id="facts"></ul>
         <div class="ctas">
           <a class="btn primary" href="receipt.html"
             >Short on time? Start here <span aria-hidden="true">→</span></a
@@ -1450,43 +1441,20 @@
       <div id="sentinel" style="height: 1px"></div>
       <section class="contact" id="contact" aria-labelledby="c-h">
         <h2 id="c-h">Let's work <i>together.</i></h2>
-        <dl>
-          <dt>LinkedIn</dt>
-          <dd>
-            <a
-              href="https://www.linkedin.com/in/ngllakra"
-              target="_blank"
-              rel="noopener"
-              >linkedin.com/in/ngllakra</a
-            >
-          </dd>
-          <dt>GitHub</dt>
-          <dd>
-            <a
-              href="https://github.com/angelxlakra"
-              target="_blank"
-              rel="noopener"
-              >github.com/angelxlakra</a
-            >
-          </dd>
-          <dt>Based in</dt>
-          <dd>Bengaluru, IST · open to remote</dd>
-        </dl>
+        <dl id="contact-rows"></dl>
       </section>
       <footer>
-        <span>Angel Lakra · full-stack engineer · Bengaluru · IST</span
+        <span
+          >Angel Lakra ·
+          <span data-c="profile.role" style="text-transform: lowercase"></span>
+          · <span data-c="profile.city"></span> ·
+          <span data-c="profile.timezone"></span></span
         ><span
-          ><a
-            href="https://github.com/angelxlakra"
-            target="_blank"
-            rel="noopener"
+          ><a data-c-href="links.github" target="_blank" rel="noopener"
             >GitHub</a
           >
           ·
-          <a
-            href="https://www.linkedin.com/in/ngllakra"
-            target="_blank"
-            rel="noopener"
+          <a data-c-href="links.linkedin" target="_blank" rel="noopener"
             >LinkedIn</a
           ></span
         >
@@ -1495,6 +1463,16 @@
     <div class="cursor" id="cursor" aria-hidden="true">Open ↗</div>
     <div class="toast" id="toast" hidden></div>
     <script>
+      document.getElementById("facts").innerHTML = CONTENT.highlights
+        .map(([a, b]) => `<li><b>${a}</b>${b}</li>`)
+        .join("");
+      document.getElementById("contact-rows").innerHTML = CONTENT.contactRows([
+        [
+          "Based in",
+          `${CONTENT.profile.city}, ${CONTENT.profile.timezone} · open to remote`,
+        ],
+      ]);
+      CONTENT.bind();
       const V = [
         {
           id: "receipt",
@@ -1502,7 +1480,7 @@
           tags: ["recruiters", "clients"],
           line: "An 80mm till receipt itemises the engineer. Calm, complete, editorial.",
           cls: "p-receipt",
-          html: `<div class="slot"></div><div class="paper"><div class="c">ANGEL LAKRA</div><div class="c" style="font-size:8px;color:#666">Full-stack · Bengaluru</div><hr><div class="r"><span>Python · FastAPI</span><span>1</span></div><div class="r"><span>LLM features</span><span>1</span></div><div class="r"><span>React · TS</span><span>1</span></div><div class="r"><span>Team lead</span><span>3y 8m</span></div><div class="r"><span>POS systems</span><span>2</span></div><hr><div class="r"><b>TOTAL</b><b>5+ YRS</b></div><hr><div class="c" style="font-size:8px">Thank you. Visit again.</div><div class="bar"></div></div><div class="big">Software<br>small business <span>runs on</span></div>`,
+          html: `<div class="slot"></div><div class="paper"><div class="c">ANGEL LAKRA</div><div class="c" style="font-size:8px;color:#666">Full-stack · Bengaluru</div><hr><div class="r"><span>Python · FastAPI</span><span>1</span></div><div class="r"><span>LLM features</span><span>1</span></div><div class="r"><span>React · TS</span><span>1</span></div><div class="r"><span>Team lead</span><span>${CONTENT.lead.short}</span></div><div class="r"><span>POS systems</span><span>2</span></div><hr><div class="r"><b>TOTAL</b><b>${CONTENT.profile.years} YRS</b></div><hr><div class="c" style="font-size:8px">Thank you. Visit again.</div><div class="bar"></div></div><div class="big">Software<br>small business <span>runs on</span></div>`,
         },
         {
           id: "desktop",
@@ -1526,7 +1504,7 @@
           tags: ["recruiters", "interactive"],
           line: "The career as a DiskMap sunburst. Months to scale, click to dig in.",
           cls: "p-scan",
-          html: `<div class="sun"></div><div class="list"><div><i style="background:#E9A23B"></i><span>Yellow Class</span><em>6 mo</em></div><div><i style="background:#4FB3BF"></i><span>Chain Labs</span><em>44 mo</em></div><div><i style="background:#E0607E"></i><span>Own clients</span><em>17 mo</em></div></div>`,
+          html: `<div class="sun"></div><div class="list"><div><i style="background:#E9A23B"></i><span>Yellow Class</span><em>${CONTENT.exp.intern.months} mo</em></div><div><i style="background:#4FB3BF"></i><span>Chain Labs</span><em>${CONTENT.exp.lead.months} mo</em></div><div><i style="background:#E0607E"></i><span>Own clients</span><em>${CONTENT.exp.now.months} mo</em></div></div>`,
         },
         {
           id: "chat",

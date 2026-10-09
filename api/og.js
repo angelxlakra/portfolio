@@ -1,4 +1,5 @@
 import { ImageResponse } from "@vercel/og";
+import "../content.js";
 
 export const config = { runtime: "edge" };
 
@@ -21,6 +22,9 @@ export default async function handler() {
 }
 
 async function render() {
+  const C = globalThis.CONTENT;
+  C.derive();
+  const P = C.profile;
   const [regular, bold, black, serif] = await Promise.all([
     font("Geist:wght@400"),
     font("Geist:wght@700"),
@@ -90,12 +94,12 @@ async function render() {
             },
             [],
           ),
-          "OPEN TO WORK · BENGALURU / REMOTE",
+          `${P.status} · ${P.city} / remote`.toUpperCase(),
         ],
       ),
       h("div", { display: "flex", fontSize: 40, marginTop: 30 }, [
         "The portfolio of ",
-        h("span", { fontWeight: 700 }, "Angel Lakra"),
+        h("span", { fontWeight: 700 }, P.name),
       ]),
       h("div", { display: "flex", alignItems: "baseline", marginTop: 10 }, [
         h(
@@ -132,7 +136,7 @@ async function render() {
       h(
         "div",
         { display: "flex", fontSize: 22, color: "#86858A", marginTop: 40 },
-        "5+ yrs  ·  ex-Frontend Tech Lead, Chain Labs  ·  2 POS systems",
+        `${P.years} yrs  ·  ex-${C.exp.lead.title}, ${C.exp.lead.company}  ·  ${C.highlights[2][0]}`,
       ),
     ],
   );
