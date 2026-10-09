@@ -87,8 +87,16 @@ Reply with JSON only: {"card":"<id>","hinglish":true|false}`,
         { role: "user", content: q },
       ],
     }),
-  }).catch(() => null);
-  if (!r || !r.ok) return json({ error: "router unavailable" }, 502);
+  }).catch((e) => e);
+  if (!r.ok) {
+    // shows up in Vercel's function logs; never sent to the visitor
+    console.error(
+      "router upstream:",
+      r.status || r,
+      r.text ? (await r.text()).slice(0, 300) : "",
+    );
+    return json({ error: "router unavailable" }, 502);
+  }
 
   let out = {};
   try {
