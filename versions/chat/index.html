@@ -747,7 +747,7 @@
           me: "How do I reach you?",
           bot: [
             `<div class="vcard"><span class="av" style="background:#3B7A6A">${P.initials}</span><div><b>${esc(P.name)}</b><div style="color:var(--muted);font-size:13px">${esc(P.role)} · ${esc(P.city)}</div></div></div>
-<div class="vrows">${C.contacts.map((c) => `<span>${c.label}</span><a href="${c.href}"${c.label === "Email" ? "" : ' target="_blank" rel="noopener"'}>${esc(c.text)}</a>`).join("\n")}</div>`,
+<div class="vrows">${C.contacts.map((c) => `<span>${c.label}</span><div>${C.link(c)}</div>`).join("\n")}</div>`,
             `<p>I usually reply the same day, ${P.timezone}. Looking forward to it!</p>`,
           ],
           next: ["work", "hire", "biz"],

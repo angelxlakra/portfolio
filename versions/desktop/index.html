@@ -1015,9 +1015,10 @@ ${p.facts.length ? `<ul>${p.facts.map((f) => `<li>${esc(f)}</li>`).join("")}</ul
 ${p.links.length ? `<div class="golinks">${p.links.map((l) => `<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} →</a>`).join("")}</div>` : ""}`;
       }
       document.getElementById("links").innerHTML = CONTENT.contacts
-        .map(
-          (c) =>
-            `<a href="${c.href}"${c.label === "Email" ? "" : ' target="_blank" rel="noopener"'}>${c.label === "Email" ? esc(c.text) : c.label}</a>`,
+        .map((c) =>
+          c.label === "Email"
+            ? `<span>${CONTENT.link(c)}</span>`
+            : `<a href="${c.href}" target="_blank" rel="noopener">${c.label}</a>`,
         )
         .join("");
       document.getElementById("exp-rows").innerHTML =

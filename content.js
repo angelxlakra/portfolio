@@ -338,14 +338,30 @@ globalThis.CONTENT.derive = () => {
       .querySelectorAll("[data-c-href]")
       .forEach((el) => (el.href = get(el.dataset.cHref)));
   };
+  // One contact as a link. The email also gets a Copy button, styled to
+  // inherit each page's font and colour.
+  C.link = (c) =>
+    c.label === "Email"
+      ? `<a href="${c.href}">${C.esc(c.text)}</a> <button type="button" data-copy="${C.esc(c.text)}" style="font:inherit;font-size:.8em;margin-left:6px;padding:1px 8px;border:1px solid currentColor;border-radius:4px;background:none;color:inherit;cursor:pointer">Copy</button>`
+      : `<a href="${c.href}" target="_blank" rel="noopener">${C.esc(c.text)}</a>`;
   // <dl> rows for a contact block; extra is [[label, text], ...]
   C.contactRows = (extra = []) =>
-    C.contacts
-      .map(
-        (c) =>
-          `<dt>${c.label}</dt><dd><a href="${c.href}"${c.href.startsWith("mailto:") ? "" : ' target="_blank" rel="noopener"'}>${C.esc(c.text)}</a></dd>`,
-      )
-      .join("") +
+    C.contacts.map((c) => `<dt>${c.label}</dt><dd>${C.link(c)}</dd>`).join("") +
     extra.map(([k, v]) => `<dt>${k}</dt><dd>${C.esc(v)}</dd>`).join("");
 };
 globalThis.CONTENT.derive();
+
+// Copy buttons: any [data-copy] element copies its value when clicked.
+globalThis.document?.addEventListener("click", async (e) => {
+  const b = e.target.closest?.("[data-copy]");
+  if (!b) return;
+  try {
+    await navigator.clipboard.writeText(b.dataset.copy);
+    b.textContent = "Copied";
+  } catch {
+    // no clipboard access: select the address so it can be copied by hand
+    getSelection().selectAllChildren(b.previousElementSibling);
+    b.textContent = "Selected";
+  }
+  setTimeout(() => (b.textContent = "Copy"), 1600);
+});
