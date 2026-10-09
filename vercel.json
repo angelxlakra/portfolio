@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(receipt|desktop|signboard|scan|chat|ask|ink)\\.html",
+      "destination": "/versions/$1/",
+      "permanent": true
+    }
+  ]
+}

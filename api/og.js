@@ -1,5 +1,6 @@
 import { ImageResponse } from "@vercel/og";
 import "../content.js";
+import "../versions.js";
 
 export const config = { runtime: "edge" };
 
@@ -10,6 +11,11 @@ async function font(query) {
   const url = css.match(/src: url\(([^)]+)\)/)[1];
   return (await fetch(url)).arrayBuffer();
 }
+
+const WORDS =
+  "zero one two three four five six seven eight nine ten eleven twelve".split(
+    " ",
+  );
 
 const h = (type, style, children) => ({ type, props: { style, children } });
 
@@ -130,7 +136,11 @@ async function render() {
         },
         [
           h("span", {}, "Full-stack engineer. Python, AI and the software"),
-          h("span", {}, "small businesses run on. Told seven ways."),
+          h(
+            "span",
+            {},
+            `small businesses run on. Told ${WORDS[globalThis.VERSIONS.length] || globalThis.VERSIONS.length} ways.`,
+          ),
         ],
       ),
       h(
