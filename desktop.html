@@ -1,0 +1,312 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+.lib-back{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:99999;font:600 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;background:rgba(18,20,25,.88);color:#F1E9D8;text-decoration:none;padding:9px 13px 9px 11px;border-radius:999px;box-shadow:0 4px 16px rgba(0,0,0,.3);display:inline-flex;gap:7px;align-items:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.lib-back:hover{background:#000}.lib-back svg{flex:none}</style></head><body>
+<title>Angel's Desktop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+
+:root{
+--wall-a:#F2A65A; --wall-b:#1E6F73; --wall-c:#0F2A36;
+--win:#F6F6F4; --win-side:#EAEAE6; --chrome:#E3E3DF; --ink:#1C1D1F; --muted:#6A6D72; --line:#D2D3CF;
+--accent:#1E6F73; --sel:#1E6F73; --sel-ink:#FFFFFF; --ok:#2C8A4E;
+--menubar:rgba(250,248,244,.72);
+--font-ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+--font-display:"Bricolage Grotesque",system-ui,sans-serif;
+--font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+:root:not([data-theme="light"]){
+--win:#26282B; --win-side:#1F2124; --chrome:#2E3034; --ink:#ECEDEE; --muted:#9A9EA5; --line:#3A3D42;
+--accent:#6FC7C9; --sel:#2F7F82; --sel-ink:#FFFFFF; --ok:#5ED18A; --menubar:rgba(20,22,25,.6); color-scheme:dark;
+}
+}
+:root[data-theme="dark"]{
+--win:#26282B; --win-side:#1F2124; --chrome:#2E3034; --ink:#ECEDEE; --muted:#9A9EA5; --line:#3A3D42;
+--accent:#6FC7C9; --sel:#2F7F82; --sel-ink:#FFFFFF; --ok:#5ED18A; --menubar:rgba(20,22,25,.6); color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--wall-c);color:var(--ink);font-family:var(--font-ui);font-size:14px;line-height:1.5;padding-inline:0;padding-block:0}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.desk{position:relative;min-height:820px;overflow:hidden;
+background:
+radial-gradient(1200px 600px at 85% 110%, var(--wall-a) 0%, transparent 60%),
+radial-gradient(900px 700px at 10% -10%, #2C8C8F 0%, transparent 60%),
+linear-gradient(160deg, var(--wall-b) 0%, var(--wall-c) 70%)}
+.wallword{position:absolute;left:clamp(16px,4vw,48px);bottom:120px;color:rgba(255,255,255,.9);font-family:var(--font-display);pointer-events:none}
+.wallword b{display:block;font-size:clamp(3rem,8vw,7rem);font-weight:800;line-height:.9;letter-spacing:-.03em}
+.wallword span{font-family:var(--font-mono);font-size:.85rem;letter-spacing:.06em;opacity:.8}
+/* menu bar */
+.menubar{position:relative;z-index:50;height:30px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-inline:14px;background:var(--menubar);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font-size:13px}
+.menubar .left,.menubar .right{display:flex;align-items:center;gap:4px;min-width:0}
+.menubar button{background:none;border:0;padding:3px 9px;border-radius:5px;cursor:pointer}
+.menubar button:hover{background:rgba(127,127,127,.18)}
+.menubar .me{font-weight:700}
+.menubar .right span{padding:3px 8px;white-space:nowrap}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);margin-right:6px;vertical-align:1px}
+/* notch */
+.notch{position:absolute;z-index:60;top:0;left:50%;transform:translateX(-50%);width:190px;height:32px;background:#000;color:#fff;border:0;border-radius:0 0 14px 14px;cursor:pointer;overflow:hidden;
+transition:width .35s cubic-bezier(.3,.8,.3,1),height .35s cubic-bezier(.3,.8,.3,1),border-radius .35s;text-align:left;padding:0}
+.notch .closed{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding-inline:14px;font-size:11px;transition:opacity .2s}
+.notch .open{position:absolute;inset:0;padding:40px 20px 16px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-content:start;opacity:0;transition:opacity .2s}
+.notch.is-open{width:430px;height:132px;border-radius:0 0 26px 26px}
+.notch.is-open .closed{opacity:0}
+.notch.is-open .open{opacity:1;transition-delay:.15s}
+.notch .open .k{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8E9297;padding-top:2px}
+.notch .open .v{font-size:13px}
+.pulse{width:8px;height:8px;border-radius:50%;background:#5ED18A}
+/* windows */
+.win{position:absolute;background:var(--win);border-radius:11px;box-shadow:0 0 0 .5px rgba(0,0,0,.35),0 22px 60px -12px rgba(0,0,0,.55);display:flex;flex-direction:column;overflow:hidden;max-width:calc(100% - 24px)}
+.win.front{box-shadow:0 0 0 .5px rgba(0,0,0,.4),0 30px 80px -10px rgba(0,0,0,.65)}
+.titlebar{height:38px;flex:none;display:flex;align-items:center;gap:12px;padding-inline:14px;background:var(--chrome);border-bottom:1px solid var(--line);cursor:grab;user-select:none;touch-action:none}
+.titlebar:active{cursor:grabbing}
+.lights{display:flex;gap:8px}
+.lights button{width:12px;height:12px;border-radius:50%;border:0;padding:0;cursor:pointer}
+.lights .c{background:#FF5F57}.lights .m{background:#FEBC2E}.lights .z{background:#28C840}
+.titlebar h2{font-size:13px;font-weight:600;margin:0;flex:1;text-align:center;padding-right:52px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.body{padding:22px 24px;overflow:auto;min-height:0}
+/* about */
+.about h1{font-family:var(--font-display);font-size:2.1rem;font-weight:800;line-height:1.02;letter-spacing:-.02em;margin:0 0 12px;text-wrap:balance}
+.about p{margin:0 0 12px;max-width:56ch}
+.about .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.about .two div{border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:0}
+.about h3{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;font-weight:600}
+.about .links{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-weight:500}
+.todo{font-family:var(--font-mono);font-size:12px;background:rgba(127,127,127,.18);padding:1px 6px;border-radius:4px}
+/* finder */
+.finder{display:grid;grid-template-columns:190px minmax(0,1fr);min-height:0;flex:1}
+.side{background:var(--win-side);border-right:1px solid var(--line);padding:12px 8px;overflow:auto}
+.side h3{font-size:11px;font-weight:600;color:var(--muted);margin:6px 10px 6px}
+.side button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:0;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:13px}
+.side button[aria-selected="true"]{background:var(--sel);color:var(--sel-ink)}
+.side svg{flex:none}
+.detail{padding:22px 26px;overflow:auto;min-width:0}
+.detail .kicker{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.detail h2{font-family:var(--font-display);font-size:1.7rem;font-weight:800;margin:4px 0 4px;letter-spacing:-.01em}
+.detail .client{color:var(--muted);margin:0 0 12px}
+.detail ul{padding-left:18px;margin:12px 0}
+.detail li{margin-bottom:6px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tags span{font-family:var(--font-mono);font-size:11px;border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:1px 8px;border-radius:999px;background:rgba(127,127,127,.18);margin-left:6px;vertical-align:3px}
+.badge.live{background:color-mix(in srgb,var(--ok) 22%,transparent);color:var(--ok)}
+.detail .golinks{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-weight:500}
+/* experience as a list view */
+table.list{width:100%;border-collapse:collapse;font-size:13px}
+.list th{font-weight:600;color:var(--muted);text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);font-size:12px}
+.list td{padding:8px 10px;vertical-align:top}
+.list tr:nth-child(even) td{background:rgba(127,127,127,.07)}
+.list td.when{font-family:var(--font-mono);font-size:12px;white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums}
+/* toolbox */
+.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.chips h3{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:600}
+.chips p{margin:0}
+/* desktop icons */
+.icons{position:absolute;right:22px;top:56px;display:grid;gap:18px;z-index:1}
+.icons a{display:grid;justify-items:center;gap:4px;width:86px;color:#fff;text-decoration:none;font-size:12px;text-align:center;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.icons a:hover .ic{transform:translateY(-2px)}
+.ic{width:52px;height:44px;border-radius:6px;transition:transform .15s}
+.ic.folder{background:linear-gradient(#7CC4F2,#4AA3E0);position:relative;border-radius:4px 6px 6px 6px}
+.ic.folder::before{content:"";position:absolute;left:0;top:-6px;width:22px;height:8px;background:#7CC4F2;border-radius:4px 4px 0 0}
+.ic.link{background:#fff;border-radius:8px;display:grid;place-items:center;color:#1C1D1F;font:700 15px var(--font-mono);text-shadow:none}
+/* dock */
+.dock{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:40;display:flex;gap:10px;padding:8px 10px;border-radius:20px;background:rgba(255,255,255,.22);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.3)}
+.dock button{position:relative;width:52px;height:52px;border-radius:13px;border:0;cursor:pointer;display:grid;place-items:center;color:#fff;transition:transform .18s cubic-bezier(.3,.8,.3,1)}
+.dock button:hover{transform:translateY(-8px) scale(1.12)}
+.dock button[data-open="true"]::after{content:"";position:absolute;bottom:-6px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:#fff}
+.dock .tip{position:absolute;bottom:64px;left:50%;transform:translateX(-50%);background:rgba(30,30,30,.85);color:#fff;font-size:12px;padding:3px 9px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+.dock button:hover .tip,.dock button:focus-visible .tip{opacity:1}
+@media (prefers-reduced-motion:reduce){ .notch,.notch *,.dock button{transition:none} }
+/* narrow: no desktop, stack windows */
+@media (max-width:900px){
+.desk{min-height:0;padding:14px 16px 32px;display:flex;flex-direction:column;gap:16px}
+.menubar{margin:-14px -16px 0;flex-wrap:nowrap}
+.menubar .left button:not(.me){display:none}
+.notch,.icons,.dock{display:none}
+.wallword{position:static;padding-block:28px 8px}
+.win{position:static!important;width:auto!important;height:auto!important;max-width:100%}
+.titlebar{cursor:default}
+.lights button{pointer-events:none}
+.finder{grid-template-columns:minmax(0,1fr)}
+.side{display:flex;overflow-x:auto;gap:4px;border-right:0;border-bottom:1px solid var(--line)}
+.side h3{display:none}
+.side button{width:auto;white-space:nowrap}
+.about .two,.chips{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+<div class="desk" id="desk">
+<div class="menubar">
+<div class="left">
+<button class="me" data-open-win="about">Angel Lakra</button>
+<button data-open-win="work">Projects</button>
+<button data-open-win="exp">Experience</button>
+<button data-open-win="tools">Toolbox</button>
+</div>
+<div class="right">
+<span><i class="dot"></i>Open to work</span>
+<span id="clock">Bengaluru</span>
+</div>
+</div>
+<button class="notch" id="notch" aria-expanded="false" aria-label="Availability">
+<span class="closed"><span class="pulse"></span><span style="font-family:var(--font-mono)">hiring?</span></span>
+<span class="open">
+<span class="k">Status</span><span class="v">Open to work, starting now</span>
+<span class="k">Roles</span><span class="v">Contract · freelance · full-time</span>
+<span class="k">Where</span><span class="v">Bengaluru · remote or hybrid · IST</span>
+<span class="k">Built</span><span class="v">This notch is a nod to the notch app I'm making</span>
+</span>
+</button>
+<div class="wallword" aria-hidden="true"><b>Angel<br>Lakra</b><span>python · ai automation · small-business software</span></div>
+<nav class="icons" aria-label="Links">
+<a href="https://github.com/angelxlakra" target="_blank" rel="noopener"><span class="ic folder"></span>GitHub</a>
+<a href="https://www.linkedin.com/in/ngllakra" target="_blank" rel="noopener"><span class="ic link">in</span>LinkedIn</a>
+<a href="https://marys-ramen-unfolded.vercel.app" target="_blank" rel="noopener"><span class="ic folder"></span>ramen-unfolded</a>
+</nav>
+<!-- About -->
+<section class="win" id="about" style="left:4%;top:64px;width:500px" aria-labelledby="about-t">
+<div class="titlebar"><div class="lights"><button class="c" aria-label="Close About"></button><button class="m" aria-label="Minimise About"></button><button class="z" tabindex="-1" aria-hidden="true"></button></div><h2 id="about-t">About — Angel Lakra.txt</h2></div>
+<div class="body about">
+<h1>I build the software small businesses run on.</h1>
+<p>Full-stack engineer, Python first. Five years of shipping, including nearly four leading frontend at Chain Labs. These days I build POS systems, back-office tools and LLM features that cafe and salon owners use every day.</p>
+<div class="two">
+<div><h3>Hiring?</h3>I've led a team and I ship whole systems alone: schema, API, UI, deploy.</div>
+<div><h3>Running a business?</h3>Billing, stock, cash counts and reports, shaped around how your shop works.</div>
+</div>
+<div class="links">
+<a href="https://github.com/angelxlakra" target="_blank" rel="noopener">GitHub</a>
+<a href="https://www.linkedin.com/in/ngllakra" target="_blank" rel="noopener">LinkedIn</a>
+</div>
+</div>
+</section>
+<!-- Projects -->
+<section class="win" id="work" style="left:calc(4% + 330px);top:250px;width:680px;height:470px" aria-labelledby="work-t">
+<div class="titlebar"><div class="lights"><button class="c" aria-label="Close Projects"></button><button class="m" aria-label="Minimise Projects"></button><button class="z" tabindex="-1" aria-hidden="true"></button></div><h2 id="work-t">Projects</h2></div>
+<div class="finder">
+<div class="side" role="tablist" aria-label="Projects" id="side"><h3>Client work</h3></div>
+<div class="detail" id="detail" role="tabpanel" aria-live="polite"></div>
+</div>
+</section>
+<!-- Experience -->
+<section class="win" id="exp" style="left:calc(4% + 40px);top:440px;width:560px" aria-labelledby="exp-t">
+<div class="titlebar"><div class="lights"><button class="c" aria-label="Close Experience"></button><button class="m" aria-label="Minimise Experience"></button><button class="z" tabindex="-1" aria-hidden="true"></button></div><h2 id="exp-t">Experience</h2></div>
+<div class="body" style="padding:8px 10px 14px">
+<table class="list">
+<thead><tr><th>Role</th><th>Where</th><th>When</th></tr></thead>
+<tbody>
+<tr><td>Senior Software Developer<br><span style="color:var(--muted)">Python and LLM work, freelance</span></td><td>Chain Labs</td><td class="when">Jun 2025 – now</td></tr>
+<tr><td>Frontend Tech Lead<br><span style="color:var(--muted)">dApp frontends, minting and event pages</span></td><td>Chain Labs</td><td class="when">Jul 2021 – Feb 2025</td></tr>
+<tr><td>Frontend Developer<br><span style="color:var(--muted)">Internship</span></td><td>Yellow Class</td><td class="when">Jan – Jun 2021</td></tr>
+<tr><td>Education</td><td>BIT Mesra</td><td class="when"></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Toolbox (starts closed) -->
+<section class="win" id="tools" style="left:calc(4% + 560px);top:80px;width:440px" aria-labelledby="tools-t" hidden>
+<div class="titlebar"><div class="lights"><button class="c" aria-label="Close Toolbox"></button><button class="m" aria-label="Minimise Toolbox"></button><button class="z" tabindex="-1" aria-hidden="true"></button></div><h2 id="tools-t">Toolbox</h2></div>
+<div class="body chips">
+<div><h3>Backend</h3><p>Python, FastAPI, SQLAlchemy, PostgreSQL, SQLite, Redis</p></div>
+<div><h3>Frontend</h3><p>TypeScript, React, Next.js, Vite, Tailwind, GSAP</p></div>
+<div><h3>AI</h3><p>LLM routing and tool use, agents, MCP servers, n8n</p></div>
+<div><h3>Shipping</h3><p>Docker Compose, Nginx, Fly.io, Vercel, uv, pytest</p></div>
+</div>
+</section>
+<div class="dock" role="toolbar" aria-label="Dock">
+<button data-open-win="about" style="background:linear-gradient(#F7C36B,#E8893B)" aria-label="About"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span class="tip">About</span></button>
+<button data-open-win="work" style="background:linear-gradient(#5FB8E8,#2D7FC1)" aria-label="Projects"><svg width="26" height="22" viewBox="0 0 26 22" fill="#fff"><path d="M2 4a2 2 0 0 1 2-2h6l2 3h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/></svg><span class="tip">Projects</span></button>
+<button data-open-win="exp" style="background:linear-gradient(#FFFFFF,#E4E4E0);color:#C9352B" aria-label="Experience"><span style="display:grid;line-height:1;text-align:center"><span style="font-size:8px;font-weight:700">YEARS</span><span style="font:800 20px var(--font-display);color:#1C1D1F">5+</span></span><span class="tip">Experience</span></button>
+<button data-open-win="tools" style="background:linear-gradient(#5A6270,#2E333B)" aria-label="Toolbox"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 7l5 5-5 5M12 17h8"/></svg><span class="tip">Toolbox</span></button>
+</div>
+</div>
+<script>
+const projects=[
+{id:"lily",group:"Client work",name:"Lily Cafe POS",kicker:"Point of sale · in daily use",badge:["Live","live"],client:"Lily Cafe by Mary's Kitchen, Ranchi",
+text:"The cafe's whole counter in one system. Waiters order from their phones, the kitchen gets a printed chit, and the owner closes the day with a cash count.",
+facts:["Table orders, partial serving, split payments across UPI, cash and card","GST billing with a CGST/SGST split; every amount stored in paise","A Windows print agent drives 80mm receipts and kitchen chits","“Ask” answers questions in English, Hindi or Hinglish. The model only picks the report and period; the backend computes every figure","A deploy script that ships only a clean origin/main and checks production runs that exact commit"],
+tags:["FastAPI","SQLAlchemy 2","React 18","TypeScript","Tailwind v4","Fly.io","Vercel","MCP"],
+links:[["Source on GitHub","https://github.com/angelxlakra/lily-cafe-pos"]]},
+{id:"salon",group:"Client work",name:"SalonOS",kicker:"Salon management",badge:["In development",""],client:"For unisex beauty salons",
+text:"A local-first POS, appointments, inventory and accounting system. It runs on the salon's own network, so a bad internet day doesn't stop billing.",
+facts:["Owner, receptionist and staff roles with different powers","Appointment conflict detection","Scheduled reports and nightly backups from background workers"],
+tags:["FastAPI","PostgreSQL","Redis + RQ","Next.js 14","Docker Compose","Nginx"],
+links:[["Source on GitHub","https://github.com/angelxlakra/efs-salon-os"]]},
+{id:"marys",group:"Client work",name:"Mary's Kitchen",kicker:"Brand website",badge:["Prototypes live","live"],client:"Mary's Kitchen and Lily Cafe, Ranchi",
+text:"A scroll-driven site for two cafes. It opens at night at the roadside stall and turns to sunrise inside the second cafe, drawn as generated pen-and-ink linework.",
+facts:["Ink illustrations generated in Python and layered as SVG","An “exploded” ramen bowl that comes apart as you scroll","A 3D model of the stall under the trees"],
+tags:["GSAP","SVG","Python","Vercel"],
+links:[["Ramen bowl","https://marys-ramen-unfolded.vercel.app"],["3D stall","https://marys-kitchen-3d.vercel.app"]]},
+{id:"sop",group:"Client work",name:"Staff SOP checklists",kicker:"Operations",badge:null,client:"Both cafes",
+text:"Daily, weekly and monthly checklists for every post at both cafes, in English and Hindi, so new staff know exactly what their shift owes.",facts:[],tags:["Excel","Process design"],links:[]},
+{id:"disk",group:"My apps",name:"DiskMap",kicker:"macOS app",badge:["Side project",""],client:"For my own Mac",
+text:"My own DaisyDisk: a visual map of what's filling a Mac's drive, built because I didn't want to pay for one.",facts:[],tags:["Python","pywebview"],links:[]},
+{id:"notch",group:"My apps",name:"Notch app",kicker:"macOS app",badge:["Side project",""],client:"Built with my brother",
+text:"A take on Boring Notch that turns the MacBook notch into a small live surface. The black notch at the top of this page is a tribute.",facts:[],tags:["macOS"],links:[]},
+{id:"aanka",group:"My apps",name:"Aanka",kicker:"Product · early stage",badge:["Brand ready",""],client:"For shop and salon owners",
+text:"A business partner that lives in WhatsApp. It reads the numbers, leads with this week's figure, points out one thing and suggests one action, in warm Hinglish.",facts:[],tags:["WhatsApp","LLM"],links:[["Brand identity","https://aanka.vercel.app"]]}
+];
+const side=document.getElementById('side'),detail=document.getElementById('detail');
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let lastGroup="Client work";
+projects.forEach(p=>{
+if(p.group!==lastGroup){const h=document.createElement('h3');h.textContent=p.group;side.appendChild(h);lastGroup=p.group}
+const b=document.createElement('button');b.role="tab";b.id="tab-"+p.id;
+b.innerHTML='<svg width="16" height="13" viewBox="0 0 26 22" fill="currentColor" opacity=".75"><path d="M2 4a2 2 0 0 1 2-2h6l2 3h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/></svg>'+esc(p.name);
+b.addEventListener('click',()=>show(p.id));side.appendChild(b);
+});
+function show(id){
+const p=projects.find(x=>x.id===id);
+side.querySelectorAll('[role=tab]').forEach(t=>t.setAttribute('aria-selected',t.id==="tab-"+id));
+detail.innerHTML=`<div class="kicker">${esc(p.kicker)}</div>
+<h2>${esc(p.name)}${p.badge?`<span class="badge ${p.badge[1]}">${esc(p.badge[0])}</span>`:""}</h2>
+<p class="client">${esc(p.client)}</p><p>${esc(p.text)}</p>
+${p.facts.length?`<ul>${p.facts.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
+<div class="tags">${p.tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
+${p.links.length?`<div class="golinks">${p.links.map(l=>`<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} →</a>`).join("")}</div>`:""}`;
+}
+show("lily");
+// windows
+const narrow=matchMedia('(max-width:900px)');
+let z=10;
+const wins=[...document.querySelectorAll('.win')];
+function front(w){wins.forEach(x=>x.classList.remove('front'));w.style.zIndex=++z;w.classList.add('front')}
+function syncDock(){document.querySelectorAll('.dock [data-open-win]').forEach(b=>b.dataset.open=!document.getElementById(b.dataset.openWin).hidden)}
+function openWin(id){const w=document.getElementById(id);w.hidden=false;front(w);syncDock();if(narrow.matches)w.scrollIntoView({behavior:'smooth',block:'start'})}
+document.querySelectorAll('[data-open-win]').forEach(b=>b.addEventListener('click',()=>openWin(b.dataset.openWin)));
+wins.forEach(w=>{
+w.addEventListener('pointerdown',()=>front(w));
+w.querySelector('.lights .c').addEventListener('click',e=>{e.stopPropagation();if(!narrow.matches){w.hidden=true;syncDock()}});
+w.querySelector('.lights .m').addEventListener('click',e=>{e.stopPropagation();if(!narrow.matches){w.hidden=true;syncDock()}});
+const bar=w.querySelector('.titlebar');
+bar.addEventListener('pointerdown',e=>{
+if(narrow.matches||e.target.closest('.lights'))return;
+const desk=document.getElementById('desk').getBoundingClientRect();
+const r=w.getBoundingClientRect(),dx=e.clientX-r.left,dy=e.clientY-r.top;
+bar.setPointerCapture(e.pointerId);
+const move=ev=>{
+let x=ev.clientX-desk.left-dx,y=ev.clientY-desk.top-dy;
+x=Math.max(-r.width+80,Math.min(desk.width-80,x));y=Math.max(30,Math.min(desk.height-40,y));
+w.style.left=x+'px';w.style.top=y+'px';
+};
+const up=()=>{bar.removeEventListener('pointermove',move);bar.removeEventListener('pointerup',up)};
+bar.addEventListener('pointermove',move);bar.addEventListener('pointerup',up);
+});
+});
+function applyNarrow(){if(narrow.matches)wins.forEach(w=>w.hidden=false);syncDock()}
+narrow.addEventListener?.('change',applyNarrow);applyNarrow();
+front(document.getElementById('about'));
+// notch
+const notch=document.getElementById('notch');
+notch.addEventListener('click',()=>{const o=notch.classList.toggle('is-open');notch.setAttribute('aria-expanded',o)});
+notch.addEventListener('mouseenter',()=>{notch.classList.add('is-open');notch.setAttribute('aria-expanded',true)});
+notch.addEventListener('mouseleave',()=>{notch.classList.remove('is-open');notch.setAttribute('aria-expanded',false)});
+// clock in IST
+const clock=document.getElementById('clock');
+function tick(){try{clock.textContent=new Intl.DateTimeFormat('en-IN',{weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Kolkata'}).format(new Date())+' IST'}catch(e){}}
+tick();setInterval(tick,20000);
+</script>
+<a class="lib-back" href="/" aria-label="Back to the library"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg>Library</a>
+</body></html>

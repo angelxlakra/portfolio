@@ -1,0 +1,224 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+.lib-back{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:99999;font:600 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;background:rgba(18,20,25,.88);color:#F1E9D8;text-decoration:none;padding:9px 13px 9px 11px;border-radius:999px;box-shadow:0 4px 16px rgba(0,0,0,.3);display:inline-flex;gap:7px;align-items:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.lib-back:hover{background:#000}.lib-back svg{flex:none}</style></head><body>
+<title>Angel Lakra Software Works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Hind:wght@400;500;600&family=Kalam:wght@400;700&family=Alfa+Slab+One&display=swap">
+<style>
+
+:root{
+--wall:#EFE9DD;        /* whitewash */
+--wall-shade:#E2D9C8;
+--ink:#1E1A16;
+--sign-yellow:#F4C430; --sign-red:#C8322A; --sign-green:#1F6E4A; --sign-blue:#1D4E89; --sign-cream:#FFF6E0;
+--chalk:#26302B; --chalk-ink:#F1EFE6; --chalk-dim:#B9BFB4;
+--font-sign:"Alfa Slab One","Rockwell",Georgia,serif;
+--font-deva:"Rozha One","Tiro Devanagari Hindi",serif;
+--font-body:"Hind",system-ui,sans-serif;
+--font-chalk:"Kalam","Comic Sans MS",cursive;
+color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--wall);color:var(--ink);font-family:var(--font-body);font-size:1.05rem;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:0;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .32 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit}
+:focus-visible{outline:3px dashed var(--sign-red);outline-offset:3px}
+.street{max-width:1080px;margin-inline:auto;display:grid;gap:clamp(56px,8vw,96px);padding-block:40px 64px}
+/* a painted sign board */
+.sign{position:relative;border:6px solid var(--ink);box-shadow:6px 8px 0 rgba(30,26,22,.18);padding:clamp(20px,4vw,40px);text-align:center}
+.sign::before,.sign::after{content:"";position:absolute;top:10px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d9d4c8,#6b665d)}
+.sign::before{left:10px}.sign::after{right:10px}
+.sign .deva{font-family:var(--font-deva);line-height:1.15;display:block}
+.sign .en{font-family:var(--font-sign);text-transform:uppercase;line-height:1;display:block;letter-spacing:.01em;text-wrap:balance}
+.painted{text-shadow:3px 3px 0 var(--ink)}
+/* hero board */
+.hero{background:var(--sign-yellow);transform:rotate(-.6deg)}
+.hero .deva{font-size:clamp(1.6rem,4.6vw,3rem);color:var(--sign-red)}
+.hero .en{font-size:clamp(2.4rem,8.5vw,6rem);color:var(--sign-cream);-webkit-text-stroke:2px var(--ink);text-shadow:5px 5px 0 var(--ink);margin:6px 0 10px}
+.hero .what{display:inline-block;background:var(--sign-red);color:var(--sign-cream);font-family:var(--font-sign);font-size:clamp(.85rem,2.2vw,1.15rem);padding:6px 16px;letter-spacing:.04em;text-transform:uppercase}
+.hero .prop{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:22px;font-weight:600;font-size:.98rem;border-top:3px solid var(--ink);padding-top:12px;text-align:left}
+.hero .prop span:last-child{text-align:right}
+.open-board{position:absolute;right:-14px;top:-30px;transform:rotate(8deg);background:var(--sign-green);color:var(--sign-cream);border:4px solid var(--ink);padding:6px 14px;font-family:var(--font-sign);font-size:1rem;line-height:1.1;box-shadow:3px 4px 0 rgba(30,26,22,.25)}
+.open-board small{display:block;font-family:var(--font-deva);font-size:.95rem}
+.open-board::before{content:"";position:absolute;left:50%;top:-26px;width:2px;height:24px;background:var(--ink)}
+/* two doors */
+.doors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+.door{text-align:left;min-width:0}
+.door .sign{padding:18px 20px;text-align:center}
+.door.hire .sign{background:var(--sign-blue);color:var(--sign-cream)}
+.door.biz .sign{background:var(--sign-green);color:var(--sign-cream)}
+.door .sign .deva{font-size:1.5rem}
+.door .sign .en{font-size:clamp(1.2rem,2.6vw,1.6rem)}
+/* chalkboard */
+.chalk{background:var(--chalk);color:var(--chalk-ink);font-family:var(--font-chalk);font-size:1.1rem;line-height:1.5;padding:20px 24px 22px;border:10px solid #7A5A3A;border-radius:3px;margin-top:-4px;box-shadow:inset 0 0 40px rgba(0,0,0,.35)}
+.chalk h3{font-family:var(--font-chalk);font-weight:700;font-size:1.3rem;margin:0 0 6px;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.chalk ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.chalk li::before{content:"✓ ";color:var(--sign-yellow)}
+.chalk p{margin:0 0 8px}
+.chalk .dim{color:var(--chalk-dim);font-size:.98rem}
+.chalk a{color:var(--sign-yellow);text-underline-offset:4px}
+/* section heading painted directly on the wall */
+.wallpaint{text-align:center}
+.wallpaint .deva{font-family:var(--font-deva);font-size:clamp(1.4rem,3.4vw,2rem);color:var(--sign-red);display:block;line-height:1.2}
+.wallpaint h2{font-family:var(--font-sign);font-weight:400;font-size:clamp(1.8rem,5vw,3rem);text-transform:uppercase;margin:0;letter-spacing:.02em;text-wrap:balance}
+/* shops (projects) */
+.shops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 28px;margin-top:28px}
+.shop{min-width:0;display:flex;flex-direction:column}
+.shop.wide{grid-column:1/-1}
+.shop .sign{padding:16px 18px}
+.shop .sign .kind{display:block;font-family:var(--font-body);font-weight:600;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+.shop .sign .en{font-size:clamp(1.5rem,3.6vw,2.4rem)}
+.shop .sign .deva{font-size:1.2rem;margin-top:4px}
+.shop .chalk{flex:1}
+.wide .chalk{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px}
+.s-red{background:var(--sign-red);color:var(--sign-cream)}
+.s-cream{background:var(--sign-cream);color:var(--sign-red)}
+.s-blue{background:var(--sign-blue);color:var(--sign-cream)}
+.s-green{background:var(--sign-green);color:var(--sign-cream)}
+.s-yellow{background:var(--sign-yellow);color:var(--ink)}
+.s-ink{background:var(--ink);color:var(--sign-yellow)}
+.shop:nth-child(odd) .sign{transform:rotate(-.8deg)}
+.shop:nth-child(even) .sign{transform:rotate(.7deg)}
+.stack{margin-top:12px;font-size:.95rem;color:var(--chalk-dim)}
+.stamp{display:inline-block;transform:rotate(-4deg);border:2px solid currentColor;padding:0 8px;font-size:.85rem;margin-left:6px;vertical-align:2px}
+/* experience: a painted "since" board */
+.since{background:var(--sign-cream);padding:0;text-align:left}
+.since table{width:100%;border-collapse:collapse;font-size:1rem}
+.since td{padding:14px 18px;border-top:3px solid var(--ink);vertical-align:top}
+.since tr:first-child td{border-top:0}
+.since td.yr{font-family:var(--font-sign);font-size:1.05rem;white-space:nowrap;color:var(--sign-red);width:1%;font-variant-numeric:tabular-nums}
+.since b{font-weight:600}
+.since .muted{color:#5d554a}
+.tablewrap{overflow-x:auto}
+/* contact */
+.contact{background:var(--sign-red);color:var(--sign-cream)}
+.contact .deva{font-size:clamp(1.6rem,4vw,2.4rem)}
+.contact .en{font-size:clamp(2rem,6vw,3.6rem);color:var(--sign-yellow);text-shadow:4px 4px 0 var(--ink);margin-top:4px}
+.contact dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px;max-width:560px;margin:22px auto 0;text-align:left;font-size:1.08rem}
+.contact dt{font-family:var(--font-sign);text-transform:uppercase;font-size:.9rem;padding-top:3px;color:var(--sign-yellow)}
+.contact dd{margin:0;overflow-wrap:anywhere}
+.contact a{text-underline-offset:4px}
+.todo{background:var(--sign-cream);color:var(--ink);padding:0 6px;font-size:.9rem}
+.foot{text-align:center;font-family:var(--font-chalk);font-size:1.2rem;color:#5d554a}
+@media (max-width:760px){
+.doors,.shops{grid-template-columns:minmax(0,1fr)}
+.wide .chalk{grid-template-columns:minmax(0,1fr)}
+.open-board{right:6px;top:-34px;font-size:.85rem}
+.hero .prop span:last-child{text-align:left}
+}
+@media (prefers-reduced-motion:no-preference){
+.open-board{animation:swing 3.2s ease-in-out infinite;transform-origin:50% -26px}
+@keyframes swing{0%,100%{transform:rotate(8deg)}50%{transform:rotate(3deg)}}
+}
+</style>
+<main class="street">
+<header class="sign hero">
+<div class="open-board" aria-hidden="true">OPEN<small>खुला है</small></div>
+<span class="deva" lang="hi">एंजल लकड़ा सॉफ़्टवेयर वर्क्स</span>
+<h1 class="en">Angel Lakra<br>Software Works</h1>
+<span class="what">Billing software · Websites · AI automation</span>
+<div class="prop"><span>Prop. Angel Lakra, full-stack engineer</span><span>Est. 2021 · Bengaluru</span></div>
+</header>
+<section class="doors" aria-label="Who this is for">
+<div class="door hire">
+<div class="sign"><span class="deva" lang="hi">कंपनियों के लिए</span><span class="en">For companies hiring</span></div>
+<div class="chalk">
+<p>Five years of shipping, nearly four of them leading frontend at Chain Labs. Now Python first, building whole systems on my own: schema, API, UI, deploy.</p>
+<ul><li>Python backends with FastAPI and tests</li><li>React and Next.js that hold up on cheap phones</li><li>LLM features with guardrails</li></ul>
+<p class="dim" style="margin-top:10px">Open to contract, freelance or full-time.</p>
+</div>
+</div>
+<div class="door biz">
+<div class="sign"><span class="deva" lang="hi">दुकान और कैफ़े मालिकों के लिए</span><span class="en">For shop &amp; cafe owners</span></div>
+<div class="chalk">
+<p>Billing, stock, cash counts and reports, built around how your shop already works.</p>
+<ul><li>POS with GST bills and kitchen chits</li><li>A website that gives your brand a real presence</li><li>Automation for the jobs you do by hand each week</li></ul>
+<p class="dim" style="margin-top:10px">Ask your numbers in Hindi or English.</p>
+</div>
+</div>
+</section>
+<section aria-labelledby="work-h">
+<div class="wallpaint"><span class="deva" lang="hi">हमारा काम</span><h2 id="work-h">Work done here</h2></div>
+<div class="shops">
+<article class="shop wide">
+<div class="sign s-red"><span class="kind">Point of sale · in daily use</span><span class="en painted">Lily Cafe POS</span><span class="deva" lang="hi">लिली कैफ़े, राँची</span></div>
+<div class="chalk">
+<div>
+<h3>Today's specials</h3>
+<ul>
+<li>Waiters order from phones, the kitchen gets a printed chit</li>
+<li>Split payments across UPI, cash and card</li>
+<li>GST bills with CGST/SGST split, every rupee stored in paise</li>
+<li>Daily cash count down to the last note, verified by the owner</li>
+</ul>
+</div>
+<div>
+<h3>House favourite: "Ask"</h3>
+<p>The owner types <em>"kal ka cash counter"</em> or <em>"which dish did best since August"</em>. The model only picks which report and which dates. The backend does every sum, so it can't make up a number.</p>
+<p class="stack">FastAPI · React · TypeScript · Fly.io · Vercel · MCP</p>
+<a href="https://github.com/angelxlakra/lily-cafe-pos" target="_blank" rel="noopener">See the source →</a>
+</div>
+</div>
+</article>
+<article class="shop">
+<div class="sign s-blue"><span class="kind">Salon management <span class="stamp">coming soon</span></span><span class="en painted">SalonOS</span></div>
+<div class="chalk">
+<p>Billing, appointments, stock and accounts for unisex salons. It runs on the salon's own network, so a bad internet day doesn't stop billing.</p>
+<ul><li>Owner, receptionist and staff roles</li><li>No double-booked chairs</li><li>Reports and backups every night</li></ul>
+<p class="stack">FastAPI · PostgreSQL · Redis · Next.js · Docker</p>
+<a href="https://github.com/angelxlakra/efs-salon-os" target="_blank" rel="noopener">See the source →</a>
+</div>
+</article>
+<article class="shop">
+<div class="sign s-cream"><span class="kind" style="color:var(--ink)">Brand website</span><span class="en">Mary's Kitchen</span><span class="deva" lang="hi">विद लव फ़्रॉम मैरी</span></div>
+<div class="chalk">
+<p>A scroll story for two Ranchi cafes. Night at the roadside stall turns to sunrise inside the second cafe, drawn in pen and ink.</p>
+<ul><li>Ink drawings generated in Python</li><li>A ramen bowl that comes apart as you scroll</li><li>A 3D stall under the trees</li></ul>
+<p class="stack">GSAP · SVG · Python · Vercel</p>
+<a href="https://marys-ramen-unfolded.vercel.app" target="_blank" rel="noopener">Ramen bowl →</a> &nbsp; <a href="https://marys-kitchen-3d.vercel.app" target="_blank" rel="noopener">3D stall →</a>
+</div>
+</article>
+<article class="shop">
+<div class="sign s-yellow"><span class="kind">Operations</span><span class="en">Staff Checklists</span><span class="deva" lang="hi">रोज़ का काम</span></div>
+<div class="chalk"><p>Daily, weekly and monthly checklists for every post at both cafes, in English and Hindi, so new staff know exactly what their shift owes.</p></div>
+</article>
+<article class="shop">
+<div class="sign s-green"><span class="kind">Product <span class="stamp">early stage</span></span><span class="en painted">Aanka</span><span class="deva" lang="hi">आपका हिसाब, समझ में</span></div>
+<div class="chalk"><p>A business partner for shop owners that lives in WhatsApp. It leads with this week's figure, points out one thing and suggests one action.</p>
+<a href="https://aanka.vercel.app" target="_blank" rel="noopener">See the brand →</a></div>
+</article>
+<article class="shop wide">
+<div class="sign s-ink"><span class="kind">After hours · my own Mac apps</span><span class="en">DiskMap &amp; Notch</span></div>
+<div class="chalk">
+<div><h3>DiskMap</h3><p>My own DaisyDisk: a visual map of what fills a Mac's drive, in Python and pywebview. Built because I didn't want to pay for one.</p></div>
+<div><h3>Notch app</h3><p>A take on Boring Notch, built with my brother, that turns the MacBook notch into a small live surface.</p></div>
+</div>
+</article>
+</div>
+</section>
+<section aria-labelledby="exp-h">
+<div class="wallpaint"><span class="deva" lang="hi">अनुभव</span><h2 id="exp-h">Worked at</h2></div>
+<div class="sign since" style="margin-top:28px">
+<div class="tablewrap"><table>
+<tr><td class="yr">2025 – now</td><td><b>Senior Software Developer, Chain Labs</b><br><span class="muted">Python and LLM work on a freelance basis, alongside my own clients.</span></td></tr>
+<tr><td class="yr">2021 – 2025</td><td><b>Frontend Tech Lead, Chain Labs</b><br><span class="muted">Led frontend for a blockchain product studio: dApps, minting pages, event platforms. July 2021 to February 2025.</span></td></tr>
+<tr><td class="yr">2021</td><td><b>Frontend Developer intern, Yellow Class</b><br><span class="muted">January to June 2021.</span></td></tr>
+<tr><td class="yr">Studied</td><td><b>Birla Institute of Technology, Mesra</b></td></tr>
+</table></div>
+</div>
+</section>
+<section class="sign contact" aria-labelledby="c-h">
+<span class="deva" lang="hi">संपर्क करें</span>
+<h2 class="en" id="c-h">Enquire within</h2>
+<dl>
+<dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/ngllakra" target="_blank" rel="noopener">linkedin.com/in/ngllakra</a></dd>
+<dt>GitHub</dt><dd><a href="https://github.com/angelxlakra" target="_blank" rel="noopener">github.com/angelxlakra</a></dd>
+<dt>Based in</dt><dd>Bengaluru, IST. Remote or hybrid.</dd>
+</dl>
+</section>
+<p class="foot" lang="hi">धन्यवाद, फिर आइए</p>
+</main>
+<a class="lib-back" href="/" aria-label="Back to the library"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg>Library</a>
+</body></html>
