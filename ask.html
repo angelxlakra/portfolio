@@ -1,212 +1,891 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
-.lib-back{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:99999;font:600 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;background:rgba(18,20,25,.88);color:#F1E9D8;text-decoration:none;padding:9px 13px 9px 11px;border-radius:999px;box-shadow:0 4px 16px rgba(0,0,0,.3);display:inline-flex;gap:7px;align-items:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.lib-back:hover{background:#000}.lib-back svg{flex:none}</style></head><body>
-<title>Ask Angel</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&family=DM+Mono:wght@400;500&display=swap">
-<style>
-
-:root{
---bg:#F1F3EE; --surface:#FFFFFF; --ink:#18201B; --muted:#5E6A62; --line:#D5DBD3;
---accent:#1E7A4F; --accent-soft:#DCEFE3; --mark:#F3D36B;
---font-display:"Familjen Grotesk",system-ui,sans-serif;
---font-body:"Atkinson Hyperlegible",system-ui,sans-serif;
---font-mono:"DM Mono",ui-monospace,Menlo,monospace;
-}
-@media (prefers-color-scheme: dark){
-:root:not([data-theme="light"]){
---bg:#121614; --surface:#1A201C; --ink:#E6ECE7; --muted:#9AA79E; --line:#2D3631;
---accent:#5CCB92; --accent-soft:#1E3326; --mark:#8C7426; color-scheme:dark;
-}
-}
-:root[data-theme="dark"]{
---bg:#121614; --surface:#1A201C; --ink:#E6ECE7; --muted:#9AA79E; --line:#2D3631;
---accent:#5CCB92; --accent-soft:#1E3326; --mark:#8C7426; color-scheme:dark;
-}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16.5px;line-height:1.6;padding-inline:clamp(16px,4vw,40px);padding-block:0}
-a{color:var(--accent);text-underline-offset:3px}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.page{max-width:860px;margin-inline:auto;padding-block:40px 64px;display:grid;gap:28px}
-.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
-.top .who{font-family:var(--font-display);font-weight:700;font-size:1.05rem}
-.top .st{font-family:var(--font-mono);font-size:.78rem;color:var(--accent)}
-h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2.6rem,7vw,4.6rem);line-height:.98;letter-spacing:-.025em;margin:0;text-wrap:balance}
-h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--mark) 62%)}
-.lede{margin:12px 0 0;color:var(--muted);max-width:58ch}
-form{display:flex;gap:10px;background:var(--surface);border:1.5px solid var(--ink);padding:8px;box-shadow:6px 6px 0 var(--ink)}
-form input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:1.1rem;color:var(--ink);padding:8px 10px}
-form input::placeholder{color:var(--muted)}
-form input:focus{outline:none}
-form button{font:inherit;font-weight:700;background:var(--ink);color:var(--bg);border:0;padding:10px 18px;cursor:pointer}
-form button:hover{background:var(--accent)}
-.tries{display:flex;flex-wrap:wrap;gap:8px;margin-top:-10px}
-.tries button{font:inherit;font-size:.92rem;background:transparent;border:1px solid var(--line);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer}
-.tries button:hover{border-color:var(--accent);color:var(--accent)}
-.answer{background:var(--surface);border:1px solid var(--line);min-height:240px}
-.route{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:10px 18px;border-bottom:1px solid var(--line);font-family:var(--font-mono);font-size:.76rem;color:var(--muted)}
-.route b{color:var(--ink);font-weight:500}
-.route .arrow{opacity:.6}
-.route .pill{background:var(--accent-soft);color:var(--ink);padding:1px 8px;border-radius:4px}
-.cardbody{padding:22px 24px 26px}
-.cardbody .k{font-family:var(--font-mono);font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-.cardbody h2{font-family:var(--font-display);font-size:clamp(1.6rem,3.6vw,2.2rem);margin:4px 0 10px;letter-spacing:-.015em;line-height:1.08;text-wrap:balance}
-.cardbody .hi{background:var(--accent-soft);padding:8px 12px;margin:0 0 12px;border-left:3px solid var(--accent)}
-.cardbody p{margin:0 0 10px;max-width:64ch}
-.cardbody ul{margin:6px 0 10px;padding-left:20px}
-.cardbody li{margin-bottom:5px}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.tags span{font-family:var(--font-mono);font-size:.72rem;border:1px solid var(--line);padding:2px 8px}
-.go{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-weight:700}
-.rel{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);align-items:center}
-.rel span{font-family:var(--font-mono);font-size:.74rem;color:var(--muted)}
-.rel button{font:inherit;font-size:.9rem;background:none;border:0;color:var(--accent);cursor:pointer;padding:2px 4px;text-decoration:underline;text-underline-offset:3px}
-.thinking{padding:22px 24px;color:var(--muted);font-family:var(--font-mono);font-size:.85rem}
-.todo{font-family:var(--font-mono);font-size:.85rem;background:var(--accent-soft);padding:0 6px}
-dl.c{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 18px;margin:8px 0 0}
-dl.c dt{font-family:var(--font-mono);font-size:.74rem;text-transform:uppercase;color:var(--muted);padding-top:3px}
-dl.c dd{margin:0;overflow-wrap:anywhere}
-.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line)}
-.how div{padding:16px 18px;min-width:0}
-.how div + div{border-left:1px solid var(--line)}
-.how .n{font-family:var(--font-mono);font-size:.72rem;color:var(--muted)}
-.how b{display:block;font-family:var(--font-display);font-size:1.05rem;margin:2px 0 4px}
-.how p{margin:0;font-size:.92rem;color:var(--muted)}
-.index{font-size:.92rem;color:var(--muted)}
-.index button{font:inherit;background:none;border:0;color:var(--ink);cursor:pointer;padding:0;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
-.index button:hover{color:var(--accent)}
-@media (max-width:640px){
-form{flex-direction:column}
-.how{grid-template-columns:minmax(0,1fr)}
-.how div + div{border-left:0;border-top:1px solid var(--line)}
-}
-</style>
-<div class="page">
-<div class="top"><span class="who">Angel Lakra</span><span class="st">● open to work · Bengaluru</span></div>
-<header>
-<h1>Ask me <em>anything</em> about my work.</h1>
-<p class="lede">English, Hindi or Hinglish. The answer is always one of my own pre-written cards: the AI only chooses which card to show, so it can't make anything up about me. It's the same rule I built into a cafe's POS.</p>
-</header>
-<form id="ask" autocomplete="off">
-<label for="q" class="visually-hidden" style="position:absolute;left:-9999px">Your question</label>
-<input id="q" name="q" placeholder="e.g. Have you built anything with FastAPI?" maxlength="200">
-<button type="submit">Ask</button>
-</form>
-<div class="tries" id="tries" aria-label="Example questions"></div>
-<section class="answer" id="answer" aria-live="polite"></section>
-<section class="how" aria-label="How answers are chosen">
-<div><span class="n">step 1</span><b>You ask</b><p>Any wording, any of three languages.</p></div>
-<div><span class="n">step 2</span><b>A router picks one card</b><p>Claude returns only a card id and a language flag. If it isn't available, a keyword matcher does the same job.</p></div>
-<div><span class="n">step 3</span><b>A fixed card answers</b><p>Every fact on screen was written by me. Nothing is generated.</p></div>
-</section>
-<p class="index" id="index"></p>
-</div>
-<script>
-const CARDS={
-intro:{k:"About",t:"Full-stack engineer, Python first.",hi:"Main ek full-stack engineer hoon. Chhote business ke liye software banata hoon.",
-body:`<p>I've been shipping software for 5+ years. I led frontend at Chain Labs for nearly four, and now I build POS systems, back-office tools and LLM features that small businesses run on every day.</p>`,rel:["hire","work","contact"]},
-hire:{k:"For recruiters",t:"What I'd bring to your team",hi:"Team lead raha hoon, aur akele poora system bana sakta hoon.",
-body:`<ul><li>3 years 8 months as Frontend Tech Lead at Chain Labs</li><li>Whole systems on my own now: schema, API, UI, deploy</li><li>Python backends with FastAPI, SQLAlchemy and tests</li><li>LLM features with guardrails</li></ul><p>Open to contract, freelance or full-time. Bengaluru, remote or hybrid.</p>`,rel:["experience","ai","contact"]},
-business:{k:"For shop and cafe owners",t:"Software built around how your shop works",hi:"Billing, stock aur cash ka hisaab, aapki dukaan ke hisaab se.",
-body:`<ul><li>Billing with GST, kitchen chits and 80mm receipts</li><li>Stock, purchases and a daily cash count</li><li>Ask your numbers in Hindi or English</li><li>Websites that give a brand a real presence</li></ul>`,rel:["lily","marys","contact"]},
-work:{k:"Index",t:"Everything I've built recently",hi:"Ye raha mera kaam.",
-body:`<ul><li><b>Lily Cafe POS</b>: point of sale in daily use</li><li><b>SalonOS</b>: local-first salon management</li><li><b>Mary's Kitchen</b>: an ink-drawn scroll website</li><li><b>Staff checklists</b>: SOPs in English and Hindi</li><li><b>Aanka</b>: a WhatsApp business partner, early stage</li><li><b>DiskMap</b> and a <b>notch app</b>: my own Mac apps</li></ul>`,rel:["lily","salon","marys","aanka","mac"]},
-lily:{k:"Point of sale · in daily use",t:"Lily Cafe POS",hi:"Ek cafe ka poora counter, ek system mein.",
-body:`<p>For Lily Cafe by Mary's Kitchen in Ranchi. Waiters order from their phones, the kitchen gets a printed chit, and the owner closes the day with a cash count.</p><ul><li>Split payments across UPI, cash and card</li><li>GST billing with a CGST/SGST split; amounts stored in paise</li><li>A Windows print agent for receipts and kitchen chits</li><li>An Ask box built on the same rule as this page</li></ul>`,
-tags:["FastAPI","SQLAlchemy 2","React 18","TypeScript","Fly.io","Vercel","MCP"],links:[["Source on GitHub","https://github.com/angelxlakra/lily-cafe-pos"]],rel:["ai","salon","business"]},
-salon:{k:"Salon management · in development",t:"SalonOS",hi:"Salon ke liye billing aur appointments, bina internet ke bhi.",
-body:`<p>A local-first POS, appointments, inventory and accounting system for unisex salons. It runs on the salon's own network, so billing keeps working when the internet doesn't.</p><ul><li>Owner, receptionist and staff roles</li><li>Appointment conflict detection</li><li>Nightly reports and backups</li></ul>`,
-tags:["FastAPI","PostgreSQL","Redis + RQ","Next.js 14","Docker Compose"],links:[["Source on GitHub","https://github.com/angelxlakra/efs-salon-os"]],rel:["lily","stack","business"]},
-marys:{k:"Brand website",t:"Mary's Kitchen",hi:"Do cafe ki kahani, ink drawing mein.",
-body:`<p>A scroll story for two Ranchi cafes. It opens at night at the roadside stall and turns to sunrise inside the second cafe, drawn as pen-and-ink linework generated in Python.</p><ul><li>A ramen bowl that comes apart as you scroll</li><li>A 3D model of the stall under the trees</li></ul>`,
-tags:["GSAP","SVG","Python","Vercel"],links:[["Ramen bowl","https://marys-ramen-unfolded.vercel.app"],["3D stall","https://marys-kitchen-3d.vercel.app"]],rel:["lily","frontend","business"]},
-aanka:{k:"Product · early stage",t:"Aanka",hi:"Aapke business ka partner, WhatsApp par.",
-body:`<p>A business partner for shop and salon owners that lives in WhatsApp. It leads with this week's figure, points out one thing, and suggests one action, in warm Hinglish.</p>`,links:[["Brand identity","https://aanka.vercel.app"]],rel:["ai","business","work"]},
-mac:{k:"Side projects",t:"DiskMap and a notch app",hi:"Apne Mac ke liye khud ke apps.",
-body:`<p><b>DiskMap</b> is my own DaisyDisk, a visual map of what's filling a Mac's drive, built in Python and pywebview because I didn't want to pay for one.</p><p>The <b>notch app</b> is a take on Boring Notch, built with my brother, that turns the MacBook notch into a small live surface.</p>`,rel:["work","stack"]},
-ai:{k:"AI, done carefully",t:"How I use LLMs",hi:"AI sirf sahi report chunta hai. Hisaab backend karta hai.",
-body:`<p>In the Lily Cafe POS the owner can ask "kal ka cash counter" or "which dish did best since August". The model only picks which report and which dates; the backend computes every number. This page works the same way.</p><ul><li>LLM routing and tool use</li><li>Agents and MCP servers, including a read-only MCP server for the POS</li><li>n8n automation</li></ul>`,rel:["lily","hire","stack"]},
-stack:{k:"Backend",t:"Python and FastAPI",hi:"Mera main kaam Python mein hota hai.",
-body:`<p>Python is my daily language. Both POS systems use FastAPI with SQLAlchemy and Pydantic, tested with pytest and managed with uv.</p><ul><li>PostgreSQL, SQLite, Redis + RQ</li><li>Docker Compose and Nginx for local-first installs</li><li>Fly.io and Vercel for hosted ones</li></ul>`,rel:["lily","salon","frontend"]},
-frontend:{k:"Frontend",t:"React, TypeScript and Next.js",hi:"Frontend mein chaar saal team lead raha hoon.",
-body:`<p>Most of my career is frontend: nearly four years leading it at Chain Labs, building dApp frontends, minting pages and event platforms. I still write React and TypeScript for every system I build, plus GSAP for scroll-driven sites.</p>`,rel:["experience","marys","stack"]},
-experience:{k:"Experience",t:"Where I've worked",hi:"Mera kaam ka anubhav.",
-body:`<ul><li><b>Chain Labs</b>, Senior Software Developer (freelance), Jun 2025 – now</li><li><b>Chain Labs</b>, Frontend Tech Lead, Jul 2021 – Feb 2025</li><li><b>Yellow Class</b>, Frontend Developer intern, Jan – Jun 2021</li><li><b>BIT Mesra</b>, studies</li></ul>`,rel:["hire","frontend","contact"]},
-contact:{k:"Contact",t:"Let's talk",hi:"Baat karni ho toh yahan likhiye.",
-body:`<dl class="c"><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/ngllakra" target="_blank" rel="noopener">linkedin.com/in/ngllakra</a></dd><dt>GitHub</dt><dd><a href="https://github.com/angelxlakra" target="_blank" rel="noopener">github.com/angelxlakra</a></dd><dt>Based in</dt><dd>Bengaluru, IST · remote or hybrid</dd></dl>`,rel:["hire","business"]},
-none:{k:"Not on my cards",t:"I haven't written an answer for that",hi:"Iska jawab mere paas likha hua nahi hai.",
-body:`<p>Rather than guess, this page only answers from what I've written. Try one of these, or ask me directly.</p>`,rel:["work","hire","contact"]}
-};
-const LABEL={intro:"About me",hire:"Hiring",business:"For businesses",work:"All work",lily:"Lily Cafe POS",salon:"SalonOS",marys:"Mary's Kitchen",aanka:"Aanka",mac:"Mac apps",ai:"AI",stack:"Python",frontend:"Frontend",experience:"Experience",contact:"Contact",none:"Fallback"};
-const KEYS={
-lily:["lily","pos","point of sale","cafe","café","restaurant","billing","bill","gst","kot","receipt","printer","upi","cash"],
-salon:["salon","parlour","parlor","appointment","booking","local-first","offline"],
-marys:["mary","website","site","ramen","scroll","3d","ink","animation","gsap","design"],
-aanka:["aanka","whatsapp","startup","product"],
-mac:["mac","macos","diskmap","daisydisk","notch","side project","apple"],
-ai:["ai","llm","agent","gpt","claude","mcp","automation","n8n","model","chatbot"],
-stack:["python","fastapi","backend","sqlalchemy","postgres","database","api","docker","redis","django"],
-frontend:["react","frontend","front-end","typescript","next","javascript","ui","web3","blockchain"],
-experience:["experience","worked","job","company","chain labs","yellow class","years","career","education","college","bit","mesra","degree","history"],
-hire:["hire","hiring","recruit","role","full-time","full time","contract","freelance","available","notice","join","salary","cv","resume"],
-business:["shop","dukaan","dukan","business","owner","store","stock","inventory","customer","kirana"],
-contact:["contact","email","reach","call","phone","linkedin","github","talk","baat","number"],
-work:["work","projects","portfolio","built","kaam","banaya"],
-intro:["who","about","yourself","kaun","introduce"]
-};
-const HINGLISH=/\b(kya|kaise|kaun|aap|aapne|ap|hai|hain|ho|mein|mujhe|kitna|kitne|banaya|bana|sakte|karte|kaam|dukaan|dukan|bhi|nahi|chahiye|batao|bataiye|ka|ki|ke)\b|[ऀ-ॿ]/i;
-function keywordRoute(q){
-const s=q.toLowerCase();let best="none",score=0;
-for(const [id,words] of Object.entries(KEYS)){
-let n=0;words.forEach(w=>{const re=new RegExp('(^|[^a-z0-9])'+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'([^a-z0-9]|$)');if(re.test(s))n+=w.length>3?2:1});
-if(n>score){score=n;best=id}
-}
-return {card:best,hinglish:HINGLISH.test(q)};
-}
-let samplerP=(async()=>{try{return window.claude?.use?await window.claude.use("sample"):null}catch(e){return null}})();
-let samplerDead=false;
-async function route(q){
-const sample=samplerDead?null:await Promise.race([samplerP,new Promise(r=>setTimeout(()=>r(null),1500))]);
-if(sample){
-try{
-const list=Object.entries(CARDS).map(([id,c])=>`${id}: ${c.k} — ${c.t}`).join("\n");
-const out=await sample.json(
-`You route questions on a developer's portfolio to ONE pre-written answer card. Do not answer the question yourself.
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <style>
+      :root {
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      body {
+        margin: 0;
+      }
+      img {
+        max-width: 100%;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .lib-back {
+        position: fixed;
+        left: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        z-index: 99999;
+        font:
+          600 12px/1 system-ui,
+          -apple-system,
+          sans-serif;
+        letter-spacing: 0.02em;
+        background: rgba(18, 20, 25, 0.88);
+        color: #f1e9d8;
+        text-decoration: none;
+        padding: 9px 13px 9px 11px;
+        border-radius: 999px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        display: inline-flex;
+        gap: 7px;
+        align-items: center;
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+      }
+      .lib-back:hover {
+        background: #000;
+      }
+      .lib-back svg {
+        flex: none;
+      }
+    </style>
+  </head>
+  <body>
+    <title>Ask Angel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&family=DM+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #f1f3ee;
+        --surface: #ffffff;
+        --ink: #18201b;
+        --muted: #5e6a62;
+        --line: #d5dbd3;
+        --accent: #1e7a4f;
+        --accent-soft: #dcefe3;
+        --mark: #f3d36b;
+        --font-display: "Familjen Grotesk", system-ui, sans-serif;
+        --font-body: "Atkinson Hyperlegible", system-ui, sans-serif;
+        --font-mono: "DM Mono", ui-monospace, Menlo, monospace;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #121614;
+          --surface: #1a201c;
+          --ink: #e6ece7;
+          --muted: #9aa79e;
+          --line: #2d3631;
+          --accent: #5ccb92;
+          --accent-soft: #1e3326;
+          --mark: #8c7426;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #121614;
+        --surface: #1a201c;
+        --ink: #e6ece7;
+        --muted: #9aa79e;
+        --line: #2d3631;
+        --accent: #5ccb92;
+        --accent-soft: #1e3326;
+        --mark: #8c7426;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 16.5px;
+        line-height: 1.6;
+        padding-inline: clamp(16px, 4vw, 40px);
+        padding-block: 0;
+      }
+      a {
+        color: var(--accent);
+        text-underline-offset: 3px;
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .page {
+        max-width: 860px;
+        margin-inline: auto;
+        padding-block: 40px 64px;
+        display: grid;
+        gap: 28px;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .top .who {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.05rem;
+      }
+      .top .st {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        color: var(--accent);
+      }
+      h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2.6rem, 7vw, 4.6rem);
+        line-height: 0.98;
+        letter-spacing: -0.025em;
+        margin: 0;
+        text-wrap: balance;
+      }
+      h1 em {
+        font-style: normal;
+        background: linear-gradient(transparent 62%, var(--mark) 62%);
+      }
+      .lede {
+        margin: 12px 0 0;
+        color: var(--muted);
+        max-width: 58ch;
+      }
+      form {
+        display: flex;
+        gap: 10px;
+        background: var(--surface);
+        border: 1.5px solid var(--ink);
+        padding: 8px;
+        box-shadow: 6px 6px 0 var(--ink);
+      }
+      form input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        background: transparent;
+        font: inherit;
+        font-size: 1.1rem;
+        color: var(--ink);
+        padding: 8px 10px;
+      }
+      form input::placeholder {
+        color: var(--muted);
+      }
+      form input:focus {
+        outline: none;
+      }
+      form button {
+        font: inherit;
+        font-weight: 700;
+        background: var(--ink);
+        color: var(--bg);
+        border: 0;
+        padding: 10px 18px;
+        cursor: pointer;
+      }
+      form button:hover {
+        background: var(--accent);
+      }
+      .tries {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: -10px;
+      }
+      .tries button {
+        font: inherit;
+        font-size: 0.92rem;
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        padding: 5px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .tries button:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .answer {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        min-height: 240px;
+      }
+      .route {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 14px;
+        align-items: center;
+        padding: 10px 18px;
+        border-bottom: 1px solid var(--line);
+        font-family: var(--font-mono);
+        font-size: 0.76rem;
+        color: var(--muted);
+      }
+      .route b {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .route .arrow {
+        opacity: 0.6;
+      }
+      .route .pill {
+        background: var(--accent-soft);
+        color: var(--ink);
+        padding: 1px 8px;
+        border-radius: 4px;
+      }
+      .cardbody {
+        padding: 22px 24px 26px;
+      }
+      .cardbody .k {
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .cardbody h2 {
+        font-family: var(--font-display);
+        font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+        margin: 4px 0 10px;
+        letter-spacing: -0.015em;
+        line-height: 1.08;
+        text-wrap: balance;
+      }
+      .cardbody .hi {
+        background: var(--accent-soft);
+        padding: 8px 12px;
+        margin: 0 0 12px;
+        border-left: 3px solid var(--accent);
+      }
+      .cardbody p {
+        margin: 0 0 10px;
+        max-width: 64ch;
+      }
+      .cardbody ul {
+        margin: 6px 0 10px;
+        padding-left: 20px;
+      }
+      .cardbody li {
+        margin-bottom: 5px;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .tags span {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        border: 1px solid var(--line);
+        padding: 2px 8px;
+      }
+      .go {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+        font-weight: 700;
+      }
+      .rel {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px dashed var(--line);
+        align-items: center;
+      }
+      .rel span {
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        color: var(--muted);
+      }
+      .rel button {
+        font: inherit;
+        font-size: 0.9rem;
+        background: none;
+        border: 0;
+        color: var(--accent);
+        cursor: pointer;
+        padding: 2px 4px;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .thinking {
+        padding: 22px 24px;
+        color: var(--muted);
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+      }
+      .todo {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        background: var(--accent-soft);
+        padding: 0 6px;
+      }
+      dl.c {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 6px 18px;
+        margin: 8px 0 0;
+      }
+      dl.c dt {
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding-top: 3px;
+      }
+      dl.c dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+      }
+      .how {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+        border: 1px solid var(--line);
+      }
+      .how div {
+        padding: 16px 18px;
+        min-width: 0;
+      }
+      .how div + div {
+        border-left: 1px solid var(--line);
+      }
+      .how .n {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+      .how b {
+        display: block;
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        margin: 2px 0 4px;
+      }
+      .how p {
+        margin: 0;
+        font-size: 0.92rem;
+        color: var(--muted);
+      }
+      .index {
+        font-size: 0.92rem;
+        color: var(--muted);
+      }
+      .index button {
+        font: inherit;
+        background: none;
+        border: 0;
+        color: var(--ink);
+        cursor: pointer;
+        padding: 0;
+        text-decoration: underline;
+        text-decoration-color: var(--line);
+        text-underline-offset: 3px;
+      }
+      .index button:hover {
+        color: var(--accent);
+      }
+      @media (max-width: 640px) {
+        form {
+          flex-direction: column;
+        }
+        .how {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .how div + div {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+        }
+      }
+    </style>
+    <div class="page">
+      <div class="top">
+        <span class="who">Angel Lakra</span
+        ><span class="st">● open to work · Bengaluru</span>
+      </div>
+      <header>
+        <h1>Ask me <em>anything</em> about my work.</h1>
+        <p class="lede">
+          English, Hindi or Hinglish. The answer is always one of my own
+          pre-written cards: the AI only chooses which card to show, so it can't
+          make anything up about me. It's the same rule I built into a cafe's
+          POS.
+        </p>
+      </header>
+      <form id="ask" autocomplete="off">
+        <label
+          for="q"
+          class="visually-hidden"
+          style="position: absolute; left: -9999px"
+          >Your question</label
+        >
+        <input
+          id="q"
+          name="q"
+          placeholder="e.g. Have you built anything with FastAPI?"
+          maxlength="200"
+        />
+        <button type="submit">Ask</button>
+      </form>
+      <div class="tries" id="tries" aria-label="Example questions"></div>
+      <section class="answer" id="answer" aria-live="polite"></section>
+      <section class="how" aria-label="How answers are chosen">
+        <div>
+          <span class="n">step 1</span><b>You ask</b>
+          <p>Any wording, any of three languages.</p>
+        </div>
+        <div>
+          <span class="n">step 2</span><b>A router picks one card</b>
+          <p>
+            Claude returns only a card id and a language flag. If it isn't
+            available, a keyword matcher does the same job.
+          </p>
+        </div>
+        <div>
+          <span class="n">step 3</span><b>A fixed card answers</b>
+          <p>Every fact on screen was written by me. Nothing is generated.</p>
+        </div>
+      </section>
+      <p class="index" id="index"></p>
+    </div>
+    <script>
+      const CARDS = {
+        intro: {
+          k: "About",
+          t: "Full-stack engineer, Python first.",
+          hi: "Main ek full-stack engineer hoon. Chhote business ke liye software banata hoon.",
+          body: `<p>I've been shipping software for 5+ years. I led frontend at Chain Labs for nearly four, and now I build POS systems, back-office tools and LLM features that small businesses run on every day.</p>`,
+          rel: ["hire", "work", "contact"],
+        },
+        hire: {
+          k: "For recruiters",
+          t: "What I'd bring to your team",
+          hi: "Team lead raha hoon, aur akele poora system bana sakta hoon.",
+          body: `<ul><li>3 years 8 months as Frontend Tech Lead at Chain Labs</li><li>Whole systems on my own now: schema, API, UI, deploy</li><li>Python backends with FastAPI, SQLAlchemy and tests</li><li>LLM features with guardrails</li></ul><p>Open to contract, freelance or full-time. Bengaluru, remote or hybrid.</p>`,
+          rel: ["experience", "ai", "contact"],
+        },
+        business: {
+          k: "For shop and cafe owners",
+          t: "Software built around how your shop works",
+          hi: "Billing, stock aur cash ka hisaab, aapki dukaan ke hisaab se.",
+          body: `<ul><li>Billing with GST, kitchen chits and 80mm receipts</li><li>Stock, purchases and a daily cash count</li><li>Ask your numbers in Hindi or English</li><li>Websites that give a brand a real presence</li></ul>`,
+          rel: ["lily", "marys", "contact"],
+        },
+        work: {
+          k: "Index",
+          t: "Everything I've built recently",
+          hi: "Ye raha mera kaam.",
+          body: `<ul><li><b>Lily Cafe POS</b>: point of sale in daily use</li><li><b>SalonOS</b>: local-first salon management</li><li><b>Mary's Kitchen</b>: an ink-drawn scroll website</li><li><b>Staff checklists</b>: SOPs in English and Hindi</li><li><b>Aanka</b>: a WhatsApp business partner, early stage</li><li><b>DiskMap</b> and a <b>notch app</b>: my own Mac apps</li></ul>`,
+          rel: ["lily", "salon", "marys", "aanka", "mac"],
+        },
+        lily: {
+          k: "Point of sale · in daily use",
+          t: "Lily Cafe POS",
+          hi: "Ek cafe ka poora counter, ek system mein.",
+          body: `<p>For Lily Cafe by Mary's Kitchen in Ranchi. Waiters order from their phones, the kitchen gets a printed chit, and the owner closes the day with a cash count.</p><ul><li>Split payments across UPI, cash and card</li><li>GST billing with a CGST/SGST split; amounts stored in paise</li><li>A Windows print agent for receipts and kitchen chits</li><li>An Ask box built on the same rule as this page</li></ul>`,
+          tags: [
+            "FastAPI",
+            "SQLAlchemy 2",
+            "React 18",
+            "TypeScript",
+            "Fly.io",
+            "Vercel",
+            "MCP",
+          ],
+          links: [
+            [
+              "Source on GitHub",
+              "https://github.com/angelxlakra/lily-cafe-pos",
+            ],
+          ],
+          rel: ["ai", "salon", "business"],
+        },
+        salon: {
+          k: "Salon management · in development",
+          t: "SalonOS",
+          hi: "Salon ke liye billing aur appointments, bina internet ke bhi.",
+          body: `<p>A local-first POS, appointments, inventory and accounting system for unisex salons. It runs on the salon's own network, so billing keeps working when the internet doesn't.</p><ul><li>Owner, receptionist and staff roles</li><li>Appointment conflict detection</li><li>Nightly reports and backups</li></ul>`,
+          tags: [
+            "FastAPI",
+            "PostgreSQL",
+            "Redis + RQ",
+            "Next.js 14",
+            "Docker Compose",
+          ],
+          links: [
+            ["Source on GitHub", "https://github.com/angelxlakra/efs-salon-os"],
+          ],
+          rel: ["lily", "stack", "business"],
+        },
+        marys: {
+          k: "Brand website",
+          t: "Mary's Kitchen",
+          hi: "Do cafe ki kahani, ink drawing mein.",
+          body: `<p>A scroll story for two Ranchi cafes. It opens at night at the roadside stall and turns to sunrise inside the second cafe, drawn as pen-and-ink linework generated in Python.</p><ul><li>A ramen bowl that comes apart as you scroll</li><li>A 3D model of the stall under the trees</li></ul>`,
+          tags: ["GSAP", "SVG", "Python", "Vercel"],
+          links: [
+            ["Ramen bowl", "https://marys-ramen-unfolded.vercel.app"],
+            ["3D stall", "https://marys-kitchen-3d.vercel.app"],
+          ],
+          rel: ["lily", "frontend", "business"],
+        },
+        aanka: {
+          k: "Product · early stage",
+          t: "Aanka",
+          hi: "Aapke business ka partner, WhatsApp par.",
+          body: `<p>A business partner for shop and salon owners that lives in WhatsApp. It leads with this week's figure, points out one thing, and suggests one action, in warm Hinglish.</p>`,
+          links: [["Brand identity", "https://aanka.vercel.app"]],
+          rel: ["ai", "business", "work"],
+        },
+        mac: {
+          k: "Side projects",
+          t: "DiskMap and a notch app",
+          hi: "Apne Mac ke liye khud ke apps.",
+          body: `<p><b>DiskMap</b> is my own DaisyDisk, a visual map of what's filling a Mac's drive, built in Python and pywebview because I didn't want to pay for one.</p><p>The <b>notch app</b> is a take on Boring Notch, built with my brother, that turns the MacBook notch into a small live surface.</p>`,
+          rel: ["work", "stack"],
+        },
+        ai: {
+          k: "AI, done carefully",
+          t: "How I use LLMs",
+          hi: "AI sirf sahi report chunta hai. Hisaab backend karta hai.",
+          body: `<p>In the Lily Cafe POS the owner can ask "kal ka cash counter" or "which dish did best since August". The model only picks which report and which dates; the backend computes every number. This page works the same way.</p><ul><li>LLM routing and tool use</li><li>Agents and MCP servers, including a read-only MCP server for the POS</li><li>n8n automation</li></ul>`,
+          rel: ["lily", "hire", "stack"],
+        },
+        stack: {
+          k: "Backend",
+          t: "Python and FastAPI",
+          hi: "Mera main kaam Python mein hota hai.",
+          body: `<p>Python is my daily language. Both POS systems use FastAPI with SQLAlchemy and Pydantic, tested with pytest and managed with uv.</p><ul><li>PostgreSQL, SQLite, Redis + RQ</li><li>Docker Compose and Nginx for local-first installs</li><li>Fly.io and Vercel for hosted ones</li></ul>`,
+          rel: ["lily", "salon", "frontend"],
+        },
+        frontend: {
+          k: "Frontend",
+          t: "React, TypeScript and Next.js",
+          hi: "Frontend mein chaar saal team lead raha hoon.",
+          body: `<p>Most of my career is frontend: nearly four years leading it at Chain Labs, building dApp frontends, minting pages and event platforms. I still write React and TypeScript for every system I build, plus GSAP for scroll-driven sites.</p>`,
+          rel: ["experience", "marys", "stack"],
+        },
+        experience: {
+          k: "Experience",
+          t: "Where I've worked",
+          hi: "Mera kaam ka anubhav.",
+          body: `<ul><li><b>Chain Labs</b>, Senior Software Developer (freelance), Jun 2025 – now</li><li><b>Chain Labs</b>, Frontend Tech Lead, Jul 2021 – Feb 2025</li><li><b>Yellow Class</b>, Frontend Developer intern, Jan – Jun 2021</li><li><b>BIT Mesra</b>, studies</li></ul>`,
+          rel: ["hire", "frontend", "contact"],
+        },
+        contact: {
+          k: "Contact",
+          t: "Let's talk",
+          hi: "Baat karni ho toh yahan likhiye.",
+          body: `<dl class="c"><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/ngllakra" target="_blank" rel="noopener">linkedin.com/in/ngllakra</a></dd><dt>GitHub</dt><dd><a href="https://github.com/angelxlakra" target="_blank" rel="noopener">github.com/angelxlakra</a></dd><dt>Based in</dt><dd>Bengaluru, IST · remote or hybrid</dd></dl>`,
+          rel: ["hire", "business"],
+        },
+        none: {
+          k: "Not on my cards",
+          t: "I haven't written an answer for that",
+          hi: "Iska jawab mere paas likha hua nahi hai.",
+          body: `<p>Rather than guess, this page only answers from what I've written. Try one of these, or ask me directly.</p>`,
+          rel: ["work", "hire", "contact"],
+        },
+      };
+      const LABEL = {
+        intro: "About me",
+        hire: "Hiring",
+        business: "For businesses",
+        work: "All work",
+        lily: "Lily Cafe POS",
+        salon: "SalonOS",
+        marys: "Mary's Kitchen",
+        aanka: "Aanka",
+        mac: "Mac apps",
+        ai: "AI",
+        stack: "Python",
+        frontend: "Frontend",
+        experience: "Experience",
+        contact: "Contact",
+        none: "Fallback",
+      };
+      const KEYS = {
+        lily: [
+          "lily",
+          "pos",
+          "point of sale",
+          "cafe",
+          "café",
+          "restaurant",
+          "billing",
+          "bill",
+          "gst",
+          "kot",
+          "receipt",
+          "printer",
+          "upi",
+          "cash",
+        ],
+        salon: [
+          "salon",
+          "parlour",
+          "parlor",
+          "appointment",
+          "booking",
+          "local-first",
+          "offline",
+        ],
+        marys: [
+          "mary",
+          "website",
+          "site",
+          "ramen",
+          "scroll",
+          "3d",
+          "ink",
+          "animation",
+          "gsap",
+          "design",
+        ],
+        aanka: ["aanka", "whatsapp", "startup", "product"],
+        mac: [
+          "mac",
+          "macos",
+          "diskmap",
+          "daisydisk",
+          "notch",
+          "side project",
+          "apple",
+        ],
+        ai: [
+          "ai",
+          "llm",
+          "agent",
+          "gpt",
+          "claude",
+          "mcp",
+          "automation",
+          "n8n",
+          "model",
+          "chatbot",
+        ],
+        stack: [
+          "python",
+          "fastapi",
+          "backend",
+          "sqlalchemy",
+          "postgres",
+          "database",
+          "api",
+          "docker",
+          "redis",
+          "django",
+        ],
+        frontend: [
+          "react",
+          "frontend",
+          "front-end",
+          "typescript",
+          "next",
+          "javascript",
+          "ui",
+          "web3",
+          "blockchain",
+        ],
+        experience: [
+          "experience",
+          "worked",
+          "job",
+          "company",
+          "chain labs",
+          "yellow class",
+          "years",
+          "career",
+          "education",
+          "college",
+          "bit",
+          "mesra",
+          "degree",
+          "history",
+        ],
+        hire: [
+          "hire",
+          "hiring",
+          "recruit",
+          "role",
+          "full-time",
+          "full time",
+          "contract",
+          "freelance",
+          "available",
+          "notice",
+          "join",
+          "salary",
+          "cv",
+          "resume",
+        ],
+        business: [
+          "shop",
+          "dukaan",
+          "dukan",
+          "business",
+          "owner",
+          "store",
+          "stock",
+          "inventory",
+          "customer",
+          "kirana",
+        ],
+        contact: [
+          "contact",
+          "email",
+          "reach",
+          "call",
+          "phone",
+          "linkedin",
+          "github",
+          "talk",
+          "baat",
+          "number",
+        ],
+        work: ["work", "projects", "portfolio", "built", "kaam", "banaya"],
+        intro: ["who", "about", "yourself", "kaun", "introduce"],
+      };
+      const HINGLISH =
+        /\b(kya|kaise|kaun|aap|aapne|ap|hai|hain|ho|mein|mujhe|kitna|kitne|banaya|bana|sakte|karte|kaam|dukaan|dukan|bhi|nahi|chahiye|batao|bataiye|ka|ki|ke)\b|[ऀ-ॿ]/i;
+      function keywordRoute(q) {
+        const s = q.toLowerCase();
+        let best = "none",
+          score = 0;
+        for (const [id, words] of Object.entries(KEYS)) {
+          let n = 0;
+          words.forEach((w) => {
+            const re = new RegExp(
+              "(^|[^a-z0-9])" +
+                w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") +
+                "([^a-z0-9]|$)",
+            );
+            if (re.test(s)) n += w.length > 3 ? 2 : 1;
+          });
+          if (n > score) {
+            score = n;
+            best = id;
+          }
+        }
+        return { card: best, hinglish: HINGLISH.test(q) };
+      }
+      let samplerP = (async () => {
+        try {
+          return window.claude?.use ? await window.claude.use("sample") : null;
+        } catch (e) {
+          return null;
+        }
+      })();
+      let samplerDead = false;
+      async function route(q) {
+        const sample = samplerDead
+          ? null
+          : await Promise.race([
+              samplerP,
+              new Promise((r) => setTimeout(() => r(null), 1500)),
+            ]);
+        if (sample) {
+          try {
+            const list = Object.entries(CARDS)
+              .map(([id, c]) => `${id}: ${c.k} — ${c.t}`)
+              .join("\n");
+            const out = await sample.json(
+              `You route questions on a developer's portfolio to ONE pre-written answer card. Do not answer the question yourself.
 Cards:
 ${list}
 Rules: pick the single best card id. Use "none" if no card covers it or the question is not about Angel's work. Set hinglish true if the question is in Hindi or Hinglish.
-Question: """${q.slice(0,200)}"""
+Question: """${q.slice(0, 200)}"""
 Reply with JSON only: {"card":"<id>","hinglish":true|false}`,
-{modelTier:"quick"});
-if(out&&CARDS[out.card])return {card:out.card,hinglish:!!out.hinglish,by:"Claude"};
-}catch(e){if(e&&(e.code==="not_granted"||e.code==="rate_limited"))samplerDead=true}
-}
-return {...keywordRoute(q),by:"keyword match"};
-}
-const ans=document.getElementById('answer');
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function show(id,{q,hinglish,by}={}){
-const c=CARDS[id];
-ans.innerHTML=`<div class="route">${q?`<span>asked <b>"${esc(q)}"</b></span><span class="arrow">→</span><span>routed by <b>${esc(by)}</b></span><span class="arrow">→</span>`:`<span>opened</span><span class="arrow">→</span>`}<span class="pill">card: ${id}</span>${hinglish?`<span class="pill">hinglish</span>`:""}</div>
-<div class="cardbody"><div class="k">${c.k}</div><h2>${c.t}</h2>${hinglish&&c.hi?`<p class="hi" lang="hi-Latn">${c.hi}</p>`:""}${c.body}
-${c.tags?`<div class="tags">${c.tags.map(t=>`<span>${t}</span>`).join("")}</div>`:""}
-${c.links?`<div class="go">${c.links.map(l=>`<a href="${l[1]}" target="_blank" rel="noopener">${l[0]} →</a>`).join("")}</div>`:""}
-<div class="rel"><span>related</span>${c.rel.map(r=>`<button data-card="${r}">${LABEL[r]}</button>`).join("")}</div></div>`;
-}
-async function ask(q){
-q=q.trim();if(!q)return;
-ans.innerHTML=`<div class="thinking">Picking a card for "${esc(q)}"…</div>`;
-const r=await route(q);show(r.card,{q,hinglish:r.hinglish,by:r.by});
-}
-document.getElementById('ask').addEventListener('submit',e=>{e.preventDefault();ask(document.getElementById('q').value)});
-const tries=["Have you built anything with FastAPI?","kya aap mere cafe ke liye billing software bana sakte ho?","Are you open to full-time roles?","How do you stop an LLM making up numbers?","What's your favourite cricket team?"];
-const tbox=document.getElementById('tries');
-tries.forEach(t=>{const b=document.createElement('button');b.type="button";b.textContent=t;b.addEventListener('click',()=>{document.getElementById('q').value=t;ask(t)});tbox.appendChild(b)});
-document.addEventListener('click',e=>{const b=e.target.closest('[data-card]');if(b)show(b.dataset.card)});
-document.getElementById('index').innerHTML="All cards: "+Object.keys(LABEL).filter(k=>k!=="none").map(k=>`<button data-card="${k}">${LABEL[k]}</button>`).join(" · ");
-show("intro");
-</script>
-<a class="lib-back" href="/" aria-label="Back to the library"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg>Library</a>
-</body></html>
+              { modelTier: "quick" },
+            );
+            if (out && CARDS[out.card])
+              return { card: out.card, hinglish: !!out.hinglish, by: "Claude" };
+          } catch (e) {
+            if (e && (e.code === "not_granted" || e.code === "rate_limited"))
+              samplerDead = true;
+          }
+        }
+        return { ...keywordRoute(q), by: "keyword match" };
+      }
+      const ans = document.getElementById("answer");
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"]/g,
+          (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+        );
+      function show(id, { q, hinglish, by } = {}) {
+        const c = CARDS[id];
+        ans.innerHTML = `<div class="route">${q ? `<span>asked <b>"${esc(q)}"</b></span><span class="arrow">→</span><span>routed by <b>${esc(by)}</b></span><span class="arrow">→</span>` : `<span>opened</span><span class="arrow">→</span>`}<span class="pill">card: ${id}</span>${hinglish ? `<span class="pill">hinglish</span>` : ""}</div>
+<div class="cardbody"><div class="k">${c.k}</div><h2>${c.t}</h2>${hinglish && c.hi ? `<p class="hi" lang="hi-Latn">${c.hi}</p>` : ""}${c.body}
+${c.tags ? `<div class="tags">${c.tags.map((t) => `<span>${t}</span>`).join("")}</div>` : ""}
+${c.links ? `<div class="go">${c.links.map((l) => `<a href="${l[1]}" target="_blank" rel="noopener">${l[0]} →</a>`).join("")}</div>` : ""}
+<div class="rel"><span>related</span>${c.rel.map((r) => `<button data-card="${r}">${LABEL[r]}</button>`).join("")}</div></div>`;
+      }
+      async function ask(q) {
+        q = q.trim();
+        if (!q) return;
+        ans.innerHTML = `<div class="thinking">Picking a card for "${esc(q)}"…</div>`;
+        const r = await route(q);
+        show(r.card, { q, hinglish: r.hinglish, by: r.by });
+      }
+      document.getElementById("ask").addEventListener("submit", (e) => {
+        e.preventDefault();
+        ask(document.getElementById("q").value);
+      });
+      const tries = [
+        "Have you built anything with FastAPI?",
+        "kya aap mere cafe ke liye billing software bana sakte ho?",
+        "Are you open to full-time roles?",
+        "How do you stop an LLM making up numbers?",
+        "What's your favourite cricket team?",
+      ];
+      const tbox = document.getElementById("tries");
+      tries.forEach((t) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = t;
+        b.addEventListener("click", () => {
+          document.getElementById("q").value = t;
+          ask(t);
+        });
+        tbox.appendChild(b);
+      });
+      document.addEventListener("click", (e) => {
+        const b = e.target.closest("[data-card]");
+        if (b) show(b.dataset.card);
+      });
+      document.getElementById("index").innerHTML =
+        "All cards: " +
+        Object.keys(LABEL)
+          .filter((k) => k !== "none")
+          .map((k) => `<button data-card="${k}">${LABEL[k]}</button>`)
+          .join(" · ");
+      show("intro");
+    </script>
+    <a class="lib-back" href="/" aria-label="Back to the library"
+      ><svg
+        width="13"
+        height="13"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.4"
+      >
+        <path d="M15 5l-7 7 7 7" /></svg
+      >Library</a
+    >
+  </body>
+</html>

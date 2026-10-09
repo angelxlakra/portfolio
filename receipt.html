@@ -1,325 +1,1081 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
-.lib-back{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:99999;font:600 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;background:rgba(18,20,25,.88);color:#F1E9D8;text-decoration:none;padding:9px 13px 9px 11px;border-radius:999px;box-shadow:0 4px 16px rgba(0,0,0,.3);display:inline-flex;gap:7px;align-items:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.lib-back:hover{background:#000}.lib-back svg{flex:none}</style></head><body>
-<title>Angel Lakra</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>
-
-:root{
---bg:#ECEEF1;          /* cool desk grey */
---surface:#F8F9FA;     /* card */
---paper:#FFFFFF;       /* thermal paper */
---ink:#15181D;
---muted:#5B6270;
---line:#CDD2D9;
---accent:#2E43D1;      /* ballpoint blue */
---accent-soft:#E2E6FB;
---ok:#1F7A4D;
---font-display:"Archivo","Arial Narrow",Arial,sans-serif;
---font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
---font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
---step-0:1rem; --step-1:1.2rem; --step-2:1.6rem; --step-3:2.4rem; --step-4:clamp(2.6rem,7vw,5.2rem);
-}
-@media (prefers-color-scheme: dark){
-:root:not([data-theme="light"]){
---bg:#111317; --surface:#181B21; --paper:#E9EAE4; --ink:#E8EAEE; --muted:#9AA1AD;
---line:#2B3038; --accent:#8F9BFF; --accent-soft:#1E2340; --ok:#5BC48C; color-scheme:dark;
-}
-}
-:root[data-theme="dark"]{
---bg:#111317; --surface:#181B21; --paper:#E9EAE4; --ink:#E8EAEE; --muted:#9AA1AD;
---line:#2B3038; --accent:#8F9BFF; --accent-soft:#1E2340; --ok:#5BC48C; color-scheme:dark;
-}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:var(--step-0);line-height:1.6;padding-inline:clamp(16px,4vw,48px);padding-block:0}
-a{color:var(--accent);text-underline-offset:3px}
-a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
-.wrap{max-width:1120px;margin-inline:auto}
-h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.05}
-.label{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-/* top bar */
-.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-block:24px;border-bottom:1px solid var(--line)}
-.top .mark{font-family:var(--font-display);font-weight:800;font-stretch:125%;letter-spacing:-.01em}
-.top nav{display:flex;gap:20px;flex-wrap:wrap;font-size:.95rem}
-.top nav a{color:var(--ink);text-decoration:none}
-.top nav a:hover{color:var(--accent)}
-/* hero */
-.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);gap:clamp(32px,6vw,80px);align-items:start;padding-block:clamp(48px,8vw,96px) 64px}
-.hero h1{font-size:var(--step-4);font-weight:800;font-stretch:72%;letter-spacing:-.015em;text-transform:uppercase}
-.hero h1 em{font-style:normal;color:var(--accent)}
-.hero .lede{font-size:var(--step-1);max-width:34ch;margin-top:24px;color:var(--ink)}
-.status{display:inline-flex;align-items:center;gap:8px;margin-bottom:24px;font-family:var(--font-mono);font-size:.8rem;color:var(--ok)}
-.status i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 20%,transparent)}
-.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
-.btn{display:inline-block;padding:12px 20px;font-weight:600;text-decoration:none;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
-.btn.primary{background:var(--ink);color:var(--bg)}
-.btn:hover{border-color:var(--accent);color:var(--accent)}
-.btn.primary:hover{background:var(--accent);color:var(--bg)}
-/* receipt */
-.receipt{background:var(--paper);color:#1B1B1B;font-family:var(--font-mono);font-size:.82rem;line-height:1.55;padding:28px 24px 34px;max-width:360px;justify-self:end;width:100%;
-box-shadow:0 1px 0 rgba(0,0,0,.04),0 18px 40px -18px rgba(20,24,40,.35);transform:rotate(1.2deg);position:relative;
---tooth:8px;
--webkit-mask:linear-gradient(#000 0 0) top/100% calc(100% - var(--tooth)) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/calc(2*var(--tooth)) var(--tooth) repeat-x;
-mask:linear-gradient(#000 0 0) top/100% calc(100% - var(--tooth)) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/calc(2*var(--tooth)) var(--tooth) repeat-x}
-.receipt .c{text-align:center}
-.receipt .big{font-weight:500;font-size:1rem;letter-spacing:.06em}
-.receipt hr{border:0;border-top:1px dashed #9A9A9A;margin:12px 0}
-.receipt .row{display:flex;justify-content:space-between;gap:12px}
-.receipt .row span:last-child{text-align:right;white-space:nowrap}
-.receipt .tot{font-weight:500;font-size:.95rem}
-.receipt .small{font-size:.72rem;color:#555}
-.receipt .bar{height:34px;margin-top:14px;background:repeating-linear-gradient(90deg,#1B1B1B 0 2px,transparent 2px 4px,#1B1B1B 4px 5px,transparent 5px 8px,#1B1B1B 8px 11px,transparent 11px 12px)}
-@media (prefers-reduced-motion:no-preference){
-.receipt{animation:feed .9s cubic-bezier(.2,.7,.2,1) both}
-@keyframes feed{from{transform:translateY(-14px) rotate(1.2deg)}to{transform:translateY(0) rotate(1.2deg)}}
-}
-/* audiences */
-.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.split > div{padding:32px clamp(0px,3vw,32px) 32px 0;min-width:0}
-.split > div + div{border-left:1px solid var(--line);padding-left:clamp(20px,3vw,32px)}
-.split h2{font-size:var(--step-2);font-weight:700;font-stretch:90%;margin:8px 0 12px}
-.split p{margin:0;max-width:52ch;color:var(--ink)}
-.split ul{margin:14px 0 0;padding-left:18px;color:var(--muted)}
-/* section head */
-section{padding-block:72px 0}
-.shead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:28px}
-.shead h2{font-size:var(--step-3);font-weight:800;font-stretch:75%;text-transform:uppercase;letter-spacing:-.01em}
-/* work tickets */
-.work{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:20px}
-.ticket{background:var(--surface);border:1px solid var(--line);padding:28px;display:flex;flex-direction:column;gap:14px;min-width:0;grid-column:span 3}
-.ticket.feature{grid-column:span 6;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px}
-.ticket.third{grid-column:span 2}
-.ticket .meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.ticket h3{font-size:var(--step-2);font-weight:750;font-stretch:88%}
-.ticket p{margin:0;max-width:62ch}
-.ticket .client{font-size:.9rem;color:var(--muted)}
-.facts{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.facts li{padding-left:18px;position:relative}
-.facts li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:1.5px;background:var(--accent)}
-.stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
-.stack span{font-family:var(--font-mono);font-size:.72rem;padding:3px 8px;background:var(--accent-soft);color:var(--ink)}
-.links{display:flex;gap:16px;flex-wrap:wrap;font-size:.92rem;font-weight:500}
-.pill{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border:1px solid var(--line);color:var(--muted)}
-.pill.live{border-color:var(--ok);color:var(--ok)}
-/* kitchen chit inside feature */
-.chit{background:var(--paper);color:#1B1B1B;font-family:var(--font-mono);font-size:.78rem;line-height:1.5;padding:18px 18px 20px;align-self:start;max-width:100%}
-.chit .row{display:flex;justify-content:space-between;gap:10px}
-.chit hr{border:0;border-top:1px dashed #9A9A9A;margin:8px 0}
-.chit .q{background:#1B1B1B;color:#fff;padding:6px 8px;margin:4px 0 8px}
-.chit .a{color:#333}
-/* timeline */
-.timeline{display:grid;gap:0;border-top:1px solid var(--line)}
-.job{display:grid;grid-template-columns:180px minmax(0,1fr) auto;gap:24px;padding-block:22px;border-bottom:1px solid var(--line);align-items:baseline}
-.job .when{font-family:var(--font-mono);font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.job h3{font-size:var(--step-1);font-weight:700;font-stretch:95%}
-.job p{margin:6px 0 0;color:var(--muted);max-width:60ch}
-.job .type{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);white-space:nowrap}
-.skills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
-.skills h3{font-family:var(--font-mono);font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.skills ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
-/* contact */
-.contact{margin-top:96px;padding-block:56px;border-top:3px solid var(--ink);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px;align-items:end}
-.contact h2{font-size:var(--step-4);font-weight:800;font-stretch:70%;text-transform:uppercase}
-.contact dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 20px;font-size:1rem}
-.contact dt{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
-.contact dd{margin:0;overflow-wrap:anywhere}
-.todo{background:var(--accent-soft);padding:0 6px;font-family:var(--font-mono);font-size:.85rem}
-footer{padding-block:24px 40px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
-@media (max-width:860px){
-.hero{grid-template-columns:minmax(0,1fr)}
-.receipt{justify-self:start;transform:rotate(-.8deg)}
-.split{grid-template-columns:minmax(0,1fr)}
-.split > div{padding-right:0}
-.split > div + div{border-left:0;border-top:1px solid var(--line);padding-left:0}
-.ticket,.ticket.third{grid-column:span 6}
-.ticket.feature{grid-template-columns:minmax(0,1fr)}
-.job{grid-template-columns:minmax(0,1fr);gap:4px}
-.skills{grid-template-columns:repeat(2,minmax(0,1fr))}
-.contact{grid-template-columns:minmax(0,1fr)}
-}
-@media (max-width:440px){ .skills{grid-template-columns:minmax(0,1fr)} .ticket{padding:22px} }
-</style>
-<div class="wrap">
-<header class="top">
-<span class="mark">ANGEL LAKRA</span>
-<nav aria-label="Sections">
-<a href="#work">Work</a><a href="#experience">Experience</a><a href="#contact">Contact</a>
-</nav>
-</header>
-<section class="hero" style="padding-top:clamp(48px,8vw,96px)">
-<div>
-<div class="status"><i aria-hidden="true"></i>Open to work · Bengaluru · remote or hybrid</div>
-<h1>I build the software a <em>small business</em> actually runs on.</h1>
-<p class="lede">Full-stack engineer, Python first. Five years shipping production frontends, now building POS systems, back-office tools and LLM features that owners use every day.</p>
-<div class="ctas">
-<a class="btn primary" href="#work">See the work</a>
-<a class="btn" href="#contact">Get in touch</a>
-</div>
-</div>
-<aside class="receipt" aria-label="Summary as a receipt">
-<div class="c big">ANGEL LAKRA</div>
-<div class="c small">Full-stack engineer · Bengaluru</div>
-<div class="c small">GSTIN: not applicable</div>
-<hr>
-<div class="row"><span>Python · FastAPI</span><span>1</span></div>
-<div class="row"><span>LLM features &amp; agents</span><span>1</span></div>
-<div class="row"><span>React · TypeScript · Next.js</span><span>1</span></div>
-<div class="row"><span>Frontend team lead</span><span>3y 8m</span></div>
-<div class="row"><span>Web3 frontends</span><span>2021–25</span></div>
-<div class="row"><span>POS systems built</span><span>2</span></div>
-<hr>
-<div class="row tot"><span>TOTAL EXPERIENCE</span><span>5+ YRS</span></div>
-<div class="row"><span>Paid by</span><span>Contract / Freelance / FT</span></div>
-<hr>
-<div class="c small">Thank you. Please visit again.</div>
-<div class="bar" aria-hidden="true"></div>
-</aside>
-</section>
-<div class="split">
-<div>
-<span class="label">If you're hiring</span>
-<h2>An engineer who has led a team and still ships alone.</h2>
-<p>I led frontend at Chain Labs for close to four years. Since then I've built full systems end to end: schema, API, UI, deployment and the support call afterwards.</p>
-<ul><li>Python backends with FastAPI, SQLAlchemy and tests</li><li>React and Next.js frontends that hold up on cheap phones</li><li>LLM features with guardrails, not demos</li></ul>
-</div>
-<div>
-<span class="label">If you run a business</span>
-<h2>Billing, stock, cash and reports, built around how you work.</h2>
-<p>I build systems for cafes and salons in India: GST billing, kitchen chits, daily cash counts, staff roles, and a way to ask your numbers questions in Hindi or English.</p>
-<ul><li>Point-of-sale and back-office systems</li><li>Websites that give a brand a real presence</li><li>Automation for the jobs you do by hand every week</li></ul>
-</div>
-</div>
-<section id="work">
-<div class="shead"><h2>Selected work</h2><span class="label">2025 – 2026</span></div>
-<div class="work">
-<article class="ticket feature">
-<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
-<div class="meta"><span class="label">Point of sale · in daily use</span><span class="pill live">Live</span></div>
-<h3>Lily Cafe POS</h3>
-<span class="client">For Lily Cafe by Mary's Kitchen, Ranchi</span>
-<p>The cafe's whole counter in one system: waiters take orders on their phones, the kitchen gets a printed chit, and the owner closes the day with a cash count and a report.</p>
-<ul class="facts">
-<li>Table orders, partial serving, and split payments across UPI, cash and card</li>
-<li>GST billing with a CGST/SGST split; every amount stored in paise</li>
-<li>A Windows print agent drives 80mm receipts and kitchen chits from the cloud backend</li>
-<li>"Ask" answers questions in English, Hindi or Hinglish. The model only picks the report and the period; the backend computes every figure, so it can't invent a number</li>
-<li>A deploy script that refuses to ship anything except a clean origin/main, then checks production is running that exact commit</li>
-</ul>
-<div class="stack"><span>FastAPI</span><span>SQLAlchemy 2</span><span>React 18</span><span>TypeScript</span><span>Tailwind v4</span><span>Fly.io</span><span>Vercel</span><span>MCP</span></div>
-<div class="links"><a href="https://github.com/angelxlakra/lily-cafe-pos" target="_blank" rel="noopener">Source on GitHub →</a></div>
-</div>
-<div class="chit" aria-label="Example of the Ask feature">
-<div class="row"><b>KOT #0418</b><span>T6 · 19:12</span></div>
-<hr>
-<div class="row"><span>2 × Chicken Ramen Bowl</span></div>
-<div class="row"><span>1 × KFC Wings (hot)</span></div>
-<div class="row"><span>1 × Lemon Mint Cooler</span></div>
-<hr>
-<div class="q">ASK › kal ka cash counter</div>
-<div class="a">Opening, closing and difference for yesterday's drawer, verified by the owner, with the denomination breakdown.</div>
-<hr>
-<div class="a" style="font-size:.7rem">Example interaction · illustrative order</div>
-</div>
-</article>
-<article class="ticket">
-<div class="meta"><span class="label">Salon management</span><span class="pill">In development</span></div>
-<h3>SalonOS</h3>
-<p>A local-first POS, appointments, inventory and accounting system for unisex salons. It runs entirely on the salon's own network, so a bad internet day doesn't stop billing.</p>
-<ul class="facts">
-<li>Owner, receptionist and staff roles with different powers</li>
-<li>Appointment conflict detection and nightly backups</li>
-<li>Reports generated on a schedule by background workers</li>
-</ul>
-<div class="stack"><span>FastAPI</span><span>PostgreSQL</span><span>Redis + RQ</span><span>Next.js 14</span><span>Docker Compose</span><span>Nginx</span></div>
-<div class="links"><a href="https://github.com/angelxlakra/efs-salon-os" target="_blank" rel="noopener">Source on GitHub →</a></div>
-</article>
-<article class="ticket">
-<div class="meta"><span class="label">Brand website</span><span class="pill live">Prototypes live</span></div>
-<h3>Mary's Kitchen</h3>
-<p>A scroll-driven site for two Ranchi cafes. The story opens at night at the roadside stall and turns to sunrise inside the second cafe, drawn as generated pen-and-ink linework.</p>
-<ul class="facts">
-<li>Ink illustrations generated in Python and layered as SVG</li>
-<li>An "exploded" ramen bowl that comes apart as you scroll</li>
-<li>A 3D model of the stall under the trees</li>
-</ul>
-<div class="stack"><span>GSAP</span><span>SVG</span><span>Python</span><span>Vercel</span></div>
-<div class="links">
-<a href="https://marys-ramen-unfolded.vercel.app" target="_blank" rel="noopener">Ramen bowl →</a>
-<a href="https://marys-kitchen-3d.vercel.app" target="_blank" rel="noopener">3D stall →</a>
-</div>
-</article>
-<article class="ticket third">
-<div class="meta"><span class="label">Operations</span></div>
-<h3>Staff SOP checklists</h3>
-<p>Daily, weekly and monthly checklists for every post at both cafes, in English and Hindi, so new staff know exactly what their shift owes.</p>
-<div class="stack"><span>Excel</span><span>Process design</span></div>
-</article>
-<article class="ticket third">
-<div class="meta"><span class="label">macOS app</span><span class="pill">Side project</span></div>
-<h3>DiskMap</h3>
-<p>My own DaisyDisk: a visual map of what's filling a Mac's drive, built because I didn't want to pay for one.</p>
-<div class="stack"><span>Python</span><span>pywebview</span></div>
-</article>
-<article class="ticket third">
-<div class="meta"><span class="label">macOS app</span><span class="pill">Side project</span></div>
-<h3>Notch app</h3>
-<p>A take on Boring Notch, built with my brother, that turns the MacBook notch into a small live surface.</p>
-<div class="stack"><span>macOS</span></div>
-</article>
-<article class="ticket" style="grid-column:span 6">
-<div class="meta"><span class="label">Product · early stage</span><span class="pill">Brand ready</span></div>
-<h3>Aanka</h3>
-<p>A business partner for shop and salon owners that lives in WhatsApp: it reads the numbers, tells you this week's figure first, points out one thing, and suggests one action, in warm Hinglish.</p>
-<div class="links"><a href="https://aanka.vercel.app" target="_blank" rel="noopener">Brand identity →</a></div>
-</article>
-</div>
-</section>
-<section id="experience">
-<div class="shead"><h2>Experience</h2><span class="label">2021 – now</span></div>
-<div class="timeline">
-<div class="job">
-<span class="when">Jun 2025 – now</span>
-<div><h3>Senior Software Developer · Chain Labs</h3><p>Python and LLM work for the team on a freelance basis, alongside my own clients.</p></div>
-<span class="type">Freelance · remote</span>
-</div>
-<div class="job">
-<span class="when">Jul 2021 – Feb 2025</span>
-<div><h3>Frontend Tech Lead · Chain Labs</h3><p>Led frontend for a blockchain product studio: minting pages, event platforms and dApp frontends in TypeScript, React and Next.js.</p></div>
-<span class="type">Full-time</span>
-</div>
-<div class="job">
-<span class="when">Jan – Jun 2021</span>
-<div><h3>Frontend Developer · Yellow Class</h3><p>Frontend internship at an ed-tech startup.</p></div>
-<span class="type">Internship</span>
-</div>
-<div class="job">
-<span class="when">Education</span>
-<div><h3>Birla Institute of Technology, Mesra</h3></div>
-<span class="type"></span>
-</div>
-</div>
-</section>
-<section>
-<div class="shead"><h2>Toolbox</h2></div>
-<div class="skills">
-<div><h3>Backend</h3><ul><li>Python 3.11+</li><li>FastAPI, Pydantic</li><li>SQLAlchemy, Alembic</li><li>PostgreSQL, SQLite, Redis</li></ul></div>
-<div><h3>Frontend</h3><ul><li>TypeScript, React</li><li>Next.js, Vite</li><li>Tailwind CSS</li><li>GSAP, SVG animation</li></ul></div>
-<div><h3>AI</h3><ul><li>LLM routing and tool use</li><li>Agents and MCP servers</li><li>n8n automation</li></ul></div>
-<div><h3>Shipping</h3><ul><li>Docker Compose, Nginx</li><li>Fly.io, Vercel</li><li>uv, pytest, ruff</li></ul></div>
-</div>
-</section>
-<section id="contact" class="contact" style="padding-top:56px">
-<h2>Got a role or a problem? Let's talk.</h2>
-<dl>
-<dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/ngllakra" target="_blank" rel="noopener">linkedin.com/in/ngllakra</a></dd>
-<dt>GitHub</dt><dd><a href="https://github.com/angelxlakra" target="_blank" rel="noopener">github.com/angelxlakra</a></dd>
-<dt>Based in</dt><dd>Bengaluru · IST (UTC+5:30)</dd>
-</dl>
-</section>
-<footer>© 2026 Angel Lakra</footer>
-</div>
-<a class="lib-back" href="/" aria-label="Back to the library"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg>Library</a>
-</body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <style>
+      :root {
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      body {
+        margin: 0;
+      }
+      img {
+        max-width: 100%;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .lib-back {
+        position: fixed;
+        left: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        z-index: 99999;
+        font:
+          600 12px/1 system-ui,
+          -apple-system,
+          sans-serif;
+        letter-spacing: 0.02em;
+        background: rgba(18, 20, 25, 0.88);
+        color: #f1e9d8;
+        text-decoration: none;
+        padding: 9px 13px 9px 11px;
+        border-radius: 999px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        display: inline-flex;
+        gap: 7px;
+        align-items: center;
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+      }
+      .lib-back:hover {
+        background: #000;
+      }
+      .lib-back svg {
+        flex: none;
+      }
+    </style>
+  </head>
+  <body>
+    <title>Angel Lakra</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #eceef1; /* cool desk grey */
+        --surface: #f8f9fa; /* card */
+        --paper: #ffffff; /* thermal paper */
+        --ink: #15181d;
+        --muted: #5b6270;
+        --line: #cdd2d9;
+        --accent: #2e43d1; /* ballpoint blue */
+        --accent-soft: #e2e6fb;
+        --ok: #1f7a4d;
+        --font-display: "Archivo", "Arial Narrow", Arial, sans-serif;
+        --font-body:
+          "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+        --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+        --step-0: 1rem;
+        --step-1: 1.2rem;
+        --step-2: 1.6rem;
+        --step-3: 2.4rem;
+        --step-4: clamp(2.6rem, 7vw, 5.2rem);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #111317;
+          --surface: #181b21;
+          --paper: #e9eae4;
+          --ink: #e8eaee;
+          --muted: #9aa1ad;
+          --line: #2b3038;
+          --accent: #8f9bff;
+          --accent-soft: #1e2340;
+          --ok: #5bc48c;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #111317;
+        --surface: #181b21;
+        --paper: #e9eae4;
+        --ink: #e8eaee;
+        --muted: #9aa1ad;
+        --line: #2b3038;
+        --accent: #8f9bff;
+        --accent-soft: #1e2340;
+        --ok: #5bc48c;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: var(--step-0);
+        line-height: 1.6;
+        padding-inline: clamp(16px, 4vw, 48px);
+        padding-block: 0;
+      }
+      a {
+        color: var(--accent);
+        text-underline-offset: 3px;
+      }
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+      .wrap {
+        max-width: 1120px;
+        margin-inline: auto;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--font-display);
+        text-wrap: balance;
+        margin: 0;
+        line-height: 1.05;
+      }
+      .label {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      /* top bar */
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        padding-block: 24px;
+        border-bottom: 1px solid var(--line);
+      }
+      .top .mark {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-stretch: 125%;
+        letter-spacing: -0.01em;
+      }
+      .top nav {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        font-size: 0.95rem;
+      }
+      .top nav a {
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .top nav a:hover {
+        color: var(--accent);
+      }
+      /* hero */
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
+        gap: clamp(32px, 6vw, 80px);
+        align-items: start;
+        padding-block: clamp(48px, 8vw, 96px) 64px;
+      }
+      .hero h1 {
+        font-size: var(--step-4);
+        font-weight: 800;
+        font-stretch: 72%;
+        letter-spacing: -0.015em;
+        text-transform: uppercase;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .hero .lede {
+        font-size: var(--step-1);
+        max-width: 34ch;
+        margin-top: 24px;
+        color: var(--ink);
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        color: var(--ok);
+      }
+      .status i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ok);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 20%, transparent);
+      }
+      .ctas {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 32px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 20px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1.5px solid var(--ink);
+        color: var(--ink);
+        background: transparent;
+      }
+      .btn.primary {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .btn.primary:hover {
+        background: var(--accent);
+        color: var(--bg);
+      }
+      /* receipt */
+      .receipt {
+        background: var(--paper);
+        color: #1b1b1b;
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        line-height: 1.55;
+        padding: 28px 24px 34px;
+        max-width: 360px;
+        justify-self: end;
+        width: 100%;
+        box-shadow:
+          0 1px 0 rgba(0, 0, 0, 0.04),
+          0 18px 40px -18px rgba(20, 24, 40, 0.35);
+        transform: rotate(1.2deg);
+        position: relative;
+        --tooth: 8px;
+        -webkit-mask:
+          linear-gradient(#000 0 0) top/100% calc(100% - var(--tooth)) no-repeat,
+          conic-gradient(
+              from -45deg at bottom,
+              #0000,
+              #000 1deg 89deg,
+              #0000 90deg
+            )
+            bottom/calc(2 * var(--tooth)) var(--tooth) repeat-x;
+        mask:
+          linear-gradient(#000 0 0) top/100% calc(100% - var(--tooth)) no-repeat,
+          conic-gradient(
+              from -45deg at bottom,
+              #0000,
+              #000 1deg 89deg,
+              #0000 90deg
+            )
+            bottom/calc(2 * var(--tooth)) var(--tooth) repeat-x;
+      }
+      .receipt .c {
+        text-align: center;
+      }
+      .receipt .big {
+        font-weight: 500;
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+      }
+      .receipt hr {
+        border: 0;
+        border-top: 1px dashed #9a9a9a;
+        margin: 12px 0;
+      }
+      .receipt .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .receipt .row span:last-child {
+        text-align: right;
+        white-space: nowrap;
+      }
+      .receipt .tot {
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+      .receipt .small {
+        font-size: 0.72rem;
+        color: #555;
+      }
+      .receipt .bar {
+        height: 34px;
+        margin-top: 14px;
+        background: repeating-linear-gradient(
+          90deg,
+          #1b1b1b 0 2px,
+          transparent 2px 4px,
+          #1b1b1b 4px 5px,
+          transparent 5px 8px,
+          #1b1b1b 8px 11px,
+          transparent 11px 12px
+        );
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .receipt {
+          animation: feed 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+        }
+        @keyframes feed {
+          from {
+            transform: translateY(-14px) rotate(1.2deg);
+          }
+          to {
+            transform: translateY(0) rotate(1.2deg);
+          }
+        }
+      }
+      /* audiences */
+      .split {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .split > div {
+        padding: 32px clamp(0px, 3vw, 32px) 32px 0;
+        min-width: 0;
+      }
+      .split > div + div {
+        border-left: 1px solid var(--line);
+        padding-left: clamp(20px, 3vw, 32px);
+      }
+      .split h2 {
+        font-size: var(--step-2);
+        font-weight: 700;
+        font-stretch: 90%;
+        margin: 8px 0 12px;
+      }
+      .split p {
+        margin: 0;
+        max-width: 52ch;
+        color: var(--ink);
+      }
+      .split ul {
+        margin: 14px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+      }
+      /* section head */
+      section {
+        padding-block: 72px 0;
+      }
+      .shead {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .shead h2 {
+        font-size: var(--step-3);
+        font-weight: 800;
+        font-stretch: 75%;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+      }
+      /* work tickets */
+      .work {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .ticket {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-width: 0;
+        grid-column: span 3;
+      }
+      .ticket.feature {
+        grid-column: span 6;
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+        gap: 32px;
+      }
+      .ticket.third {
+        grid-column: span 2;
+      }
+      .ticket .meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .ticket h3 {
+        font-size: var(--step-2);
+        font-weight: 750;
+        font-stretch: 88%;
+      }
+      .ticket p {
+        margin: 0;
+        max-width: 62ch;
+      }
+      .ticket .client {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      .facts {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 10px;
+      }
+      .facts li {
+        padding-left: 18px;
+        position: relative;
+      }
+      .facts li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.7em;
+        width: 8px;
+        height: 1.5px;
+        background: var(--accent);
+      }
+      .stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: auto;
+        padding-top: 6px;
+      }
+      .stack span {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        padding: 3px 8px;
+        background: var(--accent-soft);
+        color: var(--ink);
+      }
+      .links {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 0.92rem;
+        font-weight: 500;
+      }
+      .pill {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+      }
+      .pill.live {
+        border-color: var(--ok);
+        color: var(--ok);
+      }
+      /* kitchen chit inside feature */
+      .chit {
+        background: var(--paper);
+        color: #1b1b1b;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        line-height: 1.5;
+        padding: 18px 18px 20px;
+        align-self: start;
+        max-width: 100%;
+      }
+      .chit .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .chit hr {
+        border: 0;
+        border-top: 1px dashed #9a9a9a;
+        margin: 8px 0;
+      }
+      .chit .q {
+        background: #1b1b1b;
+        color: #fff;
+        padding: 6px 8px;
+        margin: 4px 0 8px;
+      }
+      .chit .a {
+        color: #333;
+      }
+      /* timeline */
+      .timeline {
+        display: grid;
+        gap: 0;
+        border-top: 1px solid var(--line);
+      }
+      .job {
+        display: grid;
+        grid-template-columns: 180px minmax(0, 1fr) auto;
+        gap: 24px;
+        padding-block: 22px;
+        border-bottom: 1px solid var(--line);
+        align-items: baseline;
+      }
+      .job .when {
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .job h3 {
+        font-size: var(--step-1);
+        font-weight: 700;
+        font-stretch: 95%;
+      }
+      .job p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        max-width: 60ch;
+      }
+      .job .type {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .skills {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 24px;
+      }
+      .skills h3 {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .skills ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 4px;
+      }
+      /* contact */
+      .contact {
+        margin-top: 96px;
+        padding-block: 56px;
+        border-top: 3px solid var(--ink);
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        gap: 40px;
+        align-items: end;
+      }
+      .contact h2 {
+        font-size: var(--step-4);
+        font-weight: 800;
+        font-stretch: 70%;
+        text-transform: uppercase;
+      }
+      .contact dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 10px 20px;
+        font-size: 1rem;
+      }
+      .contact dt {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding-top: 3px;
+      }
+      .contact dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+      }
+      .todo {
+        background: var(--accent-soft);
+        padding: 0 6px;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+      }
+      footer {
+        padding-block: 24px 40px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        border-top: 1px solid var(--line);
+      }
+      @media (max-width: 860px) {
+        .hero {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .receipt {
+          justify-self: start;
+          transform: rotate(-0.8deg);
+        }
+        .split {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .split > div {
+          padding-right: 0;
+        }
+        .split > div + div {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+          padding-left: 0;
+        }
+        .ticket,
+        .ticket.third {
+          grid-column: span 6;
+        }
+        .ticket.feature {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .job {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 4px;
+        }
+        .skills {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .contact {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      @media (max-width: 440px) {
+        .skills {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .ticket {
+          padding: 22px;
+        }
+      }
+    </style>
+    <div class="wrap">
+      <header class="top">
+        <span class="mark">ANGEL LAKRA</span>
+        <nav aria-label="Sections">
+          <a href="#work">Work</a><a href="#experience">Experience</a
+          ><a href="#contact">Contact</a>
+        </nav>
+      </header>
+      <section class="hero" style="padding-top: clamp(48px, 8vw, 96px)">
+        <div>
+          <div class="status">
+            <i aria-hidden="true"></i>Open to work · Bengaluru · remote or
+            hybrid
+          </div>
+          <h1>
+            I build the software a <em>small business</em> actually runs on.
+          </h1>
+          <p class="lede">
+            Full-stack engineer, Python first. Five years shipping production
+            frontends, now building POS systems, back-office tools and LLM
+            features that owners use every day.
+          </p>
+          <div class="ctas">
+            <a class="btn primary" href="#work">See the work</a>
+            <a class="btn" href="#contact">Get in touch</a>
+          </div>
+        </div>
+        <aside class="receipt" aria-label="Summary as a receipt">
+          <div class="c big">ANGEL LAKRA</div>
+          <div class="c small">Full-stack engineer · Bengaluru</div>
+          <div class="c small">GSTIN: not applicable</div>
+          <hr />
+          <div class="row"><span>Python · FastAPI</span><span>1</span></div>
+          <div class="row">
+            <span>LLM features &amp; agents</span><span>1</span>
+          </div>
+          <div class="row">
+            <span>React · TypeScript · Next.js</span><span>1</span>
+          </div>
+          <div class="row">
+            <span>Frontend team lead</span><span>3y 8m</span>
+          </div>
+          <div class="row"><span>Web3 frontends</span><span>2021–25</span></div>
+          <div class="row"><span>POS systems built</span><span>2</span></div>
+          <hr />
+          <div class="row tot">
+            <span>TOTAL EXPERIENCE</span><span>5+ YRS</span>
+          </div>
+          <div class="row">
+            <span>Paid by</span><span>Contract / Freelance / FT</span>
+          </div>
+          <hr />
+          <div class="c small">Thank you. Please visit again.</div>
+          <div class="bar" aria-hidden="true"></div>
+        </aside>
+      </section>
+      <div class="split">
+        <div>
+          <span class="label">If you're hiring</span>
+          <h2>An engineer who has led a team and still ships alone.</h2>
+          <p>
+            I led frontend at Chain Labs for close to four years. Since then
+            I've built full systems end to end: schema, API, UI, deployment and
+            the support call afterwards.
+          </p>
+          <ul>
+            <li>Python backends with FastAPI, SQLAlchemy and tests</li>
+            <li>React and Next.js frontends that hold up on cheap phones</li>
+            <li>LLM features with guardrails, not demos</li>
+          </ul>
+        </div>
+        <div>
+          <span class="label">If you run a business</span>
+          <h2>Billing, stock, cash and reports, built around how you work.</h2>
+          <p>
+            I build systems for cafes and salons in India: GST billing, kitchen
+            chits, daily cash counts, staff roles, and a way to ask your numbers
+            questions in Hindi or English.
+          </p>
+          <ul>
+            <li>Point-of-sale and back-office systems</li>
+            <li>Websites that give a brand a real presence</li>
+            <li>Automation for the jobs you do by hand every week</li>
+          </ul>
+        </div>
+      </div>
+      <section id="work">
+        <div class="shead">
+          <h2>Selected work</h2>
+          <span class="label">2025 – 2026</span>
+        </div>
+        <div class="work">
+          <article class="ticket feature">
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                min-width: 0;
+              "
+            >
+              <div class="meta">
+                <span class="label">Point of sale · in daily use</span
+                ><span class="pill live">Live</span>
+              </div>
+              <h3>Lily Cafe POS</h3>
+              <span class="client"
+                >For Lily Cafe by Mary's Kitchen, Ranchi</span
+              >
+              <p>
+                The cafe's whole counter in one system: waiters take orders on
+                their phones, the kitchen gets a printed chit, and the owner
+                closes the day with a cash count and a report.
+              </p>
+              <ul class="facts">
+                <li>
+                  Table orders, partial serving, and split payments across UPI,
+                  cash and card
+                </li>
+                <li>
+                  GST billing with a CGST/SGST split; every amount stored in
+                  paise
+                </li>
+                <li>
+                  A Windows print agent drives 80mm receipts and kitchen chits
+                  from the cloud backend
+                </li>
+                <li>
+                  "Ask" answers questions in English, Hindi or Hinglish. The
+                  model only picks the report and the period; the backend
+                  computes every figure, so it can't invent a number
+                </li>
+                <li>
+                  A deploy script that refuses to ship anything except a clean
+                  origin/main, then checks production is running that exact
+                  commit
+                </li>
+              </ul>
+              <div class="stack">
+                <span>FastAPI</span><span>SQLAlchemy 2</span
+                ><span>React 18</span><span>TypeScript</span
+                ><span>Tailwind v4</span><span>Fly.io</span><span>Vercel</span
+                ><span>MCP</span>
+              </div>
+              <div class="links">
+                <a
+                  href="https://github.com/angelxlakra/lily-cafe-pos"
+                  target="_blank"
+                  rel="noopener"
+                  >Source on GitHub →</a
+                >
+              </div>
+            </div>
+            <div class="chit" aria-label="Example of the Ask feature">
+              <div class="row"><b>KOT #0418</b><span>T6 · 19:12</span></div>
+              <hr />
+              <div class="row"><span>2 × Chicken Ramen Bowl</span></div>
+              <div class="row"><span>1 × KFC Wings (hot)</span></div>
+              <div class="row"><span>1 × Lemon Mint Cooler</span></div>
+              <hr />
+              <div class="q">ASK › kal ka cash counter</div>
+              <div class="a">
+                Opening, closing and difference for yesterday's drawer, verified
+                by the owner, with the denomination breakdown.
+              </div>
+              <hr />
+              <div class="a" style="font-size: 0.7rem">
+                Example interaction · illustrative order
+              </div>
+            </div>
+          </article>
+          <article class="ticket">
+            <div class="meta">
+              <span class="label">Salon management</span
+              ><span class="pill">In development</span>
+            </div>
+            <h3>SalonOS</h3>
+            <p>
+              A local-first POS, appointments, inventory and accounting system
+              for unisex salons. It runs entirely on the salon's own network, so
+              a bad internet day doesn't stop billing.
+            </p>
+            <ul class="facts">
+              <li>Owner, receptionist and staff roles with different powers</li>
+              <li>Appointment conflict detection and nightly backups</li>
+              <li>Reports generated on a schedule by background workers</li>
+            </ul>
+            <div class="stack">
+              <span>FastAPI</span><span>PostgreSQL</span><span>Redis + RQ</span
+              ><span>Next.js 14</span><span>Docker Compose</span
+              ><span>Nginx</span>
+            </div>
+            <div class="links">
+              <a
+                href="https://github.com/angelxlakra/efs-salon-os"
+                target="_blank"
+                rel="noopener"
+                >Source on GitHub →</a
+              >
+            </div>
+          </article>
+          <article class="ticket">
+            <div class="meta">
+              <span class="label">Brand website</span
+              ><span class="pill live">Prototypes live</span>
+            </div>
+            <h3>Mary's Kitchen</h3>
+            <p>
+              A scroll-driven site for two Ranchi cafes. The story opens at
+              night at the roadside stall and turns to sunrise inside the second
+              cafe, drawn as generated pen-and-ink linework.
+            </p>
+            <ul class="facts">
+              <li>Ink illustrations generated in Python and layered as SVG</li>
+              <li>An "exploded" ramen bowl that comes apart as you scroll</li>
+              <li>A 3D model of the stall under the trees</li>
+            </ul>
+            <div class="stack">
+              <span>GSAP</span><span>SVG</span><span>Python</span
+              ><span>Vercel</span>
+            </div>
+            <div class="links">
+              <a
+                href="https://marys-ramen-unfolded.vercel.app"
+                target="_blank"
+                rel="noopener"
+                >Ramen bowl →</a
+              >
+              <a
+                href="https://marys-kitchen-3d.vercel.app"
+                target="_blank"
+                rel="noopener"
+                >3D stall →</a
+              >
+            </div>
+          </article>
+          <article class="ticket third">
+            <div class="meta"><span class="label">Operations</span></div>
+            <h3>Staff SOP checklists</h3>
+            <p>
+              Daily, weekly and monthly checklists for every post at both cafes,
+              in English and Hindi, so new staff know exactly what their shift
+              owes.
+            </p>
+            <div class="stack">
+              <span>Excel</span><span>Process design</span>
+            </div>
+          </article>
+          <article class="ticket third">
+            <div class="meta">
+              <span class="label">macOS app</span
+              ><span class="pill">Side project</span>
+            </div>
+            <h3>DiskMap</h3>
+            <p>
+              My own DaisyDisk: a visual map of what's filling a Mac's drive,
+              built because I didn't want to pay for one.
+            </p>
+            <div class="stack"><span>Python</span><span>pywebview</span></div>
+          </article>
+          <article class="ticket third">
+            <div class="meta">
+              <span class="label">macOS app</span
+              ><span class="pill">Side project</span>
+            </div>
+            <h3>Notch app</h3>
+            <p>
+              A take on Boring Notch, built with my brother, that turns the
+              MacBook notch into a small live surface.
+            </p>
+            <div class="stack"><span>macOS</span></div>
+          </article>
+          <article class="ticket" style="grid-column: span 6">
+            <div class="meta">
+              <span class="label">Product · early stage</span
+              ><span class="pill">Brand ready</span>
+            </div>
+            <h3>Aanka</h3>
+            <p>
+              A business partner for shop and salon owners that lives in
+              WhatsApp: it reads the numbers, tells you this week's figure
+              first, points out one thing, and suggests one action, in warm
+              Hinglish.
+            </p>
+            <div class="links">
+              <a href="https://aanka.vercel.app" target="_blank" rel="noopener"
+                >Brand identity →</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+      <section id="experience">
+        <div class="shead">
+          <h2>Experience</h2>
+          <span class="label">2021 – now</span>
+        </div>
+        <div class="timeline">
+          <div class="job">
+            <span class="when">Jun 2025 – now</span>
+            <div>
+              <h3>Senior Software Developer · Chain Labs</h3>
+              <p>
+                Python and LLM work for the team on a freelance basis, alongside
+                my own clients.
+              </p>
+            </div>
+            <span class="type">Freelance · remote</span>
+          </div>
+          <div class="job">
+            <span class="when">Jul 2021 – Feb 2025</span>
+            <div>
+              <h3>Frontend Tech Lead · Chain Labs</h3>
+              <p>
+                Led frontend for a blockchain product studio: minting pages,
+                event platforms and dApp frontends in TypeScript, React and
+                Next.js.
+              </p>
+            </div>
+            <span class="type">Full-time</span>
+          </div>
+          <div class="job">
+            <span class="when">Jan – Jun 2021</span>
+            <div>
+              <h3>Frontend Developer · Yellow Class</h3>
+              <p>Frontend internship at an ed-tech startup.</p>
+            </div>
+            <span class="type">Internship</span>
+          </div>
+          <div class="job">
+            <span class="when">Education</span>
+            <div><h3>Birla Institute of Technology, Mesra</h3></div>
+            <span class="type"></span>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="shead"><h2>Toolbox</h2></div>
+        <div class="skills">
+          <div>
+            <h3>Backend</h3>
+            <ul>
+              <li>Python 3.11+</li>
+              <li>FastAPI, Pydantic</li>
+              <li>SQLAlchemy, Alembic</li>
+              <li>PostgreSQL, SQLite, Redis</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Frontend</h3>
+            <ul>
+              <li>TypeScript, React</li>
+              <li>Next.js, Vite</li>
+              <li>Tailwind CSS</li>
+              <li>GSAP, SVG animation</li>
+            </ul>
+          </div>
+          <div>
+            <h3>AI</h3>
+            <ul>
+              <li>LLM routing and tool use</li>
+              <li>Agents and MCP servers</li>
+              <li>n8n automation</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Shipping</h3>
+            <ul>
+              <li>Docker Compose, Nginx</li>
+              <li>Fly.io, Vercel</li>
+              <li>uv, pytest, ruff</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section id="contact" class="contact" style="padding-top: 56px">
+        <h2>Got a role or a problem? Let's talk.</h2>
+        <dl>
+          <dt>LinkedIn</dt>
+          <dd>
+            <a
+              href="https://www.linkedin.com/in/ngllakra"
+              target="_blank"
+              rel="noopener"
+              >linkedin.com/in/ngllakra</a
+            >
+          </dd>
+          <dt>GitHub</dt>
+          <dd>
+            <a
+              href="https://github.com/angelxlakra"
+              target="_blank"
+              rel="noopener"
+              >github.com/angelxlakra</a
+            >
+          </dd>
+          <dt>Based in</dt>
+          <dd>Bengaluru · IST (UTC+5:30)</dd>
+        </dl>
+      </section>
+      <footer>© 2026 Angel Lakra</footer>
+    </div>
+    <a class="lib-back" href="/" aria-label="Back to the library"
+      ><svg
+        width="13"
+        height="13"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.4"
+      >
+        <path d="M15 5l-7 7 7 7" /></svg
+      >Library</a
+    >
+  </body>
+</html>

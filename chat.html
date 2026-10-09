@@ -1,221 +1,814 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
-.lib-back{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:99999;font:600 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;background:rgba(18,20,25,.88);color:#F1E9D8;text-decoration:none;padding:9px 13px 9px 11px;border-radius:999px;box-shadow:0 4px 16px rgba(0,0,0,.3);display:inline-flex;gap:7px;align-items:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.lib-back:hover{background:#000}.lib-back svg{flex:none}</style></head><body>
-<title>Chat with Angel</title>
-<style>
-
-:root{
---bg:#D9DBD5; --wall:#EFEAE2; --doodle:rgba(80,70,50,.06);
---head:#F0F2F5; --head-ink:#111B21; --muted:#667781;
---in:#FFFFFF; --out:#D9FDD3; --ink:#111B21; --tick:#53BDEB;
---chip:#FFFFFF; --chip-ink:#008069; --chip-line:#D1D7DB;
---brand:#008069; --side:#FFFFFF; --side-line:#E9EDEF; --side-sel:#F0F2F5;
---card:#F5F6F6;
---font:system-ui,-apple-system,"Segoe UI","Helvetica Neue",Roboto,sans-serif;
-}
-@media (prefers-color-scheme: dark){
-:root:not([data-theme="light"]){
---bg:#0C1317; --wall:#0B141A; --doodle:rgba(255,255,255,.035);
---head:#202C33; --head-ink:#E9EDEF; --muted:#8696A0;
---in:#202C33; --out:#005C4B; --ink:#E9EDEF; --tick:#53BDEB;
---chip:#202C33; --chip-ink:#21C063; --chip-line:#2A3942;
---brand:#21C063; --side:#111B21; --side-line:#222D34; --side-sel:#2A3942; --card:#1A262D; color-scheme:dark;
-}
-}
-:root[data-theme="dark"]{
---bg:#0C1317; --wall:#0B141A; --doodle:rgba(255,255,255,.035);
---head:#202C33; --head-ink:#E9EDEF; --muted:#8696A0;
---in:#202C33; --out:#005C4B; --ink:#E9EDEF; --tick:#53BDEB;
---chip:#202C33; --chip-ink:#21C063; --chip-line:#2A3942;
---brand:#21C063; --side:#111B21; --side-line:#222D34; --side-sel:#2A3942; --card:#1A262D; color-scheme:dark;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14.5px;line-height:1.45;padding-inline:16px;padding-block:16px;display:flex;justify-content:center}
-a{color:var(--brand)}
-:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
-.app{width:100%;max-width:1100px;height:100%;min-height:560px;display:grid;grid-template-columns:330px minmax(0,1fr);border-radius:10px;overflow:hidden;box-shadow:0 6px 30px rgba(0,0,0,.15)}
-/* sidebar */
-.side{background:var(--side);border-right:1px solid var(--side-line);display:flex;flex-direction:column;min-width:0}
-.side header{height:58px;background:var(--head);display:flex;align-items:center;padding-inline:16px;font-weight:600;font-size:1.05rem;color:var(--head-ink)}
-.side .note{padding:10px 16px;font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--side-line)}
-.side ul{list-style:none;margin:0;padding:0;overflow:auto}
-.side li{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--side-line)}
-.side li.sel{background:var(--side-sel)}
-.side .nm{font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.side .pv{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.side .tm{color:var(--muted);font-size:12px;align-self:start;padding-top:2px}
-.side .badge{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:10px;background:var(--brand);color:#fff;font-size:11.5px;font-weight:600;padding-inline:5px;margin-top:4px}
-.av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:15px}
-/* chat */
-.chat{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--wall);position:relative}
-.chat::before{content:"";position:absolute;inset:0;pointer-events:none;
-background-image:radial-gradient(var(--doodle) 1.2px,transparent 1.4px),radial-gradient(var(--doodle) 1.2px,transparent 1.4px);
-background-size:26px 26px,26px 26px;background-position:0 0,13px 13px}
-.chead{position:relative;z-index:1;height:58px;flex:none;background:var(--head);display:flex;align-items:center;gap:12px;padding-inline:16px;color:var(--head-ink)}
-.chead .av{width:40px;height:40px;font-size:14px}
-.chead b{display:block;font-weight:500;font-size:15.5px}
-.chead small{color:var(--muted);font-size:12.5px}
-.log{position:relative;z-index:1;flex:1;overflow-y:auto;padding:18px clamp(12px,6%,64px) 8px;display:flex;flex-direction:column;gap:3px;scroll-behavior:smooth}
-.day{align-self:center;background:var(--head);color:var(--muted);font-size:12px;padding:5px 12px;border-radius:8px;margin:6px 0 10px;box-shadow:0 1px .5px rgba(0,0,0,.08)}
-.enc{align-self:center;max-width:460px;text-align:center;background:color-mix(in srgb,#FFE9A8 70%,var(--wall));color:#54656F;font-size:12px;padding:6px 12px;border-radius:8px;margin-bottom:10px}
-:root[data-theme="dark"] .enc{background:#182229;color:#FFD279}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .enc{background:#182229;color:#FFD279}}
-.msg{max-width:min(78%,520px);padding:6px 9px 8px;border-radius:8px;box-shadow:0 1px .5px rgba(0,0,0,.13);position:relative;overflow-wrap:anywhere}
-.msg.in{align-self:flex-start;background:var(--in)}
-.msg.out{align-self:flex-end;background:var(--out)}
-.msg.first.in{border-top-left-radius:0;margin-top:8px}
-.msg.first.out{border-top-right-radius:0;margin-top:8px}
-.msg p{margin:0}
-.msg p + p{margin-top:6px}
-.msg .meta{float:right;margin:6px 0 -4px 12px;font-size:11px;color:var(--muted);display:inline-flex;gap:3px;align-items:center;position:relative;top:4px}
-.msg .meta svg{color:var(--tick)}
-.msg ul{margin:6px 0 0;padding-left:18px}
-.msg b{font-weight:600}
-/* link card inside a bubble */
-.lcard{display:block;background:var(--card);border-radius:6px;overflow:hidden;margin:2px -3px 6px;text-decoration:none;color:var(--ink);border-left:4px solid var(--brand)}
-.lcard .lc-body{padding:8px 10px}
-.lcard .lc-k{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-.lcard .lc-t{font-weight:600;margin:1px 0 2px}
-.lcard .lc-d{font-size:13px;color:var(--muted)}
-.lcard .lc-u{font-size:12px;color:var(--brand);margin-top:4px}
-.lcard .lc-art{height:84px;display:grid;place-items:center;font:700 13px/1 ui-monospace,Menlo,monospace;color:#fff;letter-spacing:.05em}
-/* contact card */
-.vcard{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;padding:4px 2px 8px;border-bottom:1px solid var(--chip-line);margin-bottom:6px}
-.vrows{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:13.5px}
-.vrows span:nth-child(odd){color:var(--muted)}
-.todo{font:12px ui-monospace,Menlo,monospace;background:rgba(127,127,127,.18);padding:0 5px;border-radius:4px}
-/* typing */
-.typing{align-self:flex-start;background:var(--in);border-radius:8px;padding:10px 12px;display:flex;gap:4px;box-shadow:0 1px .5px rgba(0,0,0,.13);margin-top:8px}
-.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:b 1.2s infinite}
-.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
-@keyframes b{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
-/* quick replies */
-.replies{position:relative;z-index:1;flex:none;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;padding:10px clamp(12px,6%,64px) 6px}
-.replies button{font:inherit;font-size:14px;background:var(--chip);color:var(--chip-ink);border:1px solid var(--chip-line);border-radius:18px;padding:7px 14px;cursor:pointer;box-shadow:0 1px .5px rgba(0,0,0,.08)}
-.replies button:hover{border-color:var(--chip-ink)}
-.replies button:disabled{opacity:.5;cursor:default}
-.composer{position:relative;z-index:1;flex:none;display:flex;align-items:center;gap:10px;padding:8px 14px 10px;background:var(--head)}
-.composer .fake{flex:1;background:var(--in);border-radius:8px;padding:9px 14px;color:var(--muted);font-size:14px}
-.composer .send{width:40px;height:40px;border-radius:50%;background:var(--brand);display:grid;place-items:center}
-@media (prefers-reduced-motion:reduce){.typing i{animation:none}.log{scroll-behavior:auto}}
-@media (max-width:820px){
-body{padding:0}
-.app{grid-template-columns:minmax(0,1fr);border-radius:0;min-height:100%}
-.side{display:none}
-.msg{max-width:88%}
-}
-</style>
-<div class="app">
-<aside class="side" aria-label="Chats">
-<header>Chats</header>
-<div class="note">A portfolio written as a chat. Pick a reply on the right to talk to Angel.</div>
-<ul>
-<li class="sel"><span class="av" style="background:#3B7A6A">AL</span><span style="min-width:0"><span class="nm" style="display:block">Angel Lakra</span><span class="pv" style="display:block" id="preview">Hi! I'm Angel 👋</span></span><span class="tm" id="t-side"></span></li>
-<li><span class="av" style="background:#B5651D">LC</span><span style="min-width:0"><span class="nm" style="display:block">Lily Cafe · Orders</span><span class="pv" style="display:block">KOT #0418 printed · T6</span></span><span class="tm">19:12</span></li>
-<li><span class="av" style="background:#6A4C93">SO</span><span style="min-width:0"><span class="nm" style="display:block">SalonOS backups</span><span class="pv" style="display:block">Nightly backup done ✓</span></span><span class="tm">23:30</span></li>
-<li><span class="av" style="background:#1F6E8C">Aa</span><span style="min-width:0"><span class="nm" style="display:block">Aanka</span><span class="pv" style="display:block">Maine aapka hafta aanka…</span></span><span class="tm">Mon</span></li>
-</ul>
-</aside>
-<main class="chat">
-<div class="chead">
-<span class="av" style="background:#3B7A6A">AL</span>
-<div><b>Angel Lakra</b><small id="status">online · full-stack engineer · Bengaluru</small></div>
-</div>
-<div class="log" id="log" aria-live="polite">
-<div class="day">TODAY</div>
-<div class="enc">This is a portfolio. Messages here are pre-written by Angel, and nothing you tap is sent anywhere.</div>
-</div>
-<div class="replies" id="replies" aria-label="Quick replies"></div>
-<div class="composer" aria-hidden="true">
-<div class="fake">Tap a reply above</div>
-<div class="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M3 20l18-8L3 4v6l12 2-12 2z"/></svg></div>
-</div>
-</main>
-</div>
-<script>
-const ticks='<svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 6l3 3 6-7M6 9l1 1 7-8"/></svg>';
-const now=()=>{try{return new Intl.DateTimeFormat('en-IN',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Kolkata'}).format(new Date())}catch(e){return ""}};
-document.getElementById('t-side').textContent=now();
-const card=(k,t,d,u,href,art)=>`<a class="lcard" href="${href}" target="_blank" rel="noopener">${art?`<div class="lc-art" style="background:${art[0]}">${art[1]}</div>`:""}<div class="lc-body"><div class="lc-k">${k}</div><div class="lc-t">${t}</div><div class="lc-d">${d}</div><div class="lc-u">${u}</div></div></a>`;
-const S={
-start:{bot:[
-`<p>Hi! I'm Angel 👋</p>`,
-`<p>I'm a full-stack engineer, Python first. I build the software small businesses actually run on: billing, stock, cash counts, and LLM features owners use every day.</p>`,
-`<p>What brings you here?</p>`],
-next:["hire","biz","work","contact"]},
-hire:{me:"I'm hiring",bot:[
-`<p>Great, thanks for stopping by. Short version:</p><ul><li><b>5+ years</b> shipping production software</li><li><b>3 yrs 8 mo</b> as Frontend Tech Lead at Chain Labs</li><li>Now <b>Python first</b>: FastAPI backends, LLM features, whole systems on my own</li></ul>`,
-`<p>I'm open to contract, freelance or full-time. Bengaluru, remote or hybrid.</p>`],
-next:["exp","work","ai","contact"]},
-biz:{me:"I run a business",bot:[
-`<p>Then we'll get along 😄 I build systems around how your shop already works:</p><ul><li>Billing with GST, kitchen chits and receipts</li><li>Stock, purchases and a daily cash count</li><li>A website that gives your brand a real presence</li><li>Automation for jobs you repeat every week</li></ul>`,
-`<p>Here's one that's running in a cafe right now:</p>${card("Point of sale · in daily use","Lily Cafe POS","Waiters order from phones, the kitchen gets a printed chit, the owner closes the day with a cash count.","github.com/angelxlakra","https://github.com/angelxlakra/lily-cafe-pos",["#B5651D","KOT #0418 · T6"])}`],
-next:["hindi","work","contact"]},
-work:{me:"Show me your work",bot:[
-`${card("Point of sale","Lily Cafe POS","Orders, split UPI/cash/card payments, GST bills, 80mm printing, cash counts, and an Ask box for the owner.","Source on GitHub","https://github.com/angelxlakra/lily-cafe-pos",["#B5651D","₹ · GST · KOT"])}`,
-`${card("Salon management · in development","SalonOS","Local-first billing, appointments and stock that keep working when the internet doesn't.","Source on GitHub","https://github.com/angelxlakra/efs-salon-os",["#6A4C93","LAN · NO CLOUD"])}`,
-`${card("Brand website","Mary's Kitchen","A scroll story for two Ranchi cafes, drawn in pen and ink, with a ramen bowl that comes apart as you scroll.","marys-ramen-unfolded.vercel.app","https://marys-ramen-unfolded.vercel.app",["#1D1D1D","WITH LOVE FROM MARY"])}`,
-`<p>After hours I make Mac apps: <b>DiskMap</b>, my own DaisyDisk in Python, and a <b>notch app</b> with my brother. I'm also early on <b>Aanka</b>, a business partner for shop owners that lives in WhatsApp. Like this chat, actually.</p>`],
-next:["ai","exp","contact"]},
-ai:{me:"How do you use AI?",bot:[
-`<p>Carefully 🙂 In the Lily Cafe POS the owner can ask <i>"kal ka cash counter"</i> or <i>"which dish did best since August"</i>.</p>`,
-`<p>The model only picks <b>which report</b> and <b>which dates</b>. The backend computes every number. So it can't invent a figure, and the owner can trust what they read.</p>`,
-`<p>I also build agents and MCP servers, and the POS has an optional read-only MCP server so the owner can connect their own assistant.</p>`],
-next:["work","hire","contact"]},
-exp:{me:"Where have you worked?",bot:[
-`<p><b>Chain Labs</b><br>Senior Software Developer, freelance · Jun 2025 – now<br>Frontend Tech Lead · Jul 2021 – Feb 2025</p>`,
-`<p><b>Yellow Class</b><br>Frontend Developer intern · Jan – Jun 2021</p>`,
-`<p><b>BIT Mesra</b> for my studies.</p>`],
-next:["work","ai","contact"]},
-hindi:{me:"Hindi mein baat karein?",bot:[
-`<p>Bilkul! 😊 Aapki dukaan ya cafe ke liye billing, stock aur cash ka hisaab ek jagah. Aap apne numbers Hindi ya Hinglish mein pooch sakte hain, jaise <i>"aaj ki sale kitni hui?"</i></p>`,
-`<p>Baat karni ho toh contact card neeche hai 👇</p>`],
-next:["contact","work"]},
-contact:{me:"How do I reach you?",bot:[
-`<div class="vcard"><span class="av" style="background:#3B7A6A">AL</span><div><b>Angel Lakra</b><div style="color:var(--muted);font-size:13px">Full-stack engineer · Bengaluru</div></div></div>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <style>
+      :root {
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      body {
+        margin: 0;
+      }
+      img {
+        max-width: 100%;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .lib-back {
+        position: fixed;
+        left: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        z-index: 99999;
+        font:
+          600 12px/1 system-ui,
+          -apple-system,
+          sans-serif;
+        letter-spacing: 0.02em;
+        background: rgba(18, 20, 25, 0.88);
+        color: #f1e9d8;
+        text-decoration: none;
+        padding: 9px 13px 9px 11px;
+        border-radius: 999px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        display: inline-flex;
+        gap: 7px;
+        align-items: center;
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+      }
+      .lib-back:hover {
+        background: #000;
+      }
+      .lib-back svg {
+        flex: none;
+      }
+    </style>
+  </head>
+  <body>
+    <title>Chat with Angel</title>
+    <style>
+      :root {
+        --bg: #d9dbd5;
+        --wall: #efeae2;
+        --doodle: rgba(80, 70, 50, 0.06);
+        --head: #f0f2f5;
+        --head-ink: #111b21;
+        --muted: #667781;
+        --in: #ffffff;
+        --out: #d9fdd3;
+        --ink: #111b21;
+        --tick: #53bdeb;
+        --chip: #ffffff;
+        --chip-ink: #008069;
+        --chip-line: #d1d7db;
+        --brand: #008069;
+        --side: #ffffff;
+        --side-line: #e9edef;
+        --side-sel: #f0f2f5;
+        --card: #f5f6f6;
+        --font:
+          system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Roboto,
+          sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0c1317;
+          --wall: #0b141a;
+          --doodle: rgba(255, 255, 255, 0.035);
+          --head: #202c33;
+          --head-ink: #e9edef;
+          --muted: #8696a0;
+          --in: #202c33;
+          --out: #005c4b;
+          --ink: #e9edef;
+          --tick: #53bdeb;
+          --chip: #202c33;
+          --chip-ink: #21c063;
+          --chip-line: #2a3942;
+          --brand: #21c063;
+          --side: #111b21;
+          --side-line: #222d34;
+          --side-sel: #2a3942;
+          --card: #1a262d;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0c1317;
+        --wall: #0b141a;
+        --doodle: rgba(255, 255, 255, 0.035);
+        --head: #202c33;
+        --head-ink: #e9edef;
+        --muted: #8696a0;
+        --in: #202c33;
+        --out: #005c4b;
+        --ink: #e9edef;
+        --tick: #53bdeb;
+        --chip: #202c33;
+        --chip-ink: #21c063;
+        --chip-line: #2a3942;
+        --brand: #21c063;
+        --side: #111b21;
+        --side-line: #222d34;
+        --side-sel: #2a3942;
+        --card: #1a262d;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font);
+        font-size: 14.5px;
+        line-height: 1.45;
+        padding-inline: 16px;
+        padding-block: 16px;
+        display: flex;
+        justify-content: center;
+      }
+      a {
+        color: var(--brand);
+      }
+      :focus-visible {
+        outline: 2px solid var(--brand);
+        outline-offset: 2px;
+      }
+      .app {
+        width: 100%;
+        max-width: 1100px;
+        height: 100%;
+        min-height: 560px;
+        display: grid;
+        grid-template-columns: 330px minmax(0, 1fr);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+      }
+      /* sidebar */
+      .side {
+        background: var(--side);
+        border-right: 1px solid var(--side-line);
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .side header {
+        height: 58px;
+        background: var(--head);
+        display: flex;
+        align-items: center;
+        padding-inline: 16px;
+        font-weight: 600;
+        font-size: 1.05rem;
+        color: var(--head-ink);
+      }
+      .side .note {
+        padding: 10px 16px;
+        font-size: 12.5px;
+        color: var(--muted);
+        border-bottom: 1px solid var(--side-line);
+      }
+      .side ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+      }
+      .side li {
+        display: grid;
+        grid-template-columns: 46px minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: center;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--side-line);
+      }
+      .side li.sel {
+        background: var(--side-sel);
+      }
+      .side .nm {
+        font-weight: 500;
+        color: var(--ink);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .side .pv {
+        color: var(--muted);
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .side .tm {
+        color: var(--muted);
+        font-size: 12px;
+        align-self: start;
+        padding-top: 2px;
+      }
+      .side .badge {
+        display: inline-grid;
+        place-items: center;
+        min-width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        background: var(--brand);
+        color: #fff;
+        font-size: 11.5px;
+        font-weight: 600;
+        padding-inline: 5px;
+        margin-top: 4px;
+      }
+      .av {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        color: #fff;
+        font-size: 15px;
+      }
+      /* chat */
+      .chat {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        min-height: 0;
+        background: var(--wall);
+        position: relative;
+      }
+      .chat::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          radial-gradient(var(--doodle) 1.2px, transparent 1.4px),
+          radial-gradient(var(--doodle) 1.2px, transparent 1.4px);
+        background-size:
+          26px 26px,
+          26px 26px;
+        background-position:
+          0 0,
+          13px 13px;
+      }
+      .chead {
+        position: relative;
+        z-index: 1;
+        height: 58px;
+        flex: none;
+        background: var(--head);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-inline: 16px;
+        color: var(--head-ink);
+      }
+      .chead .av {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+      }
+      .chead b {
+        display: block;
+        font-weight: 500;
+        font-size: 15.5px;
+      }
+      .chead small {
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+      .log {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        overflow-y: auto;
+        padding: 18px clamp(12px, 6%, 64px) 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        scroll-behavior: smooth;
+      }
+      .day {
+        align-self: center;
+        background: var(--head);
+        color: var(--muted);
+        font-size: 12px;
+        padding: 5px 12px;
+        border-radius: 8px;
+        margin: 6px 0 10px;
+        box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.08);
+      }
+      .enc {
+        align-self: center;
+        max-width: 460px;
+        text-align: center;
+        background: color-mix(in srgb, #ffe9a8 70%, var(--wall));
+        color: #54656f;
+        font-size: 12px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+      :root[data-theme="dark"] .enc {
+        background: #182229;
+        color: #ffd279;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .enc {
+          background: #182229;
+          color: #ffd279;
+        }
+      }
+      .msg {
+        max-width: min(78%, 520px);
+        padding: 6px 9px 8px;
+        border-radius: 8px;
+        box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+        position: relative;
+        overflow-wrap: anywhere;
+      }
+      .msg.in {
+        align-self: flex-start;
+        background: var(--in);
+      }
+      .msg.out {
+        align-self: flex-end;
+        background: var(--out);
+      }
+      .msg.first.in {
+        border-top-left-radius: 0;
+        margin-top: 8px;
+      }
+      .msg.first.out {
+        border-top-right-radius: 0;
+        margin-top: 8px;
+      }
+      .msg p {
+        margin: 0;
+      }
+      .msg p + p {
+        margin-top: 6px;
+      }
+      .msg .meta {
+        float: right;
+        margin: 6px 0 -4px 12px;
+        font-size: 11px;
+        color: var(--muted);
+        display: inline-flex;
+        gap: 3px;
+        align-items: center;
+        position: relative;
+        top: 4px;
+      }
+      .msg .meta svg {
+        color: var(--tick);
+      }
+      .msg ul {
+        margin: 6px 0 0;
+        padding-left: 18px;
+      }
+      .msg b {
+        font-weight: 600;
+      }
+      /* link card inside a bubble */
+      .lcard {
+        display: block;
+        background: var(--card);
+        border-radius: 6px;
+        overflow: hidden;
+        margin: 2px -3px 6px;
+        text-decoration: none;
+        color: var(--ink);
+        border-left: 4px solid var(--brand);
+      }
+      .lcard .lc-body {
+        padding: 8px 10px;
+      }
+      .lcard .lc-k {
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .lcard .lc-t {
+        font-weight: 600;
+        margin: 1px 0 2px;
+      }
+      .lcard .lc-d {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .lcard .lc-u {
+        font-size: 12px;
+        color: var(--brand);
+        margin-top: 4px;
+      }
+      .lcard .lc-art {
+        height: 84px;
+        display: grid;
+        place-items: center;
+        font:
+          700 13px/1 ui-monospace,
+          Menlo,
+          monospace;
+        color: #fff;
+        letter-spacing: 0.05em;
+      }
+      /* contact card */
+      .vcard {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 10px;
+        align-items: center;
+        padding: 4px 2px 8px;
+        border-bottom: 1px solid var(--chip-line);
+        margin-bottom: 6px;
+      }
+      .vrows {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 4px 12px;
+        font-size: 13.5px;
+      }
+      .vrows span:nth-child(odd) {
+        color: var(--muted);
+      }
+      .todo {
+        font:
+          12px ui-monospace,
+          Menlo,
+          monospace;
+        background: rgba(127, 127, 127, 0.18);
+        padding: 0 5px;
+        border-radius: 4px;
+      }
+      /* typing */
+      .typing {
+        align-self: flex-start;
+        background: var(--in);
+        border-radius: 8px;
+        padding: 10px 12px;
+        display: flex;
+        gap: 4px;
+        box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+        margin-top: 8px;
+      }
+      .typing i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--muted);
+        animation: b 1.2s infinite;
+      }
+      .typing i:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .typing i:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      @keyframes b {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.5;
+        }
+        30% {
+          transform: translateY(-4px);
+          opacity: 1;
+        }
+      }
+      /* quick replies */
+      .replies {
+        position: relative;
+        z-index: 1;
+        flex: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+        padding: 10px clamp(12px, 6%, 64px) 6px;
+      }
+      .replies button {
+        font: inherit;
+        font-size: 14px;
+        background: var(--chip);
+        color: var(--chip-ink);
+        border: 1px solid var(--chip-line);
+        border-radius: 18px;
+        padding: 7px 14px;
+        cursor: pointer;
+        box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.08);
+      }
+      .replies button:hover {
+        border-color: var(--chip-ink);
+      }
+      .replies button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .composer {
+        position: relative;
+        z-index: 1;
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px 10px;
+        background: var(--head);
+      }
+      .composer .fake {
+        flex: 1;
+        background: var(--in);
+        border-radius: 8px;
+        padding: 9px 14px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .composer .send {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--brand);
+        display: grid;
+        place-items: center;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .typing i {
+          animation: none;
+        }
+        .log {
+          scroll-behavior: auto;
+        }
+      }
+      @media (max-width: 820px) {
+        body {
+          padding: 0;
+        }
+        .app {
+          grid-template-columns: minmax(0, 1fr);
+          border-radius: 0;
+          min-height: 100%;
+        }
+        .side {
+          display: none;
+        }
+        .msg {
+          max-width: 88%;
+        }
+      }
+    </style>
+    <div class="app">
+      <aside class="side" aria-label="Chats">
+        <header>Chats</header>
+        <div class="note">
+          A portfolio written as a chat. Pick a reply on the right to talk to
+          Angel.
+        </div>
+        <ul>
+          <li class="sel">
+            <span class="av" style="background: #3b7a6a">AL</span
+            ><span style="min-width: 0"
+              ><span class="nm" style="display: block">Angel Lakra</span
+              ><span class="pv" style="display: block" id="preview"
+                >Hi! I'm Angel 👋</span
+              ></span
+            ><span class="tm" id="t-side"></span>
+          </li>
+          <li>
+            <span class="av" style="background: #b5651d">LC</span
+            ><span style="min-width: 0"
+              ><span class="nm" style="display: block">Lily Cafe · Orders</span
+              ><span class="pv" style="display: block"
+                >KOT #0418 printed · T6</span
+              ></span
+            ><span class="tm">19:12</span>
+          </li>
+          <li>
+            <span class="av" style="background: #6a4c93">SO</span
+            ><span style="min-width: 0"
+              ><span class="nm" style="display: block">SalonOS backups</span
+              ><span class="pv" style="display: block"
+                >Nightly backup done ✓</span
+              ></span
+            ><span class="tm">23:30</span>
+          </li>
+          <li>
+            <span class="av" style="background: #1f6e8c">Aa</span
+            ><span style="min-width: 0"
+              ><span class="nm" style="display: block">Aanka</span
+              ><span class="pv" style="display: block"
+                >Maine aapka hafta aanka…</span
+              ></span
+            ><span class="tm">Mon</span>
+          </li>
+        </ul>
+      </aside>
+      <main class="chat">
+        <div class="chead">
+          <span class="av" style="background: #3b7a6a">AL</span>
+          <div>
+            <b>Angel Lakra</b
+            ><small id="status">online · full-stack engineer · Bengaluru</small>
+          </div>
+        </div>
+        <div class="log" id="log" aria-live="polite">
+          <div class="day">TODAY</div>
+          <div class="enc">
+            This is a portfolio. Messages here are pre-written by Angel, and
+            nothing you tap is sent anywhere.
+          </div>
+        </div>
+        <div class="replies" id="replies" aria-label="Quick replies"></div>
+        <div class="composer" aria-hidden="true">
+          <div class="fake">Tap a reply above</div>
+          <div class="send">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
+              <path d="M3 20l18-8L3 4v6l12 2-12 2z" />
+            </svg>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      const ticks =
+        '<svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 6l3 3 6-7M6 9l1 1 7-8"/></svg>';
+      const now = () => {
+        try {
+          return new Intl.DateTimeFormat("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+            timeZone: "Asia/Kolkata",
+          }).format(new Date());
+        } catch (e) {
+          return "";
+        }
+      };
+      document.getElementById("t-side").textContent = now();
+      const card = (k, t, d, u, href, art) =>
+        `<a class="lcard" href="${href}" target="_blank" rel="noopener">${art ? `<div class="lc-art" style="background:${art[0]}">${art[1]}</div>` : ""}<div class="lc-body"><div class="lc-k">${k}</div><div class="lc-t">${t}</div><div class="lc-d">${d}</div><div class="lc-u">${u}</div></div></a>`;
+      const S = {
+        start: {
+          bot: [
+            `<p>Hi! I'm Angel 👋</p>`,
+            `<p>I'm a full-stack engineer, Python first. I build the software small businesses actually run on: billing, stock, cash counts, and LLM features owners use every day.</p>`,
+            `<p>What brings you here?</p>`,
+          ],
+          next: ["hire", "biz", "work", "contact"],
+        },
+        hire: {
+          me: "I'm hiring",
+          bot: [
+            `<p>Great, thanks for stopping by. Short version:</p><ul><li><b>5+ years</b> shipping production software</li><li><b>3 yrs 8 mo</b> as Frontend Tech Lead at Chain Labs</li><li>Now <b>Python first</b>: FastAPI backends, LLM features, whole systems on my own</li></ul>`,
+            `<p>I'm open to contract, freelance or full-time. Bengaluru, remote or hybrid.</p>`,
+          ],
+          next: ["exp", "work", "ai", "contact"],
+        },
+        biz: {
+          me: "I run a business",
+          bot: [
+            `<p>Then we'll get along 😄 I build systems around how your shop already works:</p><ul><li>Billing with GST, kitchen chits and receipts</li><li>Stock, purchases and a daily cash count</li><li>A website that gives your brand a real presence</li><li>Automation for jobs you repeat every week</li></ul>`,
+            `<p>Here's one that's running in a cafe right now:</p>${card("Point of sale · in daily use", "Lily Cafe POS", "Waiters order from phones, the kitchen gets a printed chit, the owner closes the day with a cash count.", "github.com/angelxlakra", "https://github.com/angelxlakra/lily-cafe-pos", ["#B5651D", "KOT #0418 · T6"])}`,
+          ],
+          next: ["hindi", "work", "contact"],
+        },
+        work: {
+          me: "Show me your work",
+          bot: [
+            `${card("Point of sale", "Lily Cafe POS", "Orders, split UPI/cash/card payments, GST bills, 80mm printing, cash counts, and an Ask box for the owner.", "Source on GitHub", "https://github.com/angelxlakra/lily-cafe-pos", ["#B5651D", "₹ · GST · KOT"])}`,
+            `${card("Salon management · in development", "SalonOS", "Local-first billing, appointments and stock that keep working when the internet doesn't.", "Source on GitHub", "https://github.com/angelxlakra/efs-salon-os", ["#6A4C93", "LAN · NO CLOUD"])}`,
+            `${card("Brand website", "Mary's Kitchen", "A scroll story for two Ranchi cafes, drawn in pen and ink, with a ramen bowl that comes apart as you scroll.", "marys-ramen-unfolded.vercel.app", "https://marys-ramen-unfolded.vercel.app", ["#1D1D1D", "WITH LOVE FROM MARY"])}`,
+            `<p>After hours I make Mac apps: <b>DiskMap</b>, my own DaisyDisk in Python, and a <b>notch app</b> with my brother. I'm also early on <b>Aanka</b>, a business partner for shop owners that lives in WhatsApp. Like this chat, actually.</p>`,
+          ],
+          next: ["ai", "exp", "contact"],
+        },
+        ai: {
+          me: "How do you use AI?",
+          bot: [
+            `<p>Carefully 🙂 In the Lily Cafe POS the owner can ask <i>"kal ka cash counter"</i> or <i>"which dish did best since August"</i>.</p>`,
+            `<p>The model only picks <b>which report</b> and <b>which dates</b>. The backend computes every number. So it can't invent a figure, and the owner can trust what they read.</p>`,
+            `<p>I also build agents and MCP servers, and the POS has an optional read-only MCP server so the owner can connect their own assistant.</p>`,
+          ],
+          next: ["work", "hire", "contact"],
+        },
+        exp: {
+          me: "Where have you worked?",
+          bot: [
+            `<p><b>Chain Labs</b><br>Senior Software Developer, freelance · Jun 2025 – now<br>Frontend Tech Lead · Jul 2021 – Feb 2025</p>`,
+            `<p><b>Yellow Class</b><br>Frontend Developer intern · Jan – Jun 2021</p>`,
+            `<p><b>BIT Mesra</b> for my studies.</p>`,
+          ],
+          next: ["work", "ai", "contact"],
+        },
+        hindi: {
+          me: "Hindi mein baat karein?",
+          bot: [
+            `<p>Bilkul! 😊 Aapki dukaan ya cafe ke liye billing, stock aur cash ka hisaab ek jagah. Aap apne numbers Hindi ya Hinglish mein pooch sakte hain, jaise <i>"aaj ki sale kitni hui?"</i></p>`,
+            `<p>Baat karni ho toh contact card neeche hai 👇</p>`,
+          ],
+          next: ["contact", "work"],
+        },
+        contact: {
+          me: "How do I reach you?",
+          bot: [
+            `<div class="vcard"><span class="av" style="background:#3B7A6A">AL</span><div><b>Angel Lakra</b><div style="color:var(--muted);font-size:13px">Full-stack engineer · Bengaluru</div></div></div>
 <div class="vrows"><span>LinkedIn</span><a href="https://www.linkedin.com/in/ngllakra" target="_blank" rel="noopener">linkedin.com/in/ngllakra</a>
 <span>GitHub</span><a href="https://github.com/angelxlakra" target="_blank" rel="noopener">github.com/angelxlakra</a></div>`,
-`<p>I usually reply the same day, IST. Looking forward to it!</p>`],
-next:["work","hire","biz"]}
-};
-const log=document.getElementById('log'),replies=document.getElementById('replies'),statusEl=document.getElementById('status'),preview=document.getElementById('preview');
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const seen=new Set();
-let lastSide=null;
-function bubble(html,side){
-const d=document.createElement('div');d.className='msg '+side+(lastSide!==side?' first':'');lastSide=side;
-d.innerHTML=html+`<span class="meta">${now()}${side==='out'?ticks:''}</span>`;
-log.appendChild(d);log.scrollTop=log.scrollHeight;
-}
-function setReplies(keys){
-replies.innerHTML="";
-keys.filter(k=>k!=="start").forEach(k=>{
-const b=document.createElement('button');b.textContent=S[k].me;b.addEventListener('click',()=>go(k));replies.appendChild(b);
-});
-}
-const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
-async function go(key,instant){
-const s=S[key];
-replies.querySelectorAll('button').forEach(b=>b.disabled=true);
-if(s.me){bubble(`<p>${s.me}</p>`,'out')}
-for(const html of s.bot){
-if(!instant){
-statusEl.textContent='typing…';
-const t=document.createElement('div');t.className='typing';t.innerHTML='<i></i><i></i><i></i>';log.appendChild(t);log.scrollTop=log.scrollHeight;
-await wait(Math.min(1400,500+html.replace(/<[^>]+>/g,'').length*6));
-t.remove();
-}
-bubble(html,'in');
-preview.textContent=html.replace(/<[^>]+>/g,'').trim().slice(0,60);
-}
-statusEl.textContent='online · full-stack engineer · Bengaluru';
-seen.add(key);
-const fresh=s.next.filter(k=>!seen.has(k));
-setReplies(fresh.length?fresh:["work","hire","biz","contact"].filter(k=>k!==key));
-}
-go("start",true);
-</script>
-<a class="lib-back" href="/" aria-label="Back to the library"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg>Library</a>
-</body></html>
+            `<p>I usually reply the same day, IST. Looking forward to it!</p>`,
+          ],
+          next: ["work", "hire", "biz"],
+        },
+      };
+      const log = document.getElementById("log"),
+        replies = document.getElementById("replies"),
+        statusEl = document.getElementById("status"),
+        preview = document.getElementById("preview");
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const seen = new Set();
+      let lastSide = null;
+      function bubble(html, side) {
+        const d = document.createElement("div");
+        d.className = "msg " + side + (lastSide !== side ? " first" : "");
+        lastSide = side;
+        d.innerHTML =
+          html +
+          `<span class="meta">${now()}${side === "out" ? ticks : ""}</span>`;
+        log.appendChild(d);
+        log.scrollTop = log.scrollHeight;
+      }
+      function setReplies(keys) {
+        replies.innerHTML = "";
+        keys
+          .filter((k) => k !== "start")
+          .forEach((k) => {
+            const b = document.createElement("button");
+            b.textContent = S[k].me;
+            b.addEventListener("click", () => go(k));
+            replies.appendChild(b);
+          });
+      }
+      const wait = (ms) => new Promise((r) => setTimeout(r, reduce ? 0 : ms));
+      async function go(key, instant) {
+        const s = S[key];
+        replies.querySelectorAll("button").forEach((b) => (b.disabled = true));
+        if (s.me) {
+          bubble(`<p>${s.me}</p>`, "out");
+        }
+        for (const html of s.bot) {
+          if (!instant) {
+            statusEl.textContent = "typing…";
+            const t = document.createElement("div");
+            t.className = "typing";
+            t.innerHTML = "<i></i><i></i><i></i>";
+            log.appendChild(t);
+            log.scrollTop = log.scrollHeight;
+            await wait(
+              Math.min(1400, 500 + html.replace(/<[^>]+>/g, "").length * 6),
+            );
+            t.remove();
+          }
+          bubble(html, "in");
+          preview.textContent = html
+            .replace(/<[^>]+>/g, "")
+            .trim()
+            .slice(0, 60);
+        }
+        statusEl.textContent = "online · full-stack engineer · Bengaluru";
+        seen.add(key);
+        const fresh = s.next.filter((k) => !seen.has(k));
+        setReplies(
+          fresh.length
+            ? fresh
+            : ["work", "hire", "biz", "contact"].filter((k) => k !== key),
+        );
+      }
+      go("start", true);
+    </script>
+    <a class="lib-back" href="/" aria-label="Back to the library"
+      ><svg
+        width="13"
+        height="13"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.4"
+      >
+        <path d="M15 5l-7 7 7 7" /></svg
+      >Library</a
+    >
+  </body>
+</html>
