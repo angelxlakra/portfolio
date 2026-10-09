@@ -466,7 +466,7 @@
         <div>
           <span class="n">step 2</span><b>A router picks one card</b>
           <p>
-            Claude returns only a card id and a language flag. If it isn't
+            A model returns only a card id and a language flag. If it isn't
             available, a keyword matcher does the same job.
           </p>
         </div>
@@ -768,42 +768,24 @@
         }
         return { card: best, hinglish: HINGLISH.test(q) };
       }
-      let samplerP = (async () => {
-        try {
-          return window.claude?.use ? await window.claude.use("sample") : null;
-        } catch (e) {
-          return null;
-        }
-      })();
-      let samplerDead = false;
+      // The server only ever returns { card, hinglish }. On any failure
+      // (not configured, rate limited, slow, offline) the keyword matcher answers.
       async function route(q) {
-        const sample = samplerDead
-          ? null
-          : await Promise.race([
-              samplerP,
-              new Promise((r) => setTimeout(() => r(null), 1500)),
-            ]);
-        if (sample) {
-          try {
-            const list = Object.entries(CARDS)
-              .map(([id, c]) => `${id}: ${c.k} — ${c.t}`)
-              .join("\n");
-            const out = await sample.json(
-              `You route questions on a developer's portfolio to ONE pre-written answer card. Do not answer the question yourself.
-Cards:
-${list}
-Rules: pick the single best card id. Use "none" if no card covers it or the question is not about Angel's work. Set hinglish true if the question is in Hindi or Hinglish.
-Question: """${q.slice(0, 200)}"""
-Reply with JSON only: {"card":"<id>","hinglish":true|false}`,
-              { modelTier: "quick" },
-            );
-            if (out && CARDS[out.card])
-              return { card: out.card, hinglish: !!out.hinglish, by: "Claude" };
-          } catch (e) {
-            if (e && (e.code === "not_granted" || e.code === "rate_limited"))
-              samplerDead = true;
-          }
-        }
+        try {
+          const r = await fetch("/api/route", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ q: q.slice(0, 200) }),
+            signal: AbortSignal.timeout(6000),
+          });
+          const out = r.ok && (await r.json());
+          if (out && CARDS[out.card])
+            return {
+              card: out.card,
+              hinglish: !!out.hinglish,
+              by: "an AI router",
+            };
+        } catch (e) {}
         return { ...keywordRoute(q), by: "keyword match" };
       }
       const ans = document.getElementById("answer");

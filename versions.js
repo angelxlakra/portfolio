@@ -53,7 +53,7 @@ globalThis.VERSIONS = [
     tags: ["recruiters", "interactive", "ai"],
     line: "Ask anything. The AI only picks which of Angel's own cards answers.",
     cls: "p-ask",
-    html: `<div class="q">Ask me <em>anything</em> about my work.</div><div class="box"><div class="typed"><span>Have you built anything with FastAPI?</span><span>kya aap billing software bana sakte ho?</span><span>How do you stop an LLM making up numbers?</span></div><b>Ask</b></div><div class="ans"><div class="rt">routed by Claude → <i>card: lily</i> <i>hinglish</i></div><div class="bd"><strong>Lily Cafe POS</strong><u></u><u style="width:85%"></u><u style="width:65%"></u></div></div>`,
+    html: `<div class="q">Ask me <em>anything</em> about my work.</div><div class="box"><div class="typed"><span>Have you built anything with FastAPI?</span><span>kya aap billing software bana sakte ho?</span><span>How do you stop an LLM making up numbers?</span></div><b>Ask</b></div><div class="ans"><div class="rt">routed by AI → <i>card: lily</i> <i>hinglish</i></div><div class="bd"><strong>Lily Cafe POS</strong><u></u><u style="width:85%"></u><u style="width:65%"></u></div></div>`,
   },
   {
     id: "ink",
