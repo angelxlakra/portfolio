@@ -6,260 +6,365 @@
       name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
-    <style>
-      :root {
-        padding-top: env(safe-area-inset-top, 0px);
-        padding-bottom: env(safe-area-inset-bottom, 0px);
-      }
-      body {
-        margin: 0;
-      }
-      img {
-        max-width: 100%;
-      }
-      [hidden] {
-        display: none !important;
-      }
-      .lib-back {
-        position: fixed;
-        left: 12px;
-        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-        z-index: 99999;
-        font:
-          600 12px/1 system-ui,
-          -apple-system,
-          sans-serif;
-        letter-spacing: 0.02em;
-        background: rgba(18, 20, 25, 0.88);
-        color: #f1e9d8;
-        text-decoration: none;
-        padding: 9px 13px 9px 11px;
-        border-radius: 999px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        display: inline-flex;
-        gap: 7px;
-        align-items: center;
-        -webkit-backdrop-filter: blur(6px);
-        backdrop-filter: blur(6px);
-      }
-      .lib-back:hover {
-        background: #000;
-      }
-      .lib-back svg {
-        flex: none;
-      }
-    </style>
-    <script src="/content.js"></script>
-  </head>
-  <body>
-    <title>Angel Lakra</title>
+    <title>Angel Lakra · Full-stack engineer, Bengaluru</title>
+    <meta
+      name="description"
+      content="Full-stack engineer in Bengaluru. Python first. POS systems, back-office tools and LLM features for small businesses."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Angel Lakra · Full-stack engineer, Bengaluru"
+    />
+    <meta
+      property="og:description"
+      content="POS systems, back-office tools and LLM features that small-business owners use every day."
+    />
+    <meta
+      name="theme-color"
+      content="#f4f0e8"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#161412"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b4382a'/%3E%3Cpath d='M9 23 16 8l7 15M12 18h8' fill='none' stroke='%23fffdf8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@400..600&family=Geist+Mono:wght@400..600&display=swap"
     />
     <style>
+      /* Layout: an account book. A folio column on the left carries the section numbers, a red margin rule
+   runs the full page, and everything hangs off that rule, left-aligned. The till receipt is the one loose object. */
       :root {
-        --bg: #eceef1; /* cool desk grey */
-        --surface: #f8f9fa; /* card */
-        --paper: #ffffff; /* thermal paper */
-        --ink: #15181d;
-        --muted: #5b6270;
-        --line: #cdd2d9;
-        --accent: #2e43d1; /* ballpoint blue */
-        --accent-soft: #e2e6fb;
-        --ok: #1f7a4d;
-        --font-display: "Archivo", "Arial Narrow", Arial, sans-serif;
-        --font-body:
-          "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-        --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
-        --step-0: 1rem;
-        --step-1: 1.2rem;
-        --step-2: 1.6rem;
-        --step-3: 2.4rem;
-        --step-4: clamp(2.6rem, 7vw, 5.2rem);
+        color-scheme: light dark;
+        --bg: #f4f0e8;
+        --surface: #ebe6db;
+        --ink: #1d1a16;
+        --muted: #6b645a;
+        --line: rgba(29, 26, 22, 0.15);
+        --accent: #b4382a;
+        --ok: #2f6b45;
+        --paper: #fffdf8;
+        --paper-ink: #1b1b1b;
+        --shadow: 70 45 20;
+        --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+        --body: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+        --mono: "Geist Mono", ui-monospace, Menlo, Consolas, monospace;
+        --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+        --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+        --gutter: clamp(18px, 4vw, 48px);
+        --folio: 132px;
+        --inset: clamp(20px, 3vw, 40px);
+        --z-receipt: 1;
+        --z-nav: 10;
+        --z-grain: 20;
       }
       @media (prefers-color-scheme: dark) {
-        :root:not([data-theme="light"]) {
-          --bg: #111317;
-          --surface: #181b21;
-          --paper: #e9eae4;
-          --ink: #e8eaee;
-          --muted: #9aa1ad;
-          --line: #2b3038;
-          --accent: #8f9bff;
-          --accent-soft: #1e2340;
-          --ok: #5bc48c;
-          color-scheme: dark;
+        :root {
+          --bg: #161412;
+          --surface: #201d19;
+          --ink: #efeae0;
+          --muted: #a39b8f;
+          --line: rgba(239, 234, 224, 0.15);
+          --accent: #e0705f;
+          --ok: #6fbf8a;
+          --paper: #ede9df;
+          --shadow: 0 0 0;
         }
-      }
-      :root[data-theme="dark"] {
-        --bg: #111317;
-        --surface: #181b21;
-        --paper: #e9eae4;
-        --ink: #e8eaee;
-        --muted: #9aa1ad;
-        --line: #2b3038;
-        --accent: #8f9bff;
-        --accent-soft: #1e2340;
-        --ok: #5bc48c;
-        color-scheme: dark;
       }
       * {
         box-sizing: border-box;
       }
+      html {
+        -webkit-text-size-adjust: 100%;
+        scroll-padding-top: 76px;
+        overflow-x: clip;
+      }
       body {
+        margin: 0;
         background: var(--bg);
         color: var(--ink);
-        font-family: var(--font-body);
-        font-size: var(--step-0);
-        line-height: 1.6;
-        padding-inline: clamp(16px, 4vw, 48px);
-        padding-block: 0;
+        font: 1.0625rem/1.6 var(--body);
+        -webkit-font-smoothing: antialiased;
+        padding-inline: var(--gutter);
+      }
+      /* grain: one fixed sheet over everything, so the flats read as paper */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: var(--z-grain);
+        pointer-events: none;
+        opacity: 0.5;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .15 0 0 0 0 .1 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+      ::selection {
+        background: var(--accent);
+        color: var(--paper);
       }
       a {
-        color: var(--accent);
-        text-underline-offset: 3px;
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 4px;
+        transition: color 0.2s ease;
       }
       a:focus-visible,
-      button:focus-visible {
+      summary:focus-visible {
         outline: 2px solid var(--accent);
         outline-offset: 3px;
-        border-radius: 2px;
+        border-radius: 4px;
       }
-      .wrap {
-        max-width: 1120px;
-        margin-inline: auto;
+      p {
+        margin: 0;
+        text-wrap: pretty;
+        max-width: 62ch;
       }
       h1,
       h2,
       h3 {
-        font-family: var(--font-display);
-        text-wrap: balance;
         margin: 0;
-        line-height: 1.05;
+        font-family: var(--display);
+        font-weight: 600;
+        text-wrap: balance;
+      }
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .skip {
+        position: absolute;
+        left: -999px;
+      }
+      .skip:focus {
+        left: var(--gutter);
+        top: 12px;
+        z-index: var(--z-grain);
+        background: var(--ink);
+        color: var(--bg);
+        padding: 10px 16px;
+        border-radius: 8px;
+      }
+      .wrap {
+        max-width: 1240px;
+        margin-inline: auto;
       }
       .label {
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        font: 500 0.75rem/1.4 var(--mono);
+        letter-spacing: 0.02em;
         color: var(--muted);
       }
-      /* top bar */
-      .top {
+      .arr {
+        display: inline-block;
+        transition: translate 0.2s var(--ease-out);
+      }
+
+      /* nav: full-bleed bar, page scrolls underneath */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: var(--z-nav);
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 16px;
-        flex-wrap: wrap;
-        padding-block: 24px;
+        margin-inline: calc(-1 * var(--gutter));
+        padding: max(10px, env(safe-area-inset-top)) var(--gutter) 10px;
         border-bottom: 1px solid var(--line);
+        background: color-mix(in srgb, var(--bg) 82%, transparent);
+        -webkit-backdrop-filter: blur(14px);
+        backdrop-filter: blur(14px);
       }
-      .top .mark {
-        font-family: var(--font-display);
-        font-weight: 800;
-        font-stretch: 125%;
-        letter-spacing: -0.01em;
-      }
-      .top nav {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        font-size: 0.95rem;
-      }
-      .top nav a {
-        color: var(--ink);
+      .nav .mark {
+        font: 600 1.0625rem var(--display);
+        letter-spacing: -0.02em;
         text-decoration: none;
+        white-space: nowrap;
       }
-      .top nav a:hover {
+      .nav nav {
+        display: flex;
+        gap: clamp(14px, 3vw, 28px);
+        font-size: 0.9rem;
+      }
+      .nav nav a {
+        color: var(--muted);
+        text-decoration: none;
+        padding-block: 10px;
+        background: linear-gradient(var(--accent), var(--accent)) 0 100%/0 2px
+          no-repeat;
+        transition:
+          color 0.2s ease,
+          background-size 0.3s var(--ease-out);
+      }
+      .nav nav a[aria-current] {
+        color: var(--ink);
+        background-size: 100% 2px;
+      }
+
+      /* the book: folio column, margin rule, content */
+      main {
+        position: relative;
+      }
+      main::before {
+        content: "";
+        position: absolute;
+        left: var(--folio);
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: color-mix(in srgb, var(--accent) 45%, transparent);
+      }
+      .sec {
+        display: grid;
+        grid-template-columns: var(--folio) minmax(0, 1fr);
+        padding-top: clamp(72px, 10vw, 136px);
+      }
+      .folio {
+        position: sticky;
+        top: 76px;
+        align-self: start;
+        padding-top: 0.5rem;
+      }
+      .folio b {
+        display: block;
+        font-weight: 500;
         color: var(--accent);
       }
+      .col {
+        padding-left: var(--inset);
+        min-width: 0;
+      }
+      .shead {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: clamp(28px, 4vw, 48px);
+      }
+      .shead h2 {
+        font-size: clamp(2rem, 4.6vw, 3.5rem);
+        line-height: 1;
+        letter-spacing: -0.035em;
+      }
+
+      /* buttons */
+      .btn {
+        display: inline-block;
+        padding: 13px 22px;
+        border-radius: 10px;
+        background: var(--ink);
+        color: var(--bg);
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background-color 0.2s ease,
+          transform 0.12s ease-out;
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+      .tlink {
+        font-weight: 500;
+        padding-block: 13px;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        a:hover {
+          color: var(--accent);
+        }
+        .nav nav a:hover {
+          color: var(--ink);
+        }
+        .btn:hover {
+          background: var(--accent);
+          color: var(--paper);
+        }
+        a:hover .arr {
+          translate: 3px 0;
+        }
+      }
+
       /* hero */
       .hero {
+        padding-top: clamp(40px, 7vw, 96px);
+      }
+      .hero .col {
         display: grid;
-        grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
-        gap: clamp(32px, 6vw, 80px);
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
+        gap: clamp(32px, 5vw, 72px);
         align-items: start;
-        padding-block: clamp(48px, 8vw, 96px) 64px;
-      }
-      .hero h1 {
-        font-size: var(--step-4);
-        font-weight: 800;
-        font-stretch: 72%;
-        letter-spacing: -0.015em;
-        text-transform: uppercase;
-      }
-      .hero h1 em {
-        font-style: normal;
-        color: var(--accent);
-      }
-      .hero .lede {
-        font-size: var(--step-1);
-        max-width: 34ch;
-        margin-top: 24px;
-        color: var(--ink);
       }
       .status {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        margin-bottom: 24px;
-        font-family: var(--font-mono);
-        font-size: 0.8rem;
+        gap: 10px;
         color: var(--ok);
+        font: 500 0.8rem var(--mono);
       }
       .status i {
-        width: 8px;
-        height: 8px;
+        position: relative;
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
-        background: var(--ok);
-        box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 20%, transparent);
+        background: currentColor;
+      }
+      .hero h1 {
+        font-size: clamp(2.6rem, 5.7vw, 4.9rem);
+        line-height: 0.98;
+        letter-spacing: -0.045em;
+        margin-top: 22px;
+      }
+      .hero h1 em {
+        font-style: normal;
+        background: linear-gradient(var(--accent), var(--accent)) 0 93%/100%
+          0.08em no-repeat;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+      }
+      .hero .lede {
+        font-size: clamp(1.125rem, 1.6vw, 1.3rem);
+        line-height: 1.45;
+        color: var(--muted);
+        max-width: 40ch;
+        margin-top: 28px;
       }
       .ctas {
         display: flex;
-        gap: 12px;
+        align-items: center;
+        gap: 22px;
         flex-wrap: wrap;
-        margin-top: 32px;
+        margin-top: 34px;
       }
-      .btn {
-        display: inline-block;
-        padding: 12px 20px;
-        font-weight: 600;
-        text-decoration: none;
-        border: 1.5px solid var(--ink);
-        color: var(--ink);
-        background: transparent;
-      }
-      .btn.primary {
-        background: var(--ink);
-        color: var(--bg);
-      }
-      .btn:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-      }
-      .btn.primary:hover {
-        background: var(--accent);
-        color: var(--bg);
-      }
-      /* receipt */
+
+      /* receipt: shadow sits on the wrapper so the torn-edge mask can't clip it */
       .receipt {
-        background: var(--paper);
-        color: #1b1b1b;
-        font-family: var(--font-mono);
-        font-size: 0.82rem;
-        line-height: 1.55;
-        padding: 28px 24px 34px;
-        max-width: 360px;
-        justify-self: end;
-        width: 100%;
-        box-shadow:
-          0 1px 0 rgba(0, 0, 0, 0.04),
-          0 18px 40px -18px rgba(20, 24, 40, 0.35);
-        transform: rotate(1.2deg);
         position: relative;
+        z-index: var(--z-receipt);
+        width: min(340px, 100%);
+        justify-self: end;
+        margin-top: 28px;
+        rotate: 2deg;
+        text-align: left;
+        filter: drop-shadow(0 1px 1px rgb(var(--shadow) / 0.1))
+          drop-shadow(0 28px 36px rgb(var(--shadow) / 0.24));
+        will-change: translate;
+      }
+      .receipt .paper {
+        background: var(--paper);
+        color: var(--paper-ink);
+        font: 0.8125rem/1.55 var(--mono);
+        padding: 28px 24px 34px;
+        border-radius: 4px 4px 0 0;
         --tooth: 8px;
         -webkit-mask:
           linear-gradient(#000 0 0) top/100% calc(100% - var(--tooth)) no-repeat,
@@ -284,16 +389,18 @@
         text-align: center;
       }
       .receipt .big {
-        font-weight: 500;
+        font-weight: 600;
         font-size: 1rem;
         letter-spacing: 0.06em;
       }
-      .receipt hr {
+      .receipt hr,
+      .chit hr {
         border: 0;
-        border-top: 1px dashed #9a9a9a;
+        border-top: 1px dashed #a39f97;
         margin: 12px 0;
       }
-      .receipt .row {
+      .receipt .row,
+      .chit .row {
         display: flex;
         justify-content: space-between;
         gap: 12px;
@@ -303,14 +410,15 @@
         white-space: nowrap;
       }
       .receipt .tot {
-        font-weight: 500;
-        font-size: 0.95rem;
+        font-weight: 600;
+        font-size: 0.9375rem;
       }
       .receipt .small {
         font-size: 0.72rem;
-        color: #555;
+        color: #5c5a55;
       }
       .receipt .bar {
+        position: relative;
         height: 34px;
         margin-top: 14px;
         background: repeating-linear-gradient(
@@ -323,186 +431,175 @@
           transparent 11px 12px
         );
       }
-      @media (prefers-reduced-motion: no-preference) {
+      @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
         .receipt {
-          animation: feed 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+          cursor: grab;
+          user-select: none;
+          -webkit-user-select: none;
         }
-        @keyframes feed {
-          from {
-            transform: translateY(-14px) rotate(1.2deg);
-          }
-          to {
-            transform: translateY(0) rotate(1.2deg);
-          }
+        .receipt.held {
+          cursor: grabbing;
         }
       }
-      /* audiences */
-      .split {
+
+      /* till tape: a strip of paper lying across the page, over the margin rule */
+      .tape {
+        position: relative;
+        z-index: var(--z-receipt);
+        width: 104vw;
+        margin: clamp(64px, 9vw, 112px) 0 0 calc(50% - 52vw);
+        rotate: -1.2deg;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--paper-ink);
+        font: 500 0.8125rem var(--mono);
+        padding-block: 11px;
+        box-shadow:
+          0 1px 1px rgb(var(--shadow) / 0.1),
+          0 14px 22px -12px rgb(var(--shadow) / 0.3);
+      }
+      .tape .track {
+        display: flex;
+        width: max-content;
+      }
+      .tape span {
+        white-space: nowrap;
+        padding-right: 32px;
+      }
+      .tape span::after {
+        content: "✱";
+        margin-left: 32px;
+        color: #b4382a;
+      }
+
+      /* who it's for: two columns, the second dropped a step */
+      .pair {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        border-top: 1px solid var(--line);
-        border-bottom: 1px solid var(--line);
+        gap: clamp(32px, 5vw, 80px);
       }
-      .split > div {
-        padding: 32px clamp(0px, 3vw, 32px) 32px 0;
-        min-width: 0;
+      .pair > div + div {
+        margin-top: 64px;
       }
-      .split > div + div {
-        border-left: 1px solid var(--line);
-        padding-left: clamp(20px, 3vw, 32px);
+      .pair h2 {
+        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        margin: 10px 0 14px;
       }
-      .split h2 {
-        font-size: var(--step-2);
-        font-weight: 700;
-        font-stretch: 90%;
-        margin: 8px 0 12px;
-      }
-      .split p {
-        margin: 0;
-        max-width: 52ch;
-        color: var(--ink);
-      }
-      .split ul {
-        margin: 14px 0 0;
-        padding-left: 18px;
+      .pair p {
         color: var(--muted);
       }
-      /* section head */
-      section {
-        padding-block: 72px 0;
+      .pair ul {
+        margin-top: 22px;
+        border-top: 1px solid var(--line);
+        font-size: 0.9375rem;
       }
-      .shead {
+      .pair li {
+        padding-block: 11px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      /* work */
+      .meta {
         display: flex;
         justify-content: space-between;
         align-items: baseline;
-        gap: 16px;
-        flex-wrap: wrap;
-        margin-bottom: 28px;
-      }
-      .shead h2 {
-        font-size: var(--step-3);
-        font-weight: 800;
-        font-stretch: 75%;
-        text-transform: uppercase;
-        letter-spacing: -0.01em;
-      }
-      /* work tickets */
-      .work {
-        display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-        gap: 20px;
-      }
-      .ticket {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        padding: 28px;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        min-width: 0;
-        grid-column: span 3;
-      }
-      .ticket.feature {
-        grid-column: span 6;
-        display: grid;
-        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-        gap: 32px;
-      }
-      .ticket.third {
-        grid-column: span 2;
-      }
-      .ticket .meta {
-        display: flex;
-        justify-content: space-between;
         gap: 12px;
         flex-wrap: wrap;
       }
-      .ticket h3 {
-        font-size: var(--step-2);
-        font-weight: 750;
-        font-stretch: 88%;
-      }
-      .ticket p {
-        margin: 0;
-        max-width: 62ch;
-      }
-      .ticket .client {
-        font-size: 0.9rem;
+      .state {
+        font: 500 0.75rem var(--mono);
         color: var(--muted);
       }
+      .state.live {
+        color: var(--ok);
+      }
+      .state.live::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        margin-right: 7px;
+        translate: 0 -1px;
+      }
+      .client {
+        font-size: 0.9375rem;
+        color: var(--muted);
+        margin-top: -8px;
+      }
       .facts {
-        list-style: none;
-        margin: 0;
-        padding: 0;
         display: grid;
         gap: 10px;
+        font-size: 0.9375rem;
+        max-width: 62ch;
       }
       .facts li {
-        padding-left: 18px;
+        padding-left: 20px;
         position: relative;
       }
       .facts li::before {
         content: "";
         position: absolute;
         left: 0;
-        top: 0.7em;
-        width: 8px;
+        top: 0.78em;
+        width: 9px;
         height: 1.5px;
         background: var(--accent);
       }
       .stack {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
+        font: 0.75rem/1.7 var(--mono);
+        color: var(--muted);
         margin-top: auto;
         padding-top: 6px;
       }
-      .stack span {
-        font-family: var(--font-mono);
-        font-size: 0.72rem;
-        padding: 3px 8px;
-        background: var(--accent-soft);
-        color: var(--ink);
-      }
       .links {
         display: flex;
-        gap: 16px;
+        gap: 22px;
         flex-wrap: wrap;
-        font-size: 0.92rem;
         font-weight: 500;
+        font-size: 0.9375rem;
       }
-      .pill {
-        font-family: var(--font-mono);
-        font-size: 0.7rem;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        padding: 2px 8px;
-        border: 1px solid var(--line);
-        color: var(--muted);
+      .feature {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+        gap: clamp(24px, 4vw, 56px);
+        background: var(--surface);
+        border-radius: 24px;
+        padding: clamp(24px, 3.6vw, 44px);
+        margin-top: 72px;
       }
-      .pill.live {
-        border-color: var(--ok);
-        color: var(--ok);
-      }
-      /* kitchen chit inside feature */
-      .chit {
-        background: var(--paper);
-        color: #1b1b1b;
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        line-height: 1.5;
-        padding: 18px 18px 20px;
-        align-self: start;
-        max-width: 100%;
-      }
-      .chit .row {
+      .feature .body,
+      .proj {
         display: flex;
-        justify-content: space-between;
-        gap: 10px;
+        flex-direction: column;
+        gap: 14px;
+        min-width: 0;
+      }
+      .feature h3 {
+        font-size: clamp(1.9rem, 3.6vw, 2.75rem);
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+      }
+      /* the chit pokes out over the top edge of the panel */
+      .chit {
+        align-self: start;
+        justify-self: center;
+        width: min(300px, 100%);
+        margin-top: -88px;
+        rotate: -2deg;
+        background: var(--paper);
+        color: var(--paper-ink);
+        font: 0.78rem/1.5 var(--mono);
+        padding: 18px 18px 20px;
+        border-radius: 3px;
+        box-shadow:
+          0 1px 1px rgb(var(--shadow) / 0.1),
+          0 26px 34px -16px rgb(var(--shadow) / 0.4);
       }
       .chit hr {
-        border: 0;
-        border-top: 1px dashed #9a9a9a;
         margin: 8px 0;
       }
       .chit .q {
@@ -510,365 +607,781 @@
         color: #fff;
         padding: 6px 8px;
         margin: 4px 0 8px;
+        border-radius: 2px;
       }
       .chit .a {
-        color: #333;
+        color: #3a3834;
       }
-      /* timeline */
-      .timeline {
-        display: grid;
-        gap: 0;
-        border-top: 1px solid var(--line);
+      .chit .fine {
+        font-size: 0.7rem;
       }
-      .job {
+      .duo {
         display: grid;
-        grid-template-columns: 180px minmax(0, 1fr) auto;
-        gap: 24px;
-        padding-block: 22px;
+        grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+        gap: clamp(32px, 5vw, 72px);
+        margin-top: clamp(56px, 7vw, 88px);
+      }
+      .proj {
+        position: relative;
+        padding-top: 20px;
+      }
+      .proj::before,
+      .entry::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 2px;
+        background: var(--ink);
+        transform-origin: left;
+      }
+      .proj + .proj {
+        margin-top: 72px;
+      }
+      .proj h3 {
+        font-size: clamp(1.5rem, 2.6vw, 2rem);
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+      }
+      .proj p,
+      .feature p {
+        color: var(--muted);
+      }
+
+      /* ledger rows: used for small projects, jobs, tools and contact */
+      .ledger {
         border-bottom: 1px solid var(--line);
+      }
+      .entry {
+        display: grid;
+        grid-template-columns: var(--c1, 13rem) minmax(0, 1fr) auto;
+        gap: 6px clamp(20px, 3vw, 40px);
+        padding-block: 20px;
+        position: relative;
         align-items: baseline;
       }
-      .job .when {
-        font-family: var(--font-mono);
-        font-size: 0.82rem;
+      .entry::before {
+        height: 1px;
+        background: var(--line);
+      }
+      .entry h3 {
+        font-size: 1.1875rem;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+      .entry p {
+        font-size: 0.9375rem;
+        color: var(--muted);
+      }
+      .entry .num {
+        font: 0.8125rem var(--mono);
         color: var(--muted);
         font-variant-numeric: tabular-nums;
       }
-      .job h3 {
-        font-size: var(--step-1);
-        font-weight: 700;
-        font-stretch: 95%;
-      }
-      .job p {
-        margin: 6px 0 0;
-        color: var(--muted);
-        max-width: 60ch;
-      }
-      .job .type {
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
+      .entry .end {
+        font: 500 0.75rem var(--mono);
         color: var(--muted);
         white-space: nowrap;
+        text-align: right;
       }
-      .skills {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 24px;
-      }
-      .skills h3 {
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        font-weight: 500;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+      .also {
+        margin: clamp(56px, 7vw, 88px) 0 14px;
+        font: 500 0.75rem var(--mono);
+        letter-spacing: 0.02em;
         color: var(--muted);
-        margin-bottom: 10px;
       }
-      .skills ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        gap: 4px;
+      .tools .entry p {
+        font-size: 1.0625rem;
+        color: var(--ink);
+        max-width: none;
       }
+
       /* contact */
-      .contact {
-        margin-top: 96px;
-        padding-block: 56px;
-        border-top: 3px solid var(--ink);
-        display: grid;
-        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-        gap: 40px;
-        align-items: end;
-      }
       .contact h2 {
-        font-size: var(--step-4);
-        font-weight: 800;
-        font-stretch: 70%;
-        text-transform: uppercase;
+        font-size: clamp(2.5rem, 6.6vw, 5.25rem);
+        line-height: 0.96;
+        letter-spacing: -0.045em;
+        max-width: 13ch;
+        margin-bottom: clamp(36px, 5vw, 64px);
       }
       .contact dl {
         margin: 0;
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
-        gap: 10px 20px;
-        font-size: 1rem;
+        --c1: 9rem;
       }
       .contact dt {
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        font: 0.8125rem var(--mono);
         color: var(--muted);
-        padding-top: 3px;
       }
       .contact dd {
         margin: 0;
         overflow-wrap: anywhere;
-      }
-      .todo {
-        background: var(--accent-soft);
-        padding: 0 6px;
-        font-family: var(--font-mono);
-        font-size: 0.85rem;
+        font-size: 1.125rem;
       }
       footer {
-        padding-block: 24px 40px;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        padding-block: 44px 48px;
         color: var(--muted);
-        font-size: 0.85rem;
-        border-top: 1px solid var(--line);
+        font-size: 0.8125rem;
       }
-      @media (max-width: 860px) {
-        .hero {
+
+      /* reveals: a fade for everyone, movement only where motion is welcome. Hidden only once the script has run, so no-JS shows everything */
+      .js .reveal {
+        opacity: 0;
+      }
+      .js .reveal.in {
+        opacity: 1;
+        transition: opacity 0.7s var(--ease-out) var(--d, 0ms);
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        html {
+          scroll-behavior: smooth;
+        }
+        /* load: status, then the headline word by word, its underline, then the rest */
+        .hero-copy > :not(h1) {
+          animation: rise 0.7s var(--ease-out) both;
+        }
+        .hero-copy > .lede {
+          animation-delay: 520ms;
+        }
+        .hero-copy > .ctas {
+          animation-delay: 600ms;
+        }
+        .w {
+          display: inline-block;
+          animation: word 0.8s var(--ease-out) calc(100ms + var(--i) * 55ms)
+            both;
+        }
+        .hero h1 em {
+          animation: underline 0.7s var(--ease-out) 0.85s both;
+        }
+        /* the receipt prints line by line, then a scanner keeps reading its barcode */
+        .receipt .paper {
+          animation: print 1.5s steps(20, end) 0.4s both;
+        }
+        .receipt .bar::after {
+          content: "";
+          position: absolute;
+          inset: -3px 0;
+          background: linear-gradient(#c8321f, #c8321f) center/2px 100%
+            no-repeat;
+          translate: -50% 0;
+          animation: scan 2.4s var(--ease-in-out) 2.2s infinite alternate both;
+        }
+        .status i::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: currentColor;
+          animation: ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        .js .tape .track {
+          animation: tape 40s linear infinite;
+        }
+        .js .reveal {
+          translate: 0 18px;
+        }
+        .js .reveal.in {
+          translate: 0 0;
+          transition:
+            opacity 0.7s var(--ease-out) var(--d, 0ms),
+            translate 0.7s var(--ease-out) var(--d, 0ms);
+        }
+        /* ledger lines rule themselves across as each row arrives */
+        .js :is(.entry, .proj)::before {
+          scale: 0 1;
+        }
+        .js :is(.entry, .proj).in::before {
+          scale: 1 1;
+          transition: scale 1s var(--ease-out) calc(var(--d, 0ms) + 120ms);
+        }
+        @supports (animation-timeline: view()) {
+          /* the margin rule is drawn down the page as you scroll; the chit drops onto its panel */
+          main::before {
+            animation: rule linear both;
+            animation-timeline: scroll(root);
+          }
+          .chit {
+            animation: chit linear both;
+            animation-timeline: view();
+            animation-range: entry 0% cover 45%;
+          }
+        }
+        @keyframes rise {
+          from {
+            opacity: 0;
+            translate: 0 12px;
+          }
+        }
+        @keyframes word {
+          from {
+            opacity: 0;
+            translate: 0 0.45em;
+            filter: blur(6px);
+          }
+        }
+        @keyframes underline {
+          from {
+            background-size: 0 0.08em;
+          }
+        }
+        @keyframes print {
+          from {
+            clip-path: inset(0 0 100% 0);
+          }
+          to {
+            clip-path: inset(0 0 0 0);
+          }
+        }
+        @keyframes scan {
+          to {
+            translate: 50% 0;
+          }
+        }
+        @keyframes tape {
+          to {
+            translate: -33.333% 0;
+          }
+        }
+        @keyframes rule {
+          from {
+            clip-path: inset(0 0 calc(100% - 45vh) 0);
+          }
+          to {
+            clip-path: inset(0 0 0 0);
+          }
+        }
+        @keyframes chit {
+          from {
+            translate: 0 70px;
+            rotate: 6deg;
+          }
+        }
+        @keyframes ping {
+          from {
+            scale: 1;
+            opacity: 0.6;
+          }
+          70%,
+          to {
+            scale: 2.8;
+            opacity: 0;
+          }
+        }
+      }
+      @media (prefers-reduced-transparency: reduce) {
+        .nav {
+          background: var(--bg);
+          -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+        }
+      }
+      @media (max-width: 900px) {
+        main::before {
+          display: none;
+        }
+        .sec {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .folio {
+          position: static;
+          padding: 0 0 14px;
+        }
+        .folio b {
+          display: inline;
+          margin-right: 8px;
+        }
+        .col {
+          padding-left: 0;
+        }
+        .hero .col,
+        .pair,
+        .feature,
+        .duo {
           grid-template-columns: minmax(0, 1fr);
         }
         .receipt {
           justify-self: start;
-          transform: rotate(-0.8deg);
+          rotate: -1.2deg;
+          margin-top: 8px;
         }
-        .split {
+        .pair > div + div,
+        .proj + .proj {
+          margin-top: 0;
+        }
+        .feature {
+          margin-top: 0;
+        }
+        .chit {
+          margin-top: 0;
+          rotate: -1deg;
+        }
+        .entry {
           grid-template-columns: minmax(0, 1fr);
         }
-        .split > div {
-          padding-right: 0;
-        }
-        .split > div + div {
-          border-left: 0;
-          border-top: 1px solid var(--line);
-          padding-left: 0;
-        }
-        .ticket,
-        .ticket.third {
-          grid-column: span 6;
-        }
-        .ticket.feature {
-          grid-template-columns: minmax(0, 1fr);
-        }
-        .job {
-          grid-template-columns: minmax(0, 1fr);
-          gap: 4px;
-        }
-        .skills {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-        .contact {
-          grid-template-columns: minmax(0, 1fr);
+        .entry .end {
+          text-align: left;
         }
       }
-      @media (max-width: 440px) {
-        .skills {
-          grid-template-columns: minmax(0, 1fr);
-        }
-        .ticket {
-          padding: 22px;
-        }
-      }
-      .ticket.full {
-        grid-column: span 6;
-      }
-      .ticket img {
+      /* screenshot inside a ledger row */
+      .entry img {
         display: block;
         width: 100%;
-        max-width: 560px;
-        border-radius: 8px;
-        border: 1px solid rgba(128, 128, 128, 0.35);
+        max-width: 440px;
+        margin-top: 14px;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+      }
+      /* back to the library */
+      .lib-back {
+        position: fixed;
+        left: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        z-index: 99999;
+        font:
+          600 12px/1 system-ui,
+          -apple-system,
+          sans-serif;
+        letter-spacing: 0.02em;
+        background: rgba(18, 20, 25, 0.88);
+        color: #f1e9d8;
+        text-decoration: none;
+        padding: 9px 13px 9px 11px;
+        border-radius: 999px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        display: inline-flex;
+        gap: 7px;
+        align-items: center;
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+      }
+      .lib-back:hover {
+        background: #000;
+        color: #f1e9d8;
+      }
+      .lib-back svg {
+        flex: none;
       }
     </style>
+    <script src="/content.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
     <div class="wrap">
-      <header class="top">
-        <span class="mark">ANGEL LAKRA</span>
+      <header class="nav">
+        <a class="mark" href="#main">Angel Lakra</a>
         <nav aria-label="Sections">
           <a href="#work">Work</a><a href="#experience">Experience</a
           ><a href="#contact">Contact</a>
         </nav>
       </header>
-      <section class="hero" style="padding-top: clamp(48px, 8vw, 96px)">
-        <div>
-          <div class="status">
-            <i aria-hidden="true"></i><span data-c="profile.status"></span> ·
-            <span data-c="profile.city"></span> ·
-            <span data-c="profile.where"></span>
-          </div>
-          <h1>
-            I build the software a <em>small business</em> actually runs on.
-          </h1>
-          <p class="lede">
-            Full-stack engineer, Python first. Five years shipping production
-            frontends, now building POS systems, back-office tools and LLM
-            features that owners use every day.
-          </p>
-          <div class="ctas">
-            <a class="btn primary" href="#work">See the work</a>
-            <a class="btn" href="#contact">Get in touch</a>
-          </div>
-        </div>
-        <aside class="receipt" aria-label="Summary as a receipt">
-          <div class="c big">ANGEL LAKRA</div>
-          <div class="c small">
-            <span data-c="profile.role"></span> ·
-            <span data-c="profile.city"></span>
-          </div>
-          <div class="c small">GSTIN: not applicable</div>
-          <hr />
-          <div class="row"><span>Python · FastAPI</span><span>1</span></div>
-          <div class="row">
-            <span>LLM features &amp; agents</span><span>1</span>
-          </div>
-          <div class="row">
-            <span>React · TypeScript · Next.js</span><span>1</span>
-          </div>
-          <div class="row">
-            <span>Frontend team lead</span><span data-c="lead.short"></span>
-          </div>
-          <div class="row"><span>Web3 frontends</span><span>2021–25</span></div>
-          <div class="row"><span>POS systems built</span><span>2</span></div>
-          <hr />
-          <div class="row tot">
-            <span>TOTAL EXPERIENCE</span
-            ><span><span data-c="profile.years"></span> YRS</span>
-          </div>
-          <div class="row">
-            <span>Paid by</span><span>Contract / Freelance / FT</span>
-          </div>
-          <hr />
-          <div class="c small">Thank you. Please visit again.</div>
-          <div class="bar" aria-hidden="true"></div>
-        </aside>
-      </section>
-      <div class="split">
-        <div>
-          <span class="label">If you're hiring</span>
-          <h2>An engineer who has led a team and still ships alone.</h2>
-          <p>
-            I led frontend at Chain Labs for close to four years. Since then
-            I've built full systems end to end: schema, API, UI, deployment and
-            the support call afterwards.
-          </p>
-          <ul>
-            <li>Python backends with FastAPI, SQLAlchemy and tests</li>
-            <li>React and Next.js frontends that hold up on cheap phones</li>
-            <li>LLM features with guardrails, not demos</li>
-          </ul>
-        </div>
-        <div>
-          <span class="label">If you run a business</span>
-          <h2>Billing, stock, cash and reports, built around how you work.</h2>
-          <p>
-            I build systems for cafes and salons in India: GST billing, kitchen
-            chits, daily cash counts, staff roles, and a way to ask your numbers
-            questions in Hindi or English.
-          </p>
-          <ul>
-            <li>Point-of-sale and back-office systems</li>
-            <li>Websites that give a brand a real presence</li>
-            <li>Automation for the jobs you do by hand every week</li>
-          </ul>
-        </div>
-      </div>
-      <section id="work">
-        <div class="shead">
-          <h2>Selected work</h2>
-          <span class="label">2025 – 2026</span>
-        </div>
-        <div class="work" id="work-list">
-          <article class="ticket feature">
-            <div
-              id="t-lily"
-              style="
-                display: flex;
-                flex-direction: column;
-                gap: 14px;
-                min-width: 0;
-              "
-            ></div>
-            <div class="chit" aria-label="Example of the Ask feature">
-              <div class="row"><b>KOT #0418</b><span>T6 · 19:12</span></div>
-              <hr />
-              <div class="row"><span>2 × Chicken Ramen Bowl</span></div>
-              <div class="row"><span>1 × KFC Wings (hot)</span></div>
-              <div class="row"><span>1 × Lemon Mint Cooler</span></div>
-              <hr />
-              <div class="q">ASK › kal ka cash counter</div>
-              <div class="a">
-                Opening, closing and difference for yesterday's drawer, verified
-                by the owner, with the denomination breakdown.
+
+      <main id="main">
+        <section class="sec hero">
+          <div class="folio label"><b>00</b>Hello</div>
+          <div class="col">
+            <div class="hero-copy">
+              <div class="status">
+                <i aria-hidden="true"></i
+                ><span
+                  ><span data-c="profile.status"></span> ·
+                  <span data-c="profile.city"></span> ·
+                  <span data-c="profile.where"></span
+                ></span>
               </div>
-              <hr />
-              <div class="a" style="font-size: 0.7rem">
-                Example interaction · illustrative order
+              <h1>
+                I build the software a <em>small business</em> actually runs on.
+              </h1>
+              <p class="lede">
+                Full-stack engineer, Python first. Five years shipping
+                production frontends, now building POS systems, back-office
+                tools and LLM features that owners use every day.
+              </p>
+              <div class="ctas">
+                <a class="btn" href="#work">See the work</a>
+                <a class="tlink" href="#contact"
+                  >Get in touch <span class="arr" aria-hidden="true">→</span></a
+                >
               </div>
             </div>
-          </article>
+
+            <aside class="receipt" aria-label="Summary as a receipt">
+              <div class="paper">
+                <div class="c big">ANGEL LAKRA</div>
+                <div class="c small">
+                  <span data-c="profile.role"></span> ·
+                  <span data-c="profile.city"></span>
+                </div>
+                <div class="c small" id="now">IST (UTC+5:30)</div>
+                <div class="c small">GSTIN: not applicable</div>
+                <hr />
+                <div class="row">
+                  <span>Python · FastAPI</span><span>1</span>
+                </div>
+                <div class="row">
+                  <span>LLM features &amp; agents</span><span>1</span>
+                </div>
+                <div class="row">
+                  <span>React · TypeScript · Next.js</span><span>1</span>
+                </div>
+                <div class="row">
+                  <span>Frontend team lead</span
+                  ><span data-c="lead.short"></span>
+                </div>
+                <div class="row">
+                  <span>Web3 frontends</span><span>2021–25</span>
+                </div>
+                <div class="row">
+                  <span>POS systems built</span><span>2</span>
+                </div>
+                <hr />
+                <div class="row tot">
+                  <span>TOTAL EXPERIENCE</span
+                  ><span><span data-c="profile.years"></span> YRS</span>
+                </div>
+                <div class="row">
+                  <span>Paid by</span><span>Contract / Freelance / FT</span>
+                </div>
+                <hr />
+                <div class="c small">Thank you. Please visit again.</div>
+                <div class="bar" aria-hidden="true"></div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <div class="tape" aria-hidden="true">
+          <div class="track">
+            <span>GST billing</span><span>Kitchen chits</span
+            ><span>Split payments</span><span>Daily cash count</span
+            ><span>Appointments</span><span>Inventory</span
+            ><span>Staff roles</span><span>Ask in Hinglish</span
+            ><span>80mm print agents</span>
+          </div>
         </div>
-      </section>
-      <section id="experience">
-        <div class="shead">
-          <h2>Experience</h2>
-          <span class="label">2021 – now</span>
-        </div>
-        <div class="timeline" id="timeline"></div>
-      </section>
-      <section>
-        <div class="shead"><h2>Toolbox</h2></div>
-        <div class="skills" id="skills"></div>
-      </section>
-      <section id="contact" class="contact" style="padding-top: 56px">
-        <h2>Got a role or a problem? Let's talk.</h2>
-        <dl id="contact-rows"></dl>
-      </section>
-      <footer>© 2026 Angel Lakra</footer>
+
+        <section class="sec" aria-label="Who this is for">
+          <div class="folio label"><b>01</b>For</div>
+          <div class="col pair">
+            <div>
+              <span class="label">If you're hiring</span>
+              <h2>An engineer who has led a team and still ships alone.</h2>
+              <p>
+                I led frontend at Chain Labs for close to four years. Since then
+                I've built full systems end to end: schema, API, UI, deployment
+                and the support call afterwards.
+              </p>
+              <ul>
+                <li>Python backends with FastAPI, SQLAlchemy and tests</li>
+                <li>
+                  React and Next.js frontends that hold up on cheap phones
+                </li>
+                <li>LLM features with guardrails, not demos</li>
+              </ul>
+            </div>
+            <div>
+              <span class="label">If you run a business</span>
+              <h2>
+                Billing, stock, cash and reports, built around how you work.
+              </h2>
+              <p>
+                I build systems for cafes and salons in India: GST billing,
+                kitchen chits, daily cash counts, staff roles, and a way to ask
+                your numbers questions in Hindi or English.
+              </p>
+              <ul>
+                <li>Point-of-sale and back-office systems</li>
+                <li>Websites that give a brand a real presence</li>
+                <li>Automation for the jobs you do by hand every week</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="sec" id="work">
+          <div class="folio label"><b>02</b>Work</div>
+          <div class="col">
+            <div class="shead">
+              <h2>Selected work</h2>
+              <span class="label">2025 – 2026</span>
+            </div>
+
+            <article class="feature">
+              <div class="body" id="t-feature"></div>
+              <div class="chit" aria-label="Example of the Ask feature">
+                <div class="row"><b>KOT #0418</b><span>T6 · 19:12</span></div>
+                <hr />
+                <div class="row"><span>2 × Chicken Ramen Bowl</span></div>
+                <div class="row"><span>1 × KFC Wings (hot)</span></div>
+                <div class="row"><span>1 × Lemon Mint Cooler</span></div>
+                <hr />
+                <div class="q">ASK › kal ka cash counter</div>
+                <div class="a">
+                  Opening, closing and difference for yesterday's drawer,
+                  verified by the owner, with the denomination breakdown.
+                </div>
+                <hr />
+                <div class="a fine">
+                  Example interaction · illustrative order
+                </div>
+              </div>
+            </article>
+
+            <div class="duo" id="duo"></div>
+
+            <h3 class="also">Also on the books</h3>
+            <div class="ledger" id="also"></div>
+          </div>
+        </section>
+
+        <section class="sec" id="experience">
+          <div class="folio label"><b>03</b>Experience</div>
+          <div class="col">
+            <div class="shead">
+              <h2>Experience</h2>
+              <span class="label">2021 – now</span>
+            </div>
+            <div class="ledger" id="jobs"></div>
+          </div>
+        </section>
+
+        <section class="sec" aria-labelledby="toolbox">
+          <div class="folio label"><b>04</b>Toolbox</div>
+          <div class="col">
+            <div class="shead"><h2 id="toolbox">Toolbox</h2></div>
+            <div class="ledger tools" id="tools"></div>
+          </div>
+        </section>
+
+        <section class="sec contact" id="contact">
+          <div class="folio label"><b>05</b>Contact</div>
+          <div class="col">
+            <h2>Got a role or a problem? Let's talk.</h2>
+            <dl class="ledger" id="contact-rows"></dl>
+            <footer>
+              <span>© 2026 Angel Lakra</span><a href="#main">Back to top ↑</a>
+            </footer>
+          </div>
+        </section>
+      </main>
     </div>
+
     <script>
+      // Facts come from /content.js. This runs before the page script below, which
+      // animates whatever rows it finds.
       {
         const C = CONTENT,
           esc = C.esc;
-        const ticket = (
+        const arr = ' <span class="arr" aria-hidden="true">→</span>';
+        const links = (p) =>
+          p.links
+            .map(
+              (l) =>
+                `<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])}${arr}</a>`,
+            )
+            .join("");
+        const body = (
           p,
-        ) => `<div class="meta"><span class="label">${esc(p.kind)}</span>${p.status ? `<span class="pill ${p.live ? "live" : ""}">${esc(p.status)}</span>` : ""}</div>
+        ) => `<div class="meta"><span class="label">${esc(p.kind)}</span>${p.status ? `<span class="state ${p.live ? "live" : ""}">${esc(p.status)}</span>` : ""}</div>
 <h3>${esc(p.name)}</h3>
 ${p.client ? `<span class="client">For ${esc(p.client)}</span>` : ""}
 <p>${esc(p.text)}</p>
-${p.image ? `<img src="${p.image.src}" alt="${esc(p.image.alt)}" loading="lazy">` : ""}
 ${p.facts.length ? `<ul class="facts">${p.facts.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>` : ""}
-${p.stack.length ? `<div class="stack">${p.stack.map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
-${p.links.length ? `<div class="links">${p.links.map((l) => `<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} →</a>`).join("")}</div>` : ""}`;
-        // how each ticket sits in the grid; anything not listed is a half-width ticket
-        const size = {
-          sop: "third",
-          disk: "third",
-          notch: "third",
-          aanka: "full",
-        };
-        document.getElementById("t-lily").innerHTML = ticket(C.project.lily);
-        document.getElementById("work-list").insertAdjacentHTML(
-          "beforeend",
-          C.projects
-            .filter((p) => p.id !== "lily")
-            .map(
-              (p) =>
-                `<article class="ticket ${size[p.id] || ""}">${ticket(p)}</article>`,
-            )
-            .join(""),
-        );
-        document.getElementById("timeline").innerHTML =
+<div class="stack">${esc(p.stack.join(" · "))}</div>
+${p.links.length ? `<div class="links">${links(p)}</div>` : ""}`;
+        // the first project is the feature panel, the next two get full write-ups, the rest are ledger rows
+        const [feature, a, b, ...rest] = C.projects;
+        document.getElementById("t-feature").innerHTML = body(feature);
+        document.getElementById("duo").innerHTML = [a, b]
+          .map((p) => `<article class="proj">${body(p)}</article>`)
+          .join("");
+        document.getElementById("also").innerHTML = rest
+          .map(
+            (
+              p,
+            ) => `<article class="entry"><div><h3>${esc(p.name)}</h3><span class="label">${esc(p.label)}</span></div>
+<div><p>${esc(p.text)}</p>${p.image ? `<img src="${p.image.src}" alt="${esc(p.image.alt)}" loading="lazy">` : ""}</div>
+<span class="end">${p.links.length ? links(p) : esc(p.stack.join(" · "))}</span></article>`,
+          )
+          .join("");
+        document.getElementById("jobs").innerHTML =
           C.experience
             .map(
               (e) =>
-                `<div class="job"><span class="when">${e.when}</span><div><h3>${esc(e.title)} · ${esc(e.company)}</h3><p>${esc(e.text)}</p></div><span class="type">${esc(e.type)}${e.place ? " · " + esc(e.place) : ""}</span></div>`,
+                `<div class="entry"><span class="num">${e.when}</span><div><h3>${esc(e.title)} · ${esc(e.company)}</h3><p>${esc(e.text)}</p></div><span class="end">${esc(e.type)}${e.place ? " · " + esc(e.place) : ""}</span></div>`,
             )
             .join("") +
-          `<div class="job"><span class="when">Education</span><div><h3>${esc(C.education.school)}</h3></div><span class="type"></span></div>`;
-        document.getElementById("skills").innerHTML = C.toolbox
+          `<div class="entry"><span class="num">Education</span><div><h3>${esc(C.education.school)}</h3></div></div>`;
+        document.getElementById("tools").innerHTML = C.toolbox
           .map(
             (g) =>
-              `<div><h3>${g.name}</h3><ul>${g.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul></div>`,
+              `<div class="entry"><span class="num">${g.name}</span><p>${esc(g.items.join(", "))}</p></div>`,
           )
           .join("");
-        document.getElementById("contact-rows").innerHTML = C.contactRows([
-          ["Based in", `${C.profile.city} · ${C.profile.timezone} (UTC+5:30)`],
-        ]);
+        document.getElementById("contact-rows").innerHTML =
+          C.contacts
+            .map(
+              (c) =>
+                `<div class="entry"><dt>${c.label}</dt><dd>${C.link(c)}</dd></div>`,
+            )
+            .join("") +
+          `<div class="entry"><dt>Based in</dt><dd>${esc(C.profile.city)} · ${C.profile.timezone} (UTC+5:30)</dd></div>`;
         C.bind();
       }
+    </script>
+    <script>
+      (() => {
+        document.documentElement.classList.add("js");
+
+        // the receipt is stamped with the time in Bengaluru, like a real till slip
+        document.getElementById("now").textContent =
+          new Intl.DateTimeFormat("en-IN", {
+            timeZone: "Asia/Kolkata",
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }).format(new Date()) + " IST";
+
+        // split the headline into words so they can arrive one at a time
+        let n = 0;
+        const split = (node) =>
+          [...node.childNodes].forEach((c) => {
+            if (c.nodeType !== 3) return split(c);
+            c.replaceWith(
+              ...c.textContent.split(/(\s+)/).map((t) => {
+                if (!t.trim()) return t;
+                const w = document.createElement("span");
+                w.className = "w";
+                w.style.setProperty("--i", n++);
+                w.textContent = t;
+                return w;
+              }),
+            );
+          });
+        split(document.querySelector(".hero h1"));
+
+        // three copies of the tape, so the loop never shows its end
+        const track = document.querySelector(".tape .track");
+        const items = [...track.children];
+        for (let i = 0; i < 2; i++)
+          track.append(...items.map((s) => s.cloneNode(true)));
+
+        // reveal on scroll, staggering whatever enters together
+        const reveal = new IntersectionObserver(
+          (entries) => {
+            let i = 0;
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              e.target.style.setProperty("--d", i++ * 70 + "ms");
+              e.target.classList.add("in");
+              reveal.unobserve(e.target);
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px" },
+        );
+        document
+          .querySelectorAll(
+            ".pair > div,.shead,.feature,.proj,.entry,.contact h2",
+          )
+          .forEach((el) => {
+            el.classList.add("reveal");
+            reveal.observe(el);
+          });
+
+        // mark the nav link for the section crossing the middle of the viewport
+        const links = document.querySelectorAll(".nav nav a");
+        const spy = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              links.forEach((a) =>
+                a.toggleAttribute("aria-current", a.hash === "#" + e.target.id),
+              );
+            }
+          },
+          { rootMargin: "-45% 0px -50% 0px" },
+        );
+        document
+          .querySelectorAll("#work,#experience,#contact")
+          .forEach((s) => spy.observe(s));
+
+        // The receipt can be picked up: 1:1 under the pointer, rubber-banded the further it is pulled,
+        // then a spring carries the release velocity home. Mouse and pen only, so touch scrolling is never hijacked.
+        const el = document.querySelector(".receipt");
+        if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          const LIMIT = 260,
+            C = 0.55;
+          const band = (o) => (o * LIMIT * C) / (LIMIT + C * Math.abs(o)); // raw pull -> shown offset
+          const unband = (x) => (x * LIMIT) / (C * (LIMIT - Math.abs(x))); // inverse, so a mid-flight grab doesn't jump
+          const STIFF = 247,
+            DAMP = 25; // response 0.4s, damping ratio 0.8
+          const TILT = parseFloat(getComputedStyle(el).rotate) || 0; // resting tilt from CSS
+          let x = 0,
+            y = 0,
+            vx = 0,
+            vy = 0,
+            grab = null,
+            last = 0,
+            raf = 0;
+          const paint = () => {
+            el.style.translate = `${x}px ${y}px`;
+            el.style.rotate = `${TILT + x * 0.03}deg`;
+          };
+          const settle = (t) => {
+            const dt = Math.min((t - last) / 1000, 0.032);
+            last = t;
+            vx += (-STIFF * x - DAMP * vx) * dt;
+            vy += (-STIFF * y - DAMP * vy) * dt;
+            x += vx * dt;
+            y += vy * dt;
+            if (
+              Math.abs(x) + Math.abs(y) < 0.1 &&
+              Math.abs(vx) + Math.abs(vy) < 1
+            ) {
+              x = y = vx = vy = 0;
+              paint();
+              return;
+            }
+            paint();
+            raf = requestAnimationFrame(settle);
+          };
+          el.addEventListener("pointerdown", (e) => {
+            if (e.pointerType === "touch" || e.button !== 0) return;
+            cancelAnimationFrame(raf);
+            el.setPointerCapture(e.pointerId);
+            el.classList.add("held");
+            grab = { x: e.clientX - unband(x), y: e.clientY - unband(y) };
+            last = e.timeStamp;
+            vx = vy = 0;
+          });
+          el.addEventListener("pointermove", (e) => {
+            if (!grab) return;
+            const nx = band(e.clientX - grab.x),
+              ny = band(e.clientY - grab.y);
+            const dt = Math.max(e.timeStamp - last, 1) / 1000;
+            last = e.timeStamp;
+            vx = (nx - x) / dt;
+            vy = (ny - y) / dt;
+            x = nx;
+            y = ny;
+            paint();
+          });
+          const release = () => {
+            if (!grab) return;
+            grab = null;
+            el.classList.remove("held");
+            last = performance.now();
+            raf = requestAnimationFrame(settle);
+          };
+          el.addEventListener("pointerup", release);
+          el.addEventListener("pointercancel", release);
+        }
+      })();
     </script>
     <a class="lib-back" href="/" aria-label="Back to the library"
       ><svg
