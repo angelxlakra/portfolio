@@ -50,6 +50,7 @@
       }
     </style>
     <script src="/content.js"></script>
+    <script src="/motion.js"></script>
   </head>
   <body>
     <title>Angel Lakra, Scanned</title>
@@ -476,6 +477,49 @@
         border-radius: 8px;
         border: 1px solid rgba(128, 128, 128, 0.35);
       }
+      /* ---------- motion ---------- */
+      .track span {
+        transform-origin: left;
+      }
+      .seg {
+        transform-origin: 210px 210px; /* the chart's centre, in viewBox units */
+        transition:
+          opacity 0.15s,
+          transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      .crumbs button,
+      .files li button {
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease,
+          transform 0.16s ease-out;
+      }
+      .files li button:active {
+        transform: scale(0.98);
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        @media (hover: hover) and (pointer: fine) {
+          path.seg:hover {
+            transform: scale(1.025);
+          }
+        }
+        .bar,
+        .hero > * {
+          animation: rise 0.8s cubic-bezier(0.23, 1, 0.32, 1) both;
+        }
+        .hero > :nth-child(1) {
+          animation-delay: 80ms;
+        }
+        .hero > :nth-child(2) {
+          animation-delay: 180ms;
+        }
+        @keyframes rise {
+          from {
+            opacity: 0;
+            translate: 0 12px;
+          }
+        }
+      }
     </style>
     <div class="app">
       <header class="bar">
@@ -740,8 +784,10 @@
         );
       const size = (n) => (n.months != null ? `${n.months} mo` : "project");
       let selected = "root";
+      let counting = false;
       function render(id, preview) {
         const n = byId[id];
+        if (id !== "root") counting = false;
         svg.classList.toggle("dim", id !== "root");
         Object.entries(segs).forEach(([k, el]) =>
           el.classList.toggle(
@@ -793,6 +839,15 @@ ${n.links?.length ? `<div class="go">${n.links.map((l) => `<a href="${l[1]}" tar
       function select(id) {
         selected = id;
         render(id);
+        // a click settles the inspector in; hover previews stay instant
+        if (!MOTION.still)
+          info.animate(
+            [
+              { opacity: 0, transform: "translateY(4px)" },
+              { opacity: 1, transform: "none" },
+            ],
+            { duration: 180, easing: MOTION.EASE },
+          );
       }
       document.addEventListener("click", (e) => {
         const g = e.target.closest("[data-go]");
@@ -810,6 +865,38 @@ ${n.links?.length ? `<div class="go">${n.links.map((l) => `<a href="${l[1]}" tar
         el.addEventListener("mouseleave", () => render(selected));
       });
       render("root");
+      // scan-in: the usage bar fills, the rings sweep in clockwise, the month count runs up
+      if (!MOTION.still) {
+        [...track.children].forEach((el, i) =>
+          el.animate([{ transform: "scaleX(0)" }, { transform: "none" }], {
+            duration: 700,
+            delay: 150 + i * 120,
+            easing: MOTION.EASE,
+            fill: "backwards",
+          }),
+        );
+        svg.querySelectorAll("path.seg").forEach((el, i) =>
+          el.animate(
+            [{ opacity: 0, transform: "scale(0.86)" }, { transform: "none" }],
+            {
+              duration: 520,
+              delay: 200 + i * 45,
+              easing: MOTION.EASE,
+              fill: "backwards",
+            },
+          ),
+        );
+        const t0 = performance.now();
+        counting = true;
+        (function tick(t) {
+          if (!counting) return;
+          const k = Math.min((t - t0) / 1100, 1);
+          t1.textContent = Math.round(T.months * (1 - (1 - k) ** 3));
+          if (k < 1) requestAnimationFrame(tick);
+          else counting = false;
+        })(t0);
+      }
+      MOTION.reveal(".panel");
       document.getElementById("tools").innerHTML = CONTENT.toolbox
         .map((g) => `<div><b>${g.name}</b>${esc(g.items.join(", "))}</div>`)
         .join("");

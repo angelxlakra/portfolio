@@ -50,6 +50,7 @@
       }
     </style>
     <script src="/content.js"></script>
+    <script src="/motion.js"></script>
   </head>
   <body>
     <title>Chat with Angel</title>
@@ -571,6 +572,69 @@
           max-width: 88%;
         }
       }
+      /* ---------- motion ----------
+         Bubbles grow out of the corner their tail is on, the way they do in a real chat app.
+         Reply chips arrive one after another and give under the finger. */
+      .replies button {
+        transition:
+          transform 0.16s ease-out,
+          border-color 0.2s ease,
+          opacity 0.2s ease;
+      }
+      .replies button:not(:disabled):active {
+        transform: scale(0.97);
+      }
+      .lcard {
+        transition: filter 0.2s ease;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .lcard:hover {
+          filter: brightness(1.06);
+        }
+      }
+      .msg.in,
+      .typing {
+        transform-origin: 0 100%;
+      }
+      .msg.out {
+        transform-origin: 100% 100%;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .msg {
+          animation: bubble 0.26s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+        }
+        .typing {
+          animation: bubble 0.2s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+        }
+        .replies button {
+          animation: chip 0.32s cubic-bezier(0.23, 1, 0.32, 1)
+            calc(var(--i, 0) * 45ms) backwards;
+        }
+        .side li {
+          animation: chip 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+        }
+        .side li:nth-child(2) {
+          animation-delay: 60ms;
+        }
+        .side li:nth-child(3) {
+          animation-delay: 120ms;
+        }
+        .side li:nth-child(4) {
+          animation-delay: 180ms;
+        }
+        @keyframes bubble {
+          from {
+            opacity: 0;
+            transform: translateY(8px) scale(0.96);
+          }
+        }
+        @keyframes chip {
+          from {
+            opacity: 0;
+            transform: translateY(6px);
+          }
+        }
+      }
     </style>
     <div class="app">
       <aside class="side" aria-label="Chats">
@@ -774,8 +838,9 @@
         replies.innerHTML = "";
         keys
           .filter((k) => k !== "start")
-          .forEach((k) => {
+          .forEach((k, i) => {
             const b = document.createElement("button");
+            b.style.setProperty("--i", i);
             b.textContent = S[k].me;
             b.addEventListener("click", () => go(k));
             replies.appendChild(b);

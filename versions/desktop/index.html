@@ -741,6 +741,86 @@
         border-radius: 8px;
         border: 1px solid rgba(128, 128, 128, 0.35);
       }
+      /* ---------- motion ---------- */
+      .win {
+        transform-origin: 50% 100%;
+        transition: box-shadow 0.2s ease;
+      }
+      .menubar button,
+      .lights button {
+        transition:
+          background-color 0.15s ease,
+          filter 0.15s ease;
+      }
+      .menubar button:active {
+        background: rgba(127, 127, 127, 0.32);
+      }
+      .lights button:active {
+        filter: brightness(0.8);
+      }
+      .dock button:active {
+        transform: translateY(-8px) scale(1.04);
+      }
+      .pulse {
+        position: relative;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .pulse::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: inherit;
+          animation: ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        @keyframes ping {
+          from {
+            scale: 1;
+            opacity: 0.6;
+          }
+          70%,
+          to {
+            scale: 2.8;
+            opacity: 0;
+          }
+        }
+      }
+      /* boot: the bar drops, the dock rises, the wallpaper name and icons settle */
+      @media (prefers-reduced-motion: no-preference) and (min-width: 901px) {
+        .menubar {
+          animation: bar-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+        }
+        .dock {
+          animation: dock-in 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.15s both;
+        }
+        .wallword,
+        .icons a {
+          animation: settle 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.1s both;
+        }
+        .icons a:nth-child(2) {
+          animation-delay: 0.18s;
+        }
+        .icons a:nth-child(3) {
+          animation-delay: 0.26s;
+        }
+        @keyframes bar-in {
+          from {
+            translate: 0 -100%;
+          }
+        }
+        @keyframes dock-in {
+          from {
+            translate: 0 90px;
+            opacity: 0;
+          }
+        }
+        @keyframes settle {
+          from {
+            opacity: 0;
+            translate: 0 12px;
+          }
+        }
+      }
     </style>
     <div class="desk" id="desk">
       <div class="menubar">
@@ -974,6 +1054,8 @@
       </div>
     </div>
     <script>
+      const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const EASE = "cubic-bezier(0.23, 1, 0.32, 1)";
       const projects = CONTENT.projects;
       const side = document.getElementById("side"),
         detail = document.getElementById("detail");
@@ -1001,6 +1083,14 @@
       });
       function show(id) {
         const p = projects.find((x) => x.id === id);
+        if (!still)
+          detail.animate(
+            [
+              { opacity: 0, transform: "translateY(4px)" },
+              { opacity: 1, transform: "none" },
+            ],
+            { duration: 180, easing: EASE },
+          );
         side
           .querySelectorAll("[role=tab]")
           .forEach((t) =>
@@ -1055,8 +1145,35 @@ ${p.links.length ? `<div class="golinks">${p.links.map((l) => `<a href="${l[1]}"
                 .hidden),
           );
       }
+      // windows grow up out of the dock and shrink back into it
+      const moves = () => !still && !narrow.matches;
+      function winIn(w, delay = 0) {
+        if (moves())
+          w.animate(
+            [
+              { opacity: 0, transform: "translateY(24px) scale(0.94)" },
+              { opacity: 1, transform: "none" },
+            ],
+            { duration: 280, delay, easing: EASE, fill: "backwards" },
+          );
+      }
+      function winOut(w) {
+        const done = () => {
+          w.hidden = true;
+          syncDock();
+        };
+        if (!moves()) return done();
+        w.animate(
+          [
+            { opacity: 1, transform: "none" },
+            { opacity: 0, transform: "translateY(16px) scale(0.96)" },
+          ],
+          { duration: 160, easing: "ease-out" },
+        ).onfinish = done;
+      }
       function openWin(id) {
         const w = document.getElementById(id);
+        if (w.hidden) winIn(w);
         w.hidden = false;
         front(w);
         syncDock();
@@ -1068,21 +1185,33 @@ ${p.links.length ? `<div class="golinks">${p.links.map((l) => `<a href="${l[1]}"
         .forEach((b) =>
           b.addEventListener("click", () => openWin(b.dataset.openWin)),
         );
+      // a dock icon hops once when clicked, on top of its hover lift
+      document.querySelectorAll(".dock button").forEach((b) =>
+        b.addEventListener("click", () => {
+          if (!still)
+            b.animate(
+              [
+                { transform: "translateY(0)" },
+                { transform: "translateY(-14px)" },
+                { transform: "translateY(0)" },
+              ],
+              {
+                duration: 420,
+                easing: "cubic-bezier(0.3, 0.6, 0.3, 1)",
+                composite: "add",
+              },
+            );
+        }),
+      );
       wins.forEach((w) => {
         w.addEventListener("pointerdown", () => front(w));
         w.querySelector(".lights .c").addEventListener("click", (e) => {
           e.stopPropagation();
-          if (!narrow.matches) {
-            w.hidden = true;
-            syncDock();
-          }
+          if (!narrow.matches) winOut(w);
         });
         w.querySelector(".lights .m").addEventListener("click", (e) => {
           e.stopPropagation();
-          if (!narrow.matches) {
-            w.hidden = true;
-            syncDock();
-          }
+          if (!narrow.matches) winOut(w);
         });
         const bar = w.querySelector(".titlebar");
         bar.addEventListener("pointerdown", (e) => {
@@ -1115,6 +1244,8 @@ ${p.links.length ? `<div class="golinks">${p.links.map((l) => `<a href="${l[1]}"
       narrow.addEventListener?.("change", applyNarrow);
       applyNarrow();
       front(document.getElementById("about"));
+      // boot: the open windows arrive one after another
+      wins.filter((w) => !w.hidden).forEach((w, i) => winIn(w, 250 + i * 110));
       // notch
       const notch = document.getElementById("notch");
       notch.addEventListener("click", () => {

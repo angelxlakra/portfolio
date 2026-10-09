@@ -50,6 +50,7 @@
       }
     </style>
     <script src="/content.js"></script>
+    <script src="/motion.js"></script>
   </head>
   <body>
     <title>Ask Angel</title>
@@ -418,6 +419,113 @@
         margin: 12px 0;
         border-radius: 8px;
         border: 1px solid rgba(128, 128, 128, 0.35);
+      }
+      /* ---------- motion ----------
+         The answer explains itself: the route (asked, routed by, card) arrives left to
+         right, then the card settles in under it. */
+      form {
+        transition: box-shadow 0.2s ease;
+      }
+      form:focus-within {
+        box-shadow: 6px 6px 0 var(--accent);
+      }
+      form button,
+      .tries button,
+      .rel button,
+      .index button {
+        transition:
+          transform 0.12s ease-out,
+          background-color 0.2s ease,
+          border-color 0.2s ease,
+          color 0.2s ease;
+      }
+      form button:active {
+        transform: translate(2px, 2px);
+      }
+      .tries button:active {
+        transform: scale(0.97);
+      }
+      h1 em {
+        background-repeat: no-repeat;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .top,
+        header > *,
+        form,
+        .tries button {
+          animation: rise 0.7s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+        }
+        header > .lede {
+          animation-delay: 90ms;
+        }
+        form {
+          animation-delay: 170ms;
+        }
+        .tries button:nth-child(n) {
+          animation-delay: calc(240ms + var(--n, 0) * 50ms);
+        }
+        .tries button:nth-child(2) {
+          --n: 1;
+        }
+        .tries button:nth-child(3) {
+          --n: 2;
+        }
+        .tries button:nth-child(4) {
+          --n: 3;
+        }
+        .tries button:nth-child(5) {
+          --n: 4;
+        }
+        /* the highlighter is drawn across "anything" */
+        h1 em {
+          animation: mark 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.45s backwards;
+        }
+        .route > * {
+          animation: step 0.3s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+        }
+        .route > :nth-child(2) {
+          animation-delay: 70ms;
+        }
+        .route > :nth-child(3) {
+          animation-delay: 140ms;
+        }
+        .route > :nth-child(4) {
+          animation-delay: 210ms;
+        }
+        .route > :nth-child(n + 5) {
+          animation-delay: 280ms;
+        }
+        .cardbody {
+          animation: rise 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0.12s backwards;
+        }
+        .thinking {
+          animation: think 0.9s ease-in-out infinite alternate;
+        }
+        @keyframes rise {
+          from {
+            opacity: 0;
+            translate: 0 10px;
+          }
+        }
+        @keyframes step {
+          from {
+            opacity: 0;
+            translate: -6px 0;
+          }
+        }
+        @keyframes mark {
+          from {
+            background-size: 0 100%;
+          }
+          to {
+            background-size: 100% 100%;
+          }
+        }
+        @keyframes think {
+          from {
+            opacity: 0.45;
+          }
+        }
       }
     </style>
     <div class="page">
@@ -842,6 +950,7 @@ ${c.links?.length ? `<div class="go">${c.links.map((l) => `<a href="${l[1]}" tar
           .map((k) => `<button data-card="${k}">${LABEL[k]}</button>`)
           .join(" · ");
       C.bind();
+      MOTION.reveal(".how > div");
       show("intro");
     </script>
     <a class="lib-back" href="/" aria-label="Back to the library"

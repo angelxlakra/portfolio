@@ -50,6 +50,7 @@
       }
     </style>
     <script src="/content.js"></script>
+    <script src="/motion.js"></script>
   </head>
   <body>
     <title>Angel Lakra, After Hours</title>
@@ -292,6 +293,26 @@
           transition: none !important;
         }
       }
+      /* ---------- motion ----------
+         The drawing is the show here, so the text only fades up quietly beside it
+         (see MOTION.reveal in the script) and the scroll hint nods. */
+      .go a {
+        transition: opacity 0.2s ease;
+      }
+      .go a:active {
+        opacity: 0.6;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .scrollhint {
+          display: inline-block;
+          animation: nod 1.6s ease-in-out 1.5s infinite alternate;
+        }
+        @keyframes nod {
+          to {
+            translate: 0 5px;
+          }
+        }
+      }
     </style>
     <div class="story">
       <div class="scene" aria-hidden="true">
@@ -396,6 +417,8 @@ ${
             .join("") + `<li><b>${esc(C.education.short)}</b>, studies</li>`;
         document.getElementById("contact-rows").innerHTML = C.contactRows();
         C.bind();
+        // the words of each chapter settle in line by line while its object is drawn
+        MOTION.reveal(".ch > *");
       }
     </script>
     <script>
