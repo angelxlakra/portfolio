@@ -4,3 +4,4 @@ node_modules
 # handoff material, not part of the site
 HANDOFF.md
 portfolio-handoff.zip
+.env*
