@@ -1190,6 +1190,7 @@
         margin-bottom: 18px;
       }
       .avail i {
+        flex: none;
         width: 8px;
         height: 8px;
         border-radius: 50%;
@@ -1374,6 +1375,195 @@
           margin-left: 2px;
         }
       }
+
+      /* ---------- motion ----------
+         Load: the hero arrives top to bottom, the headline word by word.
+         Scroll: cards fade up as they enter, staggered when they arrive together.
+         Press: everything pressable gives a little under the finger.
+         Loops (status ping, the ∞ turning, the logo's runner) stop for reduced motion. */
+      :root {
+        --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      .btn,
+      .filters button,
+      .top .hire {
+        transition:
+          transform 0.16s ease-out,
+          background-color 0.2s ease,
+          border-color 0.2s ease,
+          color 0.2s ease,
+          filter 0.2s ease;
+      }
+      .btn:active,
+      .filters button:active,
+      .top .hire:active {
+        transform: scale(0.97);
+      }
+      .card:active .pv {
+        transform: scale(0.97);
+        transition-duration: 0.16s;
+      }
+      .top nav a,
+      .meta .no {
+        transition: color 0.2s ease;
+      }
+      .btn span[aria-hidden] {
+        display: inline-block;
+        transition: translate 0.2s var(--ease-out);
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .btn:hover span[aria-hidden] {
+          translate: 3px 0;
+        }
+        .card:not(.un):hover .meta .no {
+          color: var(--hot);
+        }
+      }
+      /* the cursor blob grows from half size rather than from nothing */
+      .cursor {
+        transform: translate(-200px, -200px) scale(0.5);
+        opacity: 0;
+        transition:
+          transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+          opacity 0.2s ease;
+      }
+      .cursor.on {
+        opacity: 1;
+      }
+      /* toast: slides up, leaves faster than it came */
+      .toast {
+        opacity: 0;
+        translate: 0 14px;
+        pointer-events: none;
+        transition:
+          opacity 0.15s ease,
+          translate 0.15s ease;
+      }
+      .toast.on {
+        opacity: 1;
+        translate: 0 0;
+        transition:
+          opacity 0.3s var(--ease-out),
+          translate 0.4s var(--ease-out);
+      }
+      /* reveal on scroll: the class is only added by script, so no-JS shows everything */
+      .rv {
+        opacity: 0;
+      }
+      .rv.in {
+        opacity: 1;
+        transition: opacity 0.6s ease var(--d, 0ms);
+      }
+      .brand .base {
+        opacity: 0.35;
+      }
+      .avail i {
+        position: relative;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .rv {
+          translate: 0 20px;
+        }
+        .rv.in {
+          translate: 0 0;
+          transition:
+            opacity 0.6s ease var(--d, 0ms),
+            translate 0.8s var(--ease-out) var(--d, 0ms);
+        }
+        .hero > :not(h1),
+        .facts li {
+          animation: rise 0.8s var(--ease-out) both;
+        }
+        .hero > .owner {
+          animation-delay: 60ms;
+        }
+        .hero h1 .w {
+          display: inline-block;
+          animation: word 0.9s var(--ease-out) calc(140ms + var(--i) * 90ms)
+            both;
+        }
+        .hero h1 .inf {
+          animation:
+            inf-in 0.9s var(--ease-out) 0.36s both,
+            inf-turn 14s linear 1.6s infinite;
+        }
+        .hero > .role {
+          animation-delay: 420ms;
+        }
+        .hero > .facts {
+          animation-delay: 480ms;
+        }
+        .facts li:nth-child(1) {
+          animation-delay: 520ms;
+        }
+        .facts li:nth-child(2) {
+          animation-delay: 570ms;
+        }
+        .facts li:nth-child(3) {
+          animation-delay: 620ms;
+        }
+        .facts li:nth-child(4) {
+          animation-delay: 670ms;
+        }
+        .hero > .ctas {
+          animation-delay: 700ms;
+        }
+        .hero > .sub {
+          animation-delay: 780ms;
+        }
+        .avail i::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: var(--hot);
+          animation: ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        .brand .run {
+          stroke-dasharray: 0.3 0.7;
+          animation: run 3.2s linear infinite;
+        }
+        @keyframes rise {
+          from {
+            opacity: 0;
+            translate: 0 14px;
+          }
+        }
+        @keyframes word {
+          from {
+            opacity: 0;
+            translate: 0 0.35em;
+            filter: blur(8px);
+          }
+        }
+        @keyframes inf-in {
+          from {
+            opacity: 0;
+            scale: 0.8;
+          }
+        }
+        @keyframes inf-turn {
+          to {
+            rotate: y 360deg;
+          }
+        }
+        @keyframes ping {
+          from {
+            scale: 1;
+            opacity: 0.6;
+          }
+          70%,
+          to {
+            scale: 2.8;
+            opacity: 0;
+          }
+        }
+        @keyframes run {
+          to {
+            stroke-dashoffset: -1;
+          }
+        }
+      }
     </style>
     <div class="wrap">
       <div class="top">
@@ -1387,6 +1577,12 @@
             stroke-width="3.2"
           >
             <path
+              class="base"
+              d="M22 12c-4-6-8-9-12-9a9 9 0 0 0 0 18c4 0 8-3 12-9s8-9 12-9a9 9 0 0 1 0 18c-4 0-8-3-12-9z"
+            />
+            <path
+              class="run"
+              pathLength="1"
               d="M22 12c-4-6-8-9-12-9a9 9 0 0 0 0 18c4 0 8-3 12-9s8-9 12-9a9 9 0 0 1 0 18c-4 0-8-3-12-9z"
             /></svg
           >Angel Lakra · Portfolio</span
@@ -1402,12 +1598,18 @@
       </div>
       <header class="hero">
         <div class="avail">
-          <i></i><span data-c="profile.status"></span> ·
-          <span data-c="profile.rolesLine"></span> ·
-          <span data-c="profile.city"></span> / remote
+          <i></i
+          ><span
+            ><span data-c="profile.status"></span> ·
+            <span data-c="profile.rolesLine"></span> ·
+            <span data-c="profile.city"></span> / remote</span
+          >
         </div>
         <p class="owner">The portfolio of <b>Angel Lakra</b></p>
-        <h1>Infinite <i>Angels</i><span class="inf">∞</span></h1>
+        <h1>
+          <span class="w" style="--i: 0">Infinite</span>
+          <i class="w" style="--i: 1">Angels</i><span class="inf">∞</span>
+        </h1>
         <p class="role">
           Full-stack engineer. Python, AI and the software small businesses run
           on. Told <span data-n="word"></span> different ways.
@@ -1417,7 +1619,9 @@
           <a class="btn primary" href="/versions/receipt/"
             >Short on time? Start here <span aria-hidden="true">→</span></a
           >
-          <a class="btn" href="#wall">Browse all <span data-n="word"></span></a>
+          <a class="btn" href="#wall"
+            ><span>Browse all <span data-n="word"></span></span
+          ></a>
           <a class="btn" href="#contact">Get in touch</a>
         </div>
         <div class="sub">
@@ -1463,7 +1667,7 @@
       </footer>
     </div>
     <div class="cursor" id="cursor" aria-hidden="true">Open ↗</div>
-    <div class="toast" id="toast" hidden></div>
+    <div class="toast" id="toast" role="status"></div>
     <script>
       document.getElementById("facts").innerHTML = CONTENT.highlights
         .map(([a, b]) => `<li><b>${a}</b>${b}</li>`)
@@ -1499,6 +1703,32 @@
           /[&<>"]/g,
           (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
         );
+      /* things fade up as they scroll in; ones that arrive together are staggered */
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const reveal =
+        "IntersectionObserver" in window
+          ? new IntersectionObserver(
+              (es) => {
+                let i = 0;
+                es.forEach((e) => {
+                  if (!e.isIntersecting) return;
+                  e.target.style.setProperty(
+                    "--d",
+                    Math.min(i++, 8) * 60 + "ms",
+                  );
+                  e.target.classList.add("in");
+                  reveal.unobserve(e.target);
+                });
+              },
+              { rootMargin: "0px 0px -6% 0px" },
+            )
+          : null;
+      const arrive = (el) => {
+        if (!reveal) return;
+        el.classList.add("rv");
+        reveal.observe(el);
+      };
+      document.querySelectorAll(".contact h2, .contact dl").forEach(arrive);
       V.forEach((v, i) => {
         const a = document.createElement("a");
         a.className = "card";
@@ -1508,6 +1738,7 @@
 <div class="meta"><span class="no">${String(i + 1).padStart(2, "0")}</span><h2>${esc(v.title)}</h2><span class="tags">${v.tags.slice(0, 2).join(" · ")}</span></div>
 <p class="line">${esc(v.line)}</p>`;
         wall.appendChild(a);
+        arrive(a);
       });
       /* unwritten, forever */
       let seed = 91;
@@ -1575,6 +1806,7 @@
             toast(`Not written yet. Ask Angel to write “${title}”.`),
           );
           wall.appendChild(b);
+          arrive(b);
           un++;
           if (currentFilter !== "all" && currentFilter !== "unwritten")
             b.hidden = true;
@@ -1603,6 +1835,27 @@
           wall.querySelectorAll(".card").forEach((c) => {
             const tags = c.dataset.tags.split(" ");
             c.hidden = !(t === "all" || tags.includes(t));
+          });
+          // the cards left on screen settle in, so the wall doesn't just snap
+          let i = 0;
+          wall.querySelectorAll(".card:not([hidden])").forEach((c) => {
+            const r = c.getBoundingClientRect();
+            if (r.bottom < 0 || r.top > innerHeight) return;
+            c.animate(
+              [
+                {
+                  opacity: 0,
+                  transform: reduce ? "none" : "translateY(10px) scale(0.98)",
+                },
+                { opacity: 1, transform: "none" },
+              ],
+              {
+                duration: 320,
+                delay: i++ * 35,
+                easing: "cubic-bezier(0.23, 1, 0.32, 1)",
+                fill: "backwards",
+              },
+            );
           });
         });
         fbox.appendChild(b);
@@ -1648,7 +1901,7 @@
                 ? "Unwritten"
                 : "Open ↗";
             if (!cur.classList.contains("on"))
-              cur.style.transform = `translate(${e.clientX}px,${e.clientY}px) scale(0)`;
+              cur.style.transform = `translate(${e.clientX}px,${e.clientY}px) scale(0.5)`;
             else cur.style.transform = "";
           },
           { passive: true },
@@ -1658,9 +1911,9 @@
       const toastEl = document.getElementById("toast");
       function toast(m) {
         toastEl.textContent = m;
-        toastEl.hidden = false;
+        toastEl.classList.add("on");
         clearTimeout(tt);
-        tt = setTimeout(() => (toastEl.hidden = true), 2600);
+        tt = setTimeout(() => toastEl.classList.remove("on"), 2600);
       }
     </script>
   </body>
