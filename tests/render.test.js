@@ -2,6 +2,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import handler from "../api/render.js";
+import { readFileSync } from "node:fs";
 
 const post = (c, ip = "1.1.1.1") =>
   handler(
@@ -102,4 +103,18 @@ test("rejects non-POST and rate limits per IP", async () => {
   let last;
   for (let i = 0; i < 4; i++) last = await post("Angel as a kolam", "3.3.3.3");
   assert.equal(last.status, 429);
+});
+
+test("the frame that runs the model's scripts is never same-origin", () => {
+  const page = readFileSync(
+    new URL("../versions/live/index.html", import.meta.url),
+    "utf8",
+  );
+  const [sandbox] = page.match(/sandbox="[^"]*"/g);
+  assert.match(sandbox, /allow-scripts/);
+  assert.doesNotMatch(
+    sandbox,
+    /allow-same-origin|allow-top-navigation|allow-forms/,
+  );
+  assert.equal(page.match(/sandbox="[^"]*"/g).length, 1);
 });

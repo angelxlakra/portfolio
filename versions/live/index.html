@@ -304,7 +304,7 @@
       <iframe
         id="frame"
         title="The rendered page"
-        sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
       ></iframe>
       <div class="wait" id="wait">
         <b id="wait-label"></b>
@@ -321,9 +321,40 @@
       const HINT =
         "Change the prompt if you like: a different object, a style, a mood. Then press Render.";
 
-      // The frame has no allow-scripts, so nothing the model writes can run,
-      // and this policy stops its page loading anything from the network.
-      const CSP = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:">`;
+      // The model's page runs its own scripts, so it must never run as this
+      // site. The frame is sandboxed WITHOUT allow-same-origin: its scripts get
+      // an origin of their own and cannot reach this page, the sign-in kept in
+      // localStorage, or the API as the visitor. Never add allow-same-origin
+      // next to allow-scripts. This policy then takes away the network.
+      const CSP = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; media-src data: blob:; font-src data:">`;
+      // We can't write into a frame from another origin, so the frame starts
+      // with this small page, which writes whatever we post to it into itself.
+      // document.open() wipes its listeners, hence listening a second time.
+      const BOOT = `<script>
+        addEventListener("message", function first(e) {
+          if (e.source !== parent) return;
+          removeEventListener("message", first);
+          document.open();
+          const write = (e) => {
+            if (e.source !== parent) return;
+            e.data === null ? document.close() : document.write(e.data);
+          };
+          addEventListener("message", write);
+          write(e);
+        });
+      <\/script>`;
+      // start a clean frame; returns write(html), and write(null) to finish
+      async function fresh() {
+        const f = $("frame");
+        const loaded = new Promise((done) =>
+          f.addEventListener("load", done, { once: true }),
+        );
+        f.srcdoc = BOOT;
+        await loaded;
+        const write = (html) => f.contentWindow.postMessage(html, "*");
+        write(CSP);
+        return write;
+      }
       const secs = (t0) => ((performance.now() - t0) / 1000).toFixed(1) + "s";
       // the cover over the frame: before a render, while one starts, on errors
       const cover = (label, small = "") => {
@@ -359,7 +390,8 @@
           100,
         );
         let phase = "Thinking",
-          shown = false;
+          shown = false,
+          write = () => {};
         try {
           const r = await fetch("/api/render", {
             method: "POST",
@@ -378,9 +410,7 @@
           }
           const model = r.headers.get("X-Model") || "the model";
           // write the page into the frame as it arrives, so it paints top down
-          const doc = $("frame").contentDocument;
-          doc.open();
-          doc.write(CSP);
+          write = await fresh();
           let html = "";
           const reader = r.body
             .pipeThrough(new TextDecoderStream())
@@ -388,7 +418,7 @@
           for (;;) {
             const { done, value } = await reader.read();
             if (done) break;
-            doc.write(value);
+            write(value);
             html += value;
             phase = "Writing";
             $("wait-code").textContent = html.slice(-180);
@@ -398,7 +428,7 @@
               $("wait").classList.add("gone");
             }
           }
-          doc.close();
+          write(null);
           if (!shown) {
             cover("Not rendered");
             return idle(`${model} sent back nothing usable. Try again.`);
@@ -413,6 +443,7 @@
           );
         } catch {
           // Stop keeps whatever has been painted so far
+          write(null);
           if (!shown)
             cover(ctl.signal.aborted ? "Stopped" : "Not rendered", HINT);
           idle(
@@ -479,10 +510,9 @@
         idea = r;
         prompt.value = r.prompt;
         document.title = `${r.prompt} · proposed`;
-        const doc = $("frame").contentDocument;
-        doc.open();
-        doc.write(CSP + r.html);
-        doc.close();
+        const write = await fresh();
+        write(r.html);
+        write(null);
         $("wait").classList.add("gone");
         idle("A visitor's render, kept as it was");
         paint();
