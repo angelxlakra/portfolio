@@ -204,13 +204,18 @@
         opacity: 0.6;
         margin-left: 6px;
       }
+      /* up to three columns; the script deals the cards into them */
       .grid {
-        columns: 3 380px;
-        column-gap: 18px;
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
         padding-block: 8px 40px;
       }
+      .grid .col {
+        flex: 1 1 0;
+        min-width: 0;
+      }
       .card {
-        break-inside: avoid;
         margin-bottom: 26px;
         display: block;
         text-decoration: none;
@@ -1717,6 +1722,29 @@
       const V = VERSIONS;
       const tagsAll = ["all", ...new Set(V.flatMap((v) => v.tags))];
       const wall = document.getElementById("wall");
+      /* The wall deals its cards across the columns, each to whichever column
+         is shortest, so the written versions run along the top rows instead
+         of all down the left. */
+      const cards = []; // every card, in wall order
+      let cols = [];
+      // as many 380px columns as fit, three at most
+      const fits = () =>
+        Math.max(1, Math.min(3, Math.floor((wall.clientWidth + 18) / 398)));
+      const place = (c) =>
+        c.hidden ||
+        cols
+          .reduce((a, b) => (b.offsetHeight < a.offsetHeight ? b : a))
+          .appendChild(c);
+      // start over: after a filter, a resize, or cards joining mid-list
+      function deal() {
+        cols = Array.from({ length: fits() }, () =>
+          Object.assign(document.createElement("div"), { className: "col" }),
+        );
+        wall.replaceChildren(...cols);
+        cards.forEach(place);
+      }
+      deal();
+      new ResizeObserver(() => fits() !== cols.length && deal()).observe(wall);
       const esc = (s) =>
         String(s).replace(
           /[&<>"]/g,
@@ -1756,7 +1784,8 @@
         a.innerHTML = `<div class="pv ${v.cls || "p-un"}"${v.html ? "" : ' style="aspect-ratio:4/3"'}>${i === V.length - 1 ? '<span class="new">New</span>' : ""}${v.html || `<div class="glyph">${esc(v.title)}</div>`}</div>
 <div class="meta"><span class="no">${String(i + 1).padStart(2, "0")}</span><h2>${esc(v.title)}</h2><span class="tags">${v.tags.slice(0, 2).join(" · ")}</span></div>
 <p class="line">${esc(v.line)}</p>`;
-        wall.appendChild(a);
+        cards.push(a);
+        place(a);
         arrive(a);
       });
       /* unwritten, forever */
@@ -1792,11 +1821,11 @@
               ? (location.href = `/versions/live/?c=${encodeURIComponent(title)}`)
               : toast(`Not written yet. Ask Angel to write “${title}”.`),
           );
-          wall.appendChild(b);
+          b.hidden = currentFilter !== "all" && currentFilter !== "unwritten";
+          cards.push(b);
+          place(b);
           arrive(b);
           un++;
-          if (currentFilter !== "all" && currentFilter !== "unwritten")
-            b.hidden = true;
           io && io.observe(b.querySelector(".pv"));
         }
         document.getElementById("nu").textContent = un.toLocaleString("en-IN");
@@ -1813,10 +1842,11 @@
           fbox
             .querySelectorAll("button")
             .forEach((x) => x.setAttribute("aria-pressed", x === b));
-          wall.querySelectorAll(".card").forEach((c) => {
+          cards.forEach((c) => {
             const tags = c.dataset.tags.split(" ");
             c.hidden = !(t === "all" || tags.includes(t));
           });
+          deal();
           // the cards left on screen settle in, so the wall doesn't just snap
           let i = 0;
           wall.querySelectorAll(".card:not([hidden])").forEach((c) => {
@@ -1880,7 +1910,9 @@
         .then((r) => r.json())
         .then(({ ideas = [] }) => {
           if (!ideas.length) return;
-          const first = wall.querySelector(".card.un");
+          // they go after the written versions, before the unwritten cards
+          let at = cards.findIndex((c) => c.classList.contains("un"));
+          if (at < 0) at = cards.length;
           ideas.forEach((p) => {
             const a = document.createElement("a");
             a.className = "card";
@@ -1889,10 +1921,11 @@
             a.hidden = currentFilter !== "all" && currentFilter !== "proposed";
             a.innerHTML = `<div class="pv p-un" style="aspect-ratio:4/3"><div class="glyph"><b>Proposed by ${esc(p.name)}</b>${esc(p.prompt)}</div><iframe sandbox tabindex="-1" aria-hidden="true"></iframe></div>
 <div class="meta"><span class="no">▲ ${p.votes}</span><h2>${esc(p.prompt)}</h2><span class="tags">proposed · ${esc(p.name)}</span></div>`;
-            wall.insertBefore(a, first);
+            cards.splice(at++, 0, a);
             arrive(a);
             mini && mini.observe(a);
           });
+          deal();
           pill("proposed", ideas.length, unwrittenPill);
         })
         .catch(() => {});
