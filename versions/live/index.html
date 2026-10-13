@@ -471,7 +471,11 @@
       });
       async function openIdea(id) {
         const r = await AUTH.api("/api/ideas?id=" + encodeURIComponent(id));
-        if (!r.ok) return cover("Not found", "That idea isn't on the wall.");
+        if (!r.ok) {
+          cover("Not found", "That idea isn't on the wall.");
+          // not the placeholder prompt, which would look like the wrong idea
+          return ($("wait-title").textContent = "No such idea");
+        }
         idea = r;
         prompt.value = r.prompt;
         document.title = `${r.prompt} · proposed`;

@@ -27,10 +27,11 @@ globalThis.AUTH = (() => {
     const p = t && claims(t);
     token = p ? t : null;
     A.user = p && { name: p.given_name || p.name || p.email, email: p.email };
-    // kept for the tab, so moving between pages doesn't sign you out
+    // kept in localStorage, not sessionStorage: review/ opens ideas in a new
+    // tab, and a new tab starts with an empty sessionStorage
     try {
-      if (token) sessionStorage.setItem(KEY, token);
-      else sessionStorage.removeItem(KEY);
+      if (token) localStorage.setItem(KEY, token);
+      else localStorage.removeItem(KEY);
     } catch {}
     changed(A.user);
   };
@@ -52,7 +53,7 @@ globalThis.AUTH = (() => {
       });
       let saved = null;
       try {
-        saved = sessionStorage.getItem(KEY);
+        saved = localStorage.getItem(KEY);
       } catch {}
       set(saved);
     },
