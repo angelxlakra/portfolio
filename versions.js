@@ -65,8 +65,8 @@ globalThis.VERSIONS = [
   },
 ];
 
-// The unwritten cards: the hub titles each one "Angel <verb> <form>" and
-// api/render.js only renders titles made from these lists.
+// The unwritten cards: the hub titles each one "Angel <verb> <form>", and
+// that title is the starting prompt on versions/live/.
 globalThis.UNWRITTEN = {
   forms: [
     "a train ticket",

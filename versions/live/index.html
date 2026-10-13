@@ -7,7 +7,7 @@
       content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
     <meta name="robots" content="noindex" />
-    <title>Rendering · Angel Lakra</title>
+    <title>Render a version · Angel Lakra</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -70,12 +70,44 @@
       .bar .back:hover {
         color: var(--ink);
       }
-      .bar h1 {
-        margin: 0;
-        font: 400 italic 20px/1.1 var(--serif);
+      .ask {
+        flex: 1 1 320px;
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+      }
+      .ask label {
+        flex: 1;
+        display: grid;
+        gap: 4px;
+        font: 500 10px var(--mono);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .ask textarea {
+        width: 100%;
+        min-height: 38px;
+        max-height: 30vh;
+        field-sizing: content;
+        resize: none;
+        padding: 8px 10px;
+        font: 400 italic 18px/1.2 var(--serif);
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--ink);
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+      .ask textarea:focus-visible {
+        outline: 0;
+        border-color: var(--hot);
+      }
+      .ask textarea::placeholder {
+        color: var(--muted);
       }
       .status {
-        margin-left: auto;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -97,18 +129,27 @@
         background: var(--hot);
         animation: pulse 1s ease-in-out infinite;
       }
-      .bar button {
+      .ask button {
+        flex: none;
+        height: 38px;
+        min-width: 84px;
         font: 500 11px var(--mono);
         letter-spacing: 0.04em;
         color: var(--bg);
         background: var(--hot);
         border: 0;
-        border-radius: 999px;
-        padding: 6px 12px;
+        border-radius: 8px;
+        padding: 0 14px;
         cursor: pointer;
+        transition: transform 0.16s ease-out;
       }
-      .bar button:active {
+      .ask button:active {
         transform: scale(0.97);
+      }
+      .busy .ask button {
+        color: var(--ink);
+        background: none;
+        box-shadow: inset 0 0 0 1px var(--line);
       }
       .note {
         flex-basis: 100%;
@@ -166,7 +207,7 @@
         font: 400 11px var(--mono);
         color: var(--muted);
         max-width: 60ch;
-        height: 3em;
+        max-height: 3em;
         overflow: hidden;
         overflow-wrap: anywhere;
       }
@@ -198,15 +239,27 @@
       }
     </style>
   </head>
-  <body class="busy">
+  <body>
     <header class="bar">
       <a class="back" href="/#wall">← Library</a>
-      <h1 id="title"></h1>
+      <form class="ask" id="ask">
+        <label
+          >Prompt
+          <textarea
+            id="prompt"
+            rows="1"
+            maxlength="300"
+            required
+            placeholder="Angel as a boarding pass"
+            enterkeyhint="go"
+          ></textarea>
+        </label>
+        <button id="go">Render</button>
+      </form>
       <span class="status" role="status"><i></i><span id="status"></span></span>
-      <button id="again" type="button" hidden>Render again</button>
       <p class="note">
-        Written just now by an AI model from Angel's facts. Nobody has checked
-        this page, so it can get things wrong. The
+        Pages here are written on the spot by an AI model from Angel's facts.
+        Nobody has checked them, so they can get things wrong. The
         <a href="/#wall">written versions</a> are the ones to trust.
       </p>
     </header>
@@ -217,67 +270,76 @@
         sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
       ></iframe>
       <div class="wait" id="wait">
-        <b id="wait-label">Rendering</b>
+        <b id="wait-label"></b>
         <p id="wait-title"></p>
-        <small id="wait-code" aria-hidden="true"></small>
+        <small id="wait-code"></small>
       </div>
     </main>
     <script>
       const $ = (id) => document.getElementById(id);
-      const c = new URLSearchParams(location.search).get("c") || "";
-      const title = c.charAt(0).toUpperCase() + c.slice(1);
-      document.title = `${title || "Unwritten"} · rendered live`;
-      $("title").textContent = $("wait-title").textContent = title;
+      const prompt = $("prompt");
+      prompt.value = new URLSearchParams(location.search).get("c") || "";
+      const HINT =
+        "Change the prompt if you like: a different object, a style, a mood. Then press Render.";
 
       // The frame has no allow-scripts, so nothing the model writes can run,
       // and this policy stops its page loading anything from the network.
       const CSP = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:">`;
       const secs = (t0) => ((performance.now() - t0) / 1000).toFixed(1) + "s";
-      const stop = (label, msg) => {
-        document.body.classList.remove("busy");
+      // the cover over the frame: before a render, while one starts, on errors
+      const cover = (label, small = "") => {
         $("wait").classList.remove("gone");
         $("wait-label").textContent = label;
-        $("wait-code").textContent = "";
+        $("wait-title").textContent = prompt.value.trim() || prompt.placeholder;
+        $("wait-code").textContent = small;
+      };
+      let stop = null; // aborts the render in flight
+      const idle = (msg, again = true) => {
+        stop = null;
+        document.body.classList.remove("busy");
         $("status").textContent = msg;
-        $("again").hidden = false;
+        $("go").textContent = again ? "Render again" : "Render";
       };
 
       async function render() {
+        const c = prompt.value.trim();
+        if (c.length < 3) return prompt.focus();
+        history.replaceState(null, "", "?c=" + encodeURIComponent(c));
+        document.title = `${c} · rendered live`;
+        const ctl = new AbortController();
+        stop = () => ctl.abort();
         document.body.classList.add("busy");
-        $("again").hidden = true;
-        $("wait").classList.remove("gone");
-        $("wait-label").textContent = "Rendering";
-        $("status").textContent = "Rendering…";
+        $("go").textContent = "Stop";
+        cover("Rendering");
         const t0 = performance.now();
         const tick = setInterval(
-          () => ($("status").textContent = `Rendering… ${secs(t0)}`),
+          () => ($("status").textContent = `${phase}… ${secs(t0)}`),
           100,
         );
+        let phase = "Thinking",
+          shown = false;
         try {
           const r = await fetch("/api/render", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ c }),
+            signal: ctl.signal,
           });
           if (!r.ok) {
             const why = {
-              400: "This one can't be rendered. Pick an unwritten card from the wall.",
+              400: "That prompt is too short to render.",
               429: "Too many renders in a minute. Give it a moment.",
               503: "The renderer isn't switched on here.",
             };
-            return stop(
-              "Not rendered",
-              why[r.status] || "The renderer is unavailable.",
-            );
+            cover("Not rendered");
+            return idle(why[r.status] || "The renderer is unavailable.");
           }
           const model = r.headers.get("X-Model") || "the model";
           // write the page into the frame as it arrives, so it paints top down
           const doc = $("frame").contentDocument;
           doc.open();
           doc.write(CSP);
-          let n = 0,
-            html = "",
-            shown = false;
+          let html = "";
           const reader = r.body
             .pipeThrough(new TextDecoderStream())
             .getReader();
@@ -286,7 +348,7 @@
             if (done) break;
             doc.write(value);
             html += value;
-            n += value.length;
+            phase = "Writing";
             $("wait-code").textContent = html.slice(-180);
             // keep the cover up through the <style> block, until there is a body
             if (!shown && /<body[\s>]/i.test(html)) {
@@ -295,20 +357,46 @@
             }
           }
           doc.close();
-          if (!shown)
-            return stop("Not rendered", `${model} sent back nothing usable.`);
-          document.body.classList.remove("busy");
-          $("status").textContent =
-            `Rendered by ${model} in ${secs(t0)} · ${(n / 1024).toFixed(1)} kB`;
-          $("again").hidden = false;
+          if (!shown) {
+            cover("Not rendered");
+            return idle(`${model} sent back nothing usable. Try again.`);
+          }
+          idle(
+            html.endsWith("<!--cut-->")
+              ? `Cut off: ${model} hit the length limit after ${secs(t0)}`
+              : `Rendered by ${model} in ${secs(t0)} · ${(html.length / 1024).toFixed(1)} kB`,
+          );
         } catch {
-          stop("Not rendered", "The connection dropped mid-render.");
+          // Stop keeps whatever has been painted so far
+          if (!shown)
+            cover(ctl.signal.aborted ? "Stopped" : "Not rendered", HINT);
+          idle(
+            ctl.signal.aborted
+              ? `Stopped after ${secs(t0)}`
+              : "The connection dropped mid-render.",
+          );
         } finally {
           clearInterval(tick);
         }
       }
-      $("again").addEventListener("click", render);
-      render();
+      $("ask").addEventListener("submit", (e) => {
+        e.preventDefault();
+        stop ? stop() : render();
+      });
+      // Enter renders, Shift+Enter is a new line
+      prompt.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+          e.preventDefault();
+          $("ask").requestSubmit();
+        }
+      });
+      prompt.addEventListener("input", () => {
+        if (!stop)
+          $("wait-title").textContent =
+            prompt.value.trim() || prompt.placeholder;
+      });
+      cover("Not rendered yet", HINT);
+      idle("Ready", false);
     </script>
   </body>
 </html>
