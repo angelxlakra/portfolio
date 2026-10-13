@@ -321,10 +321,10 @@ globalThis.CONTENT.derive = () => {
   ];
   // The headline numbers on the hub and the share image.
   C.highlights = [
-    [`${P.years} yrs`, "shipping production software"],
-    [C.lead.mid, `${C.exp.lead.title}, ${C.exp.lead.company}`],
-    ["2 POS systems", "for a cafe and for salons"],
-    ["LLM features", "with guardrails, in Hindi and English"],
+    [C.dur(C.months), "of software people actually use"],
+    [C.lead.mid, `leading frontend at ${C.exp.lead.company}`],
+    ["2 POS systems", "in daily use, one of them works offline"],
+    ["0 numbers", "made up by the AI; the backend does the maths"],
   ];
 
   // Fill static markup: <span data-c="profile.city"></span>,
