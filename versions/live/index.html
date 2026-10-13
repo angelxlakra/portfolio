@@ -151,6 +151,28 @@
         background: none;
         box-shadow: inset 0 0 0 1px var(--line);
       }
+      /* start the rendered page over, without asking the model again */
+      .reload {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        color: var(--muted);
+        background: none;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        cursor: pointer;
+        transition:
+          color 0.2s ease,
+          transform 0.16s ease-out;
+      }
+      .reload:hover {
+        color: var(--ink);
+      }
+      .reload:active {
+        transform: scale(0.94);
+      }
       .note {
         flex-basis: 100%;
         margin: 0;
@@ -293,6 +315,29 @@
         <button id="go">Render</button>
       </form>
       <span class="status" role="status"><i></i><span id="status"></span></span>
+      <button
+        class="reload"
+        id="reload"
+        type="button"
+        title="Reload this page"
+        aria-label="Reload the rendered page"
+        hidden
+      >
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M20 11a8 8 0 1 0-2.3 6.3" />
+          <path d="M20 4v7h-7" />
+        </svg>
+      </button>
       <div class="act" id="act" hidden></div>
       <p class="note">
         Pages here are written on the spot by an AI model from Angel's facts.
@@ -364,11 +409,13 @@
         $("wait-code").textContent = small;
       };
       let stop = null; // aborts the render in flight
+      let page = ""; // the HTML in the frame, kept so it can be reloaded
       const idle = (msg, again = true) => {
         stop = null;
         document.body.classList.remove("busy");
         $("status").textContent = msg;
         $("go").textContent = again ? "Render again" : "Render";
+        $("reload").hidden = !page;
       };
 
       async function render() {
@@ -378,6 +425,8 @@
         document.title = `${c} · rendered live`;
         const ctl = new AbortController();
         stop = () => ctl.abort();
+        page = "";
+        $("reload").hidden = true;
         rid = idea = null;
         sent = false;
         paint();
@@ -419,7 +468,7 @@
             const { done, value } = await reader.read();
             if (done) break;
             write(value);
-            html += value;
+            page = html += value;
             phase = "Writing";
             $("wait-code").textContent = html.slice(-180);
             // keep the cover up through the <style> block, until there is a body
@@ -511,7 +560,7 @@
         prompt.value = r.prompt;
         document.title = `${r.prompt} · proposed`;
         const write = await fresh();
-        write(r.html);
+        write((page = r.html));
         write(null);
         $("wait").classList.add("gone");
         idle("A visitor's render, kept as it was");
@@ -526,6 +575,11 @@
         })
         .catch(() => {});
 
+      $("reload").addEventListener("click", async () => {
+        const write = await fresh();
+        write(page);
+        write(null);
+      });
       $("ask").addEventListener("submit", (e) => {
         e.preventDefault();
         stop ? stop() : render();
