@@ -64,3 +64,46 @@ globalThis.VERSIONS = [
     html: `<span class="t">after hours</span><svg viewBox="0 0 320 200" aria-hidden="true"><path pathLength="1" d="M10 160 L310 160 M10 168 L310 168 M30 168 L30 200 M290 168 L290 200"/><path pathLength="1" d="M70 158 L150 158 L158 168 L62 168 Z M76 158 L76 100 L146 100 L146 158"/><path pathLength="1" d="M90 115 L120 115 M90 125 L134 125 M90 135 L112 135 M90 145 L128 145"/><path pathLength="1" d="M30 158 L22 120 L52 92 L68 90 L76 108 L44 112 Z"/><path pathLength="1" d="M190 20 L300 20 L300 110 L190 110 Z M245 20 L245 110 M190 65 L300 65"/><path pathLength="1" d="M276 44 m-10 0 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0"/><path pathLength="1" d="M180 158 L214 158 L212 128 L182 128 Z M184 128 L184 104 Q186 96 198 94 L214 92 L212 128"/></svg>`,
   },
 ];
+
+// The unwritten cards: the hub titles each one "Angel <verb> <form>" and
+// api/render.js only renders titles made from these lists.
+globalThis.UNWRITTEN = {
+  forms: [
+    "a train ticket",
+    "an API reference",
+    "a tiffin menu",
+    "a cricket scorecard",
+    "a kolam",
+    "a chai stall menu",
+    "a metro map",
+    "a cassette inlay",
+    "a wedding card",
+    "a crossword",
+    "a boarding pass",
+    "a periodic table",
+    "a bus timetable",
+    "a museum label",
+    "a vending machine",
+    "a radio show",
+    "a field guide",
+    "a comic strip",
+    "a postage stamp",
+    "a lab notebook",
+    "a flip book",
+    "a sticker sheet",
+    "a matchbox",
+    "a fortune cookie",
+    "a pin code",
+    "a weather report",
+    "a mixtape",
+    "a lunchbox note",
+  ],
+  verbs: [
+    "as",
+    "told as",
+    "folded into",
+    "printed on",
+    "rendered as",
+    "hidden in",
+  ],
+};

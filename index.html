@@ -1744,44 +1744,7 @@
       let seed = 91;
       const rnd = () => (seed = (seed * 48271) % 2147483647) / 2147483647;
       const pick = (a) => a[Math.floor(rnd() * a.length)];
-      const forms = [
-        "a train ticket",
-        "an API reference",
-        "a tiffin menu",
-        "a cricket scorecard",
-        "a kolam",
-        "a chai stall menu",
-        "a metro map",
-        "a cassette inlay",
-        "a wedding card",
-        "a crossword",
-        "a boarding pass",
-        "a periodic table",
-        "a bus timetable",
-        "a museum label",
-        "a vending machine",
-        "a radio show",
-        "a field guide",
-        "a comic strip",
-        "a postage stamp",
-        "a lab notebook",
-        "a flip book",
-        "a sticker sheet",
-        "a matchbox",
-        "a fortune cookie",
-        "a pin code",
-        "a weather report",
-        "a mixtape",
-        "a lunchbox note",
-      ];
-      const verbs = [
-        "as",
-        "told as",
-        "folded into",
-        "printed on",
-        "rendered as",
-        "hidden in",
-      ];
+      const { forms, verbs } = UNWRITTEN;
       const ratios = ["1/1", "4/5", "4/3", "3/4", "16/11", "5/4"];
       let nu = 0,
         un = 0;
@@ -1802,8 +1765,13 @@
           b.dataset.tags = "unwritten";
           b.innerHTML = `<div class="pv p-un" style="aspect-ratio:${pick(ratios)}"><div class="glyph"><b>Unwritten</b>${esc(title)}</div></div>
 <div class="meta"><span class="no">${String(V.length + 1 + un).padStart(2, "0")}</span><h2>${esc(title.charAt(0).toUpperCase() + title.slice(1))}</h2><span class="tags">unwritten</span></div>`;
+          // real concepts get rendered live; the Borges titles stay unwritten
+          const live = title.startsWith("Angel ");
+          b.dataset.live = live;
           b.addEventListener("click", () =>
-            toast(`Not written yet. Ask Angel to write “${title}”.`),
+            live
+              ? (location.href = `/versions/live/?c=${encodeURIComponent(title)}`)
+              : toast(`Not written yet. Ask Angel to write “${title}”.`),
           );
           wall.appendChild(b);
           arrive(b);
@@ -1897,9 +1865,11 @@
             const c = e.target.closest && e.target.closest(".card");
             cur.classList.toggle("on", !!c);
             if (c)
-              cur.textContent = c.classList.contains("un")
-                ? "Unwritten"
-                : "Open ↗";
+              cur.textContent = !c.classList.contains("un")
+                ? "Open ↗"
+                : c.dataset.live === "true"
+                  ? "Render ↗"
+                  : "Unwritten";
             if (!cur.classList.contains("on"))
               cur.style.transform = `translate(${e.clientX}px,${e.clientY}px) scale(0.5)`;
             else cur.style.transform = "";

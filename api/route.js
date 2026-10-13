@@ -1,4 +1,5 @@
 import "../content.js";
+import { limiter } from "./_limit.js";
 
 export const config = { runtime: "edge" };
 
@@ -24,18 +25,7 @@ const CARDS = {
   contact: "how to reach him, email, LinkedIn, GitHub",
 };
 
-// ponytail: per-instance memory, so the limit is per edge instance, not global.
-// Move to Upstash or Vercel KV if this endpoint gets abused.
-const LIMIT = 10; // requests per IP per minute
-const hits = new Map();
-function limited(ip) {
-  const now = Date.now();
-  const recent = (hits.get(ip) || []).filter((t) => now - t < 60_000);
-  recent.push(now);
-  hits.set(ip, recent);
-  if (hits.size > 5000) hits.clear();
-  return recent.length > LIMIT;
-}
+const limited = limiter(10);
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -51,8 +41,7 @@ export default async function handler(req) {
   const key = process.env.OPENAI_API_KEY,
     model = process.env.OPENAI_MODEL;
   if (!key || !model) return json({ error: "router not configured" }, 503);
-  const ip = (req.headers.get("x-forwarded-for") || "?").split(",")[0].trim();
-  if (limited(ip)) return json({ error: "slow down" }, 429);
+  if (limited(req)) return json({ error: "slow down" }, 429);
 
   let q;
   try {
