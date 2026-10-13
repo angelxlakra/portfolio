@@ -1111,6 +1111,24 @@
         color: #4a494e;
         margin-bottom: 10px;
       }
+      /* a proposed card's preview: the visitor's page itself, drawn at three
+         times the tile's size and scaled down, with its scripts off */
+      .p-un iframe {
+        position: absolute;
+        inset: 0;
+        width: 300%;
+        height: 300%;
+        border: 0;
+        background: #fff;
+        transform: scale(0.33334);
+        transform-origin: 0 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      .p-un iframe.on {
+        opacity: 1;
+      }
       .card.un .meta h2 {
         color: var(--muted);
       }
@@ -1830,6 +1848,32 @@
         ),
       );
       const unwrittenPill = pill("unwritten", null);
+      /* A proposed card's miniature loads when the card first comes on screen.
+         The empty sandbox gives the page no scripts and no access to this
+         site; the policy stops it loading anything. */
+      const QUIET = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:">`;
+      const mini =
+        "IntersectionObserver" in window
+          ? new IntersectionObserver(
+              (es) =>
+                es.forEach((e) => {
+                  if (!e.isIntersecting) return;
+                  mini.unobserve(e.target);
+                  const f = e.target.querySelector("iframe");
+                  fetch(
+                    `/api/ideas?id=${new URL(e.target.href).searchParams.get("id")}`,
+                  )
+                    .then((r) => r.json())
+                    .then(({ html }) => {
+                      if (!html) return; // the card keeps its title tile
+                      f.onload = () => f.classList.add("on");
+                      f.srcdoc = QUIET + html;
+                    })
+                    .catch(() => {});
+                }),
+              { rootMargin: "300px" },
+            )
+          : null;
       /* proposed: visitors' live renders that Angel approved, most voted first */
       fetch("/api/ideas")
         .then((r) => r.json())
@@ -1842,10 +1886,11 @@
             a.href = `/versions/live/?id=${p.id}`;
             a.dataset.tags = "proposed";
             a.hidden = currentFilter !== "all" && currentFilter !== "proposed";
-            a.innerHTML = `<div class="pv p-un" style="aspect-ratio:4/3"><div class="glyph"><b>Proposed by ${esc(p.name)}</b>${esc(p.prompt)}</div></div>
-<div class="meta"><span class="no">▲ ${p.votes}</span><h2>${esc(p.prompt)}</h2><span class="tags">proposed</span></div>`;
+            a.innerHTML = `<div class="pv p-un" style="aspect-ratio:4/3"><div class="glyph"><b>Proposed by ${esc(p.name)}</b>${esc(p.prompt)}</div><iframe sandbox tabindex="-1" aria-hidden="true"></iframe></div>
+<div class="meta"><span class="no">▲ ${p.votes}</span><h2>${esc(p.prompt)}</h2><span class="tags">proposed · ${esc(p.name)}</span></div>`;
             wall.insertBefore(a, first);
             arrive(a);
+            mini && mini.observe(a);
           });
           pill("proposed", ideas.length, unwrittenPill);
         })
