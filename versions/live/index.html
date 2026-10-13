@@ -157,6 +157,42 @@
         font-size: 12px;
         color: var(--muted);
       }
+      /* send it in, or vote: only there once a page is on screen */
+      .act {
+        flex-basis: 100%;
+        display: flex;
+        align-items: center;
+        gap: 8px 12px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .act button {
+        font: 500 11px var(--mono);
+        letter-spacing: 0.04em;
+        color: var(--hot);
+        background: none;
+        border: 1px solid currentColor;
+        border-radius: 999px;
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+      .act button[aria-pressed="true"] {
+        color: var(--bg);
+        background: var(--hot);
+        border-color: var(--hot);
+      }
+      .act button.link {
+        padding: 0;
+        border: 0;
+        color: inherit;
+        font: inherit;
+        letter-spacing: 0;
+        text-decoration: underline;
+      }
+      .act #gbtn {
+        color-scheme: light; /* Google's button draws its own background */
+      }
       .stage {
         position: relative;
         min-height: 0;
@@ -257,6 +293,7 @@
         <button id="go">Render</button>
       </form>
       <span class="status" role="status"><i></i><span id="status"></span></span>
+      <div class="act" id="act" hidden></div>
       <p class="note">
         Pages here are written on the spot by an AI model from Angel's facts.
         Nobody has checked them, so they can get things wrong. The
@@ -275,10 +312,12 @@
         <small id="wait-code"></small>
       </div>
     </main>
+    <script src="/auth.js"></script>
     <script>
       const $ = (id) => document.getElementById(id);
       const prompt = $("prompt");
-      prompt.value = new URLSearchParams(location.search).get("c") || "";
+      const params = new URLSearchParams(location.search);
+      prompt.value = params.get("c") || "";
       const HINT =
         "Change the prompt if you like: a different object, a style, a mood. Then press Render.";
 
@@ -308,6 +347,9 @@
         document.title = `${c} · rendered live`;
         const ctl = new AbortController();
         stop = () => ctl.abort();
+        rid = idea = null;
+        sent = false;
+        paint();
         document.body.classList.add("busy");
         $("go").textContent = "Stop";
         cover("Rendering");
@@ -361,6 +403,9 @@
             cover("Not rendered");
             return idle(`${model} sent back nothing usable. Try again.`);
           }
+          // a whole page can be sent in as an idea
+          if (!html.endsWith("<!--cut-->")) rid = r.headers.get("X-Render-Id");
+          paint();
           idle(
             html.endsWith("<!--cut-->")
               ? `Cut off: ${model} hit the length limit after ${secs(t0)}`
@@ -379,6 +424,74 @@
           clearInterval(tick);
         }
       }
+      // Ideas (api/ideas.js): a signed-in visitor can send the page they just
+      // rendered to Angel, and vote on the ones he has put on the wall.
+      const esc = (t) =>
+        String(t).replace(/[&<>"]/g, (ch) => `&#${ch.charCodeAt(0)};`);
+      const act = $("act");
+      let on = false, // the site has a database and a Google client id
+        rid = null, // the render on screen, if it can be sent in
+        idea = null, // the idea on screen, when the page was opened with ?id=
+        sent = false;
+      function paint() {
+        act.hidden = !on || !(rid || idea);
+        if (act.hidden) return;
+        const me = AUTH.user;
+        const about = idea ? `<span>Proposed by ${esc(idea.name)}.</span>` : "";
+        if (!me) {
+          act.innerHTML = `<span id="gbtn"></span><span>${idea ? "to vote for this one." : "to send this one to Angel."}</span>${about}`;
+          return AUTH.button($("gbtn"));
+        }
+        const main = idea
+          ? idea.status === "approved"
+            ? `<button data-do="vote" aria-pressed="${idea.voted}">▲ ${idea.voted ? "Voted" : "Vote"} · ${idea.votes}</button>`
+            : `<span>Waiting for Angel to look at it.</span>`
+          : sent
+            ? `<span>Sent. Angel looks at every one before it goes on the wall.</span>`
+            : `<button data-do="send">Send this one to Angel</button><span>If it goes on the wall, your first name goes with it.</span>`;
+        act.innerHTML = `${main}${about}<span>Signed in as ${esc(me.name)} · <button class="link" data-do="out">Sign out</button></span>`;
+      }
+      act.addEventListener("click", async (e) => {
+        const what = e.target.dataset.do;
+        if (what === "out") return AUTH.out();
+        if (what !== "send" && what !== "vote") return;
+        e.target.disabled = true;
+        const r = await AUTH.api("/api/ideas", {
+          do: what === "send" ? "submit" : "vote",
+          id: rid || idea.id,
+        });
+        if (r.ok && what === "send") sent = true;
+        if (r.ok && what === "vote") Object.assign(idea, r);
+        paint(); // a 401 has already signed them out, so this asks again
+        if (!r.ok && r.code !== 401)
+          act.insertAdjacentHTML(
+            "beforeend",
+            `<span role="alert">${esc(r.code === 429 ? "That's the limit for today." : "That didn't go through. Try again.")}</span>`,
+          );
+      });
+      async function openIdea(id) {
+        const r = await AUTH.api("/api/ideas?id=" + encodeURIComponent(id));
+        if (!r.ok) return cover("Not found", "That idea isn't on the wall.");
+        idea = r;
+        prompt.value = r.prompt;
+        document.title = `${r.prompt} · proposed`;
+        const doc = $("frame").contentDocument;
+        doc.open();
+        doc.write(CSP + r.html);
+        doc.close();
+        $("wait").classList.add("gone");
+        idle("A visitor's render, kept as it was");
+        paint();
+      }
+      fetch("/api/ideas")
+        .then((r) => r.json())
+        .then((cfg) => {
+          if (!(on = !!cfg.on)) return;
+          AUTH.start(cfg.clientId, paint);
+          if (params.get("id")) openIdea(params.get("id"));
+        })
+        .catch(() => {});
+
       $("ask").addEventListener("submit", (e) => {
         e.preventDefault();
         stop ? stop() : render();

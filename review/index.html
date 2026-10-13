@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Review · Angel Lakra</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
+    />
+    <!-- Angel's desk: ideas visitors sent in, and what the live renders cost.
+         Anyone can load this page; api/ideas.js only answers Angel's account. -->
+    <style>
+      :root {
+        --bg: #0a0a0b;
+        --card: #141416;
+        --ink: #f3f2ee;
+        --muted: #86858a;
+        --line: #232326;
+        --hot: #d7ff3a;
+        --font: "Geist", system-ui, -apple-system, sans-serif;
+        --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+        --serif: "Instrument Serif", Georgia, serif;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0 auto;
+        max-width: 1000px;
+        padding: 24px clamp(16px, 2.6vw, 36px) 80px;
+        background: var(--bg);
+        color: var(--ink);
+        font: 14px/1.5 var(--font);
+      }
+      a {
+        color: inherit;
+      }
+      :focus-visible {
+        outline: 2px solid var(--hot);
+        outline-offset: 3px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      h1 {
+        margin: 28px 0 4px;
+        font: 400 italic clamp(36px, 6vw, 56px)/1 var(--serif);
+      }
+      h2 {
+        margin: 48px 0 12px;
+        font: 500 11px var(--mono);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1px;
+        margin: 24px 0 0;
+        background: var(--line);
+        border: 1px solid var(--line);
+      }
+      .stats div {
+        padding: 14px 16px;
+        background: var(--bg);
+      }
+      .stats dt {
+        font: 500 11px var(--mono);
+        color: var(--muted);
+      }
+      .stats dd {
+        margin: 2px 0 0;
+        font: 400 28px/1.1 var(--serif);
+        font-variant-numeric: tabular-nums;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-top: 1px solid var(--line);
+      }
+      li {
+        display: flex;
+        align-items: baseline;
+        gap: 6px 16px;
+        flex-wrap: wrap;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      li .what {
+        flex: 1 1 280px;
+        font: 400 italic 20px/1.2 var(--serif);
+        overflow-wrap: anywhere;
+      }
+      li small,
+      .empty {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      li .num {
+        font: 400 12px var(--mono);
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      li .bad {
+        color: #ff8a7a;
+      }
+      button {
+        font: 500 11px var(--mono);
+        letter-spacing: 0.04em;
+        color: var(--ink);
+        background: none;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+      button.yes {
+        color: var(--bg);
+        background: var(--hot);
+        border-color: var(--hot);
+      }
+      #gbtn {
+        display: inline-block;
+        margin-top: 12px;
+        color-scheme: light;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/">← Library</a>
+      <span id="who"></span>
+    </header>
+    <h1>Review</h1>
+    <p class="empty" id="gate">Checking…</p>
+    <div id="gbtn"></div>
+    <main id="desk" hidden>
+      <dl class="stats" id="stats"></dl>
+      <h2>Waiting for you</h2>
+      <ul id="pending"></ul>
+      <h2>On the wall</h2>
+      <ul id="approved"></ul>
+      <h2>Most rendered prompts</h2>
+      <ul id="top"></ul>
+      <h2>Render log <small>(newest first)</small></h2>
+      <ul id="log"></ul>
+    </main>
+    <script src="/auth.js"></script>
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const esc = (t) =>
+        String(t).replace(/[&<>"]/g, (ch) => `&#${ch.charCodeAt(0)};`);
+      const n = (x) => (x ?? 0).toLocaleString("en-IN");
+      const list = (id, rows, none) =>
+        ($(id).innerHTML = rows.join("") || `<li class="empty">${none}</li>`);
+      const open = (i) =>
+        `<a href="/versions/live/?id=${i.id}" target="_blank" rel="noopener">Open ↗</a>`;
+
+      async function load(me) {
+        $("who").innerHTML = me
+          ? `${esc(me.email)} · <a href="#" id="out">Sign out</a>`
+          : "";
+        $("desk").hidden = true;
+        $("gbtn").hidden = !!me;
+        if (!me) {
+          $("gate").textContent = "Sign in with Angel's Google account.";
+          return AUTH.button($("gbtn"));
+        }
+        const [desk, wall] = await Promise.all([
+          AUTH.api("/api/ideas?admin=1"),
+          AUTH.api("/api/ideas"),
+        ]);
+        if (!desk.ok) {
+          $("gate").textContent =
+            desk.code === 403
+              ? "This account can't review. Sign out and use Angel's."
+              : "Couldn't load the desk. Reload to try again.";
+          return;
+        }
+        $("gate").textContent = "";
+        $("desk").hidden = false;
+        const t = desk.totals;
+        $("stats").innerHTML = [
+          ["Renders", n(t.renders)],
+          ["Input tokens", n(t.in)],
+          ["Output tokens", n(t.out)],
+          ["Waiting", n(desk.pending.length)],
+        ]
+          .map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`)
+          .join("");
+        list(
+          "pending",
+          desk.pending.map(
+            (i) =>
+              `<li><span class="what">${esc(i.prompt)}</span><small>${esc(i.name)} · ${esc(i.email)} · ${new Date(i.at).toLocaleDateString("en-IN")}</small>${open(i)}<button class="yes" data-id="${i.id}" data-status="approved">Put on the wall</button><button data-id="${i.id}" data-status="rejected">Reject</button></li>`,
+          ),
+          "Nothing waiting.",
+        );
+        list(
+          "approved",
+          (wall.ideas || []).map(
+            (i) =>
+              `<li><span class="what">${esc(i.prompt)}</span><small>${esc(i.name)}</small><span class="num">▲ ${i.votes}</span>${open(i)}<button data-id="${i.id}" data-status="rejected">Take down</button></li>`,
+          ),
+          "Nothing on the wall yet.",
+        );
+        list(
+          "top",
+          desk.top.map(
+            ([p, c]) =>
+              `<li><span class="what">${esc(p)}</span><span class="num">× ${c}</span></li>`,
+          ),
+          "No renders yet.",
+        );
+        list(
+          "log",
+          desk.log.map(
+            (l) =>
+              `<li><span class="what">${esc(l.prompt)}</span><span class="num">${new Date(l.at).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</span><span class="num">${n(l.in)} in · ${n(l.out)} out${l.thinking ? ` (${n(l.thinking)} thinking)` : ""} · ${(l.ms / 1000).toFixed(0)}s</span>${l.cut ? '<span class="num bad">cut off</span>' : ""}${l.error ? `<span class="num bad">${esc(l.error).slice(0, 80)}</span>` : ""}</li>`,
+          ),
+          "No renders yet.",
+        );
+      }
+      document.addEventListener("click", async (e) => {
+        if (e.target.id === "out") {
+          e.preventDefault();
+          return AUTH.out();
+        }
+        const { id, status } = e.target.dataset;
+        if (!id) return;
+        e.target.disabled = true;
+        await AUTH.api("/api/ideas", { do: "review", id, status });
+        load(AUTH.user);
+      });
+      fetch("/api/ideas")
+        .then((r) => r.json())
+        .then((cfg) =>
+          cfg.on
+            ? AUTH.start(cfg.clientId, load)
+            : ($("gate").textContent =
+                "Ideas aren't switched on: the site needs a database and a Google client id."),
+        )
+        .catch(() => ($("gate").textContent = "Couldn't reach the site."));
+    </script>
+  </body>
+</html>

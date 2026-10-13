@@ -1,5 +1,6 @@
 import "../content.js";
 import { limiter } from "./_limit.js";
+import { db, hasDb } from "./_db.js";
 
 export const config = { runtime: "edge" };
 
@@ -80,7 +81,11 @@ export default async function handler(req) {
   // dropped and a short tail is held back, so a stray code fence at either
   // end never reaches the page.
   const t0 = Date.now();
-  let sse = "",
+  // with a database the finished page is kept for a day under this id, so
+  // the visitor can send it in as an idea (api/ideas.js)
+  const id = hasDb() ? crypto.randomUUID() : null;
+  let page = "",
+    sse = "",
     tail = "",
     started = false,
     cut = false,
@@ -109,16 +114,19 @@ export default async function handler(req) {
           started = true;
         }
         if (tail.length > 16) {
+          page += tail.slice(0, -16);
           ctl.enqueue(tail.slice(0, -16));
           tail = tail.slice(-16);
         }
       }
     },
-    flush(ctl) {
-      if (started) ctl.enqueue(tail.replace(/\s*`+\s*$/, ""));
+    async flush(ctl) {
+      tail = started ? tail.replace(/\s*`+\s*$/, "") : "";
+      page += tail;
+      ctl.enqueue(tail);
       // the model ran out of tokens mid-page; versions/live/ looks for this
       if (cut) ctl.enqueue("<!--cut-->");
-      log({
+      await log({
         in: usage?.prompt_tokens,
         out: usage?.completion_tokens,
         thinking: usage?.completion_tokens_details?.reasoning_tokens,
@@ -127,15 +135,34 @@ export default async function handler(req) {
       });
     },
   });
-  // The render log: one line per render in Vercel's function logs, with what
-  // was asked for and the tokens it cost.
-  // ponytail: Vercel only keeps these logs for a short while. Write them to
-  // the database instead once the site has one.
-  const log = (more) =>
-    console.log(
-      "render " +
-        JSON.stringify({ prompt: c, model, ms: Date.now() - t0, ...more }),
-    );
+  // The render log: what was asked for and the tokens it cost. Always one
+  // line in Vercel's function logs (kept briefly); with a database, also the
+  // lasting log, running totals and prompt counts that /review/ shows.
+  const log = async (more) => {
+    const line = { at: t0, prompt: c, model, ms: Date.now() - t0, ...more };
+    console.log("render " + JSON.stringify(line));
+    if (!id) return;
+    const whole = page && !line.cut && !line.error;
+    await db(
+      ["LPUSH", "renders", JSON.stringify(line)],
+      ["LTRIM", "renders", 0, 1999],
+      ["HINCRBY", "totals", "renders", 1],
+      ["HINCRBY", "totals", "in", line.in || 0],
+      ["HINCRBY", "totals", "out", line.out || 0],
+      ["ZINCRBY", "prompts", 1, c.toLowerCase()],
+      ...(whole
+        ? [
+            [
+              "SET",
+              `render:${id}`,
+              JSON.stringify({ prompt: c, model, html: page }),
+              "EX",
+              86400,
+            ],
+          ]
+        : []),
+    ).catch((e) => console.error("render log:", e));
+  };
 
   // Answer straight away and call the model from inside the stream: an edge
   // function has 25 seconds to start responding and the model can think for
@@ -166,12 +193,14 @@ export default async function handler(req) {
       return html.writable.close(); // flush writes the log line
     }
     await r.body.pipeThrough(new TextDecoderStream()).pipeTo(html.writable);
+    // reached when the visitor stops the render: tokens were spent, uncounted
   })().catch((e) => log({ error: String(e) }));
   return new Response(html.readable.pipeThrough(new TextEncoderStream()), {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": "no-store",
       "X-Model": model,
+      ...(id && { "X-Render-Id": id }),
     },
   });
 }

@@ -1785,13 +1785,7 @@
       /* filters */
       let currentFilter = "all";
       const fbox = document.getElementById("filters");
-      [...tagsAll, "unwritten"].forEach((t) => {
-        const n =
-          t === "all"
-            ? V.length
-            : t === "unwritten"
-              ? null
-              : V.filter((v) => v.tags.includes(t)).length;
+      function pill(t, n, before = null) {
         const b = document.createElement("button");
         b.setAttribute("aria-pressed", t === "all");
         b.innerHTML = `${t.charAt(0).toUpperCase() + t.slice(1)}${n != null ? `<span class="n">${n}</span>` : `<span class="n">∞</span>`}`;
@@ -1826,8 +1820,36 @@
             );
           });
         });
-        fbox.appendChild(b);
-      });
+        fbox.insertBefore(b, before);
+        return b;
+      }
+      tagsAll.forEach((t) =>
+        pill(
+          t,
+          t === "all" ? V.length : V.filter((v) => v.tags.includes(t)).length,
+        ),
+      );
+      const unwrittenPill = pill("unwritten", null);
+      /* proposed: visitors' live renders that Angel approved, most voted first */
+      fetch("/api/ideas")
+        .then((r) => r.json())
+        .then(({ ideas = [] }) => {
+          if (!ideas.length) return;
+          const first = wall.querySelector(".card.un");
+          ideas.forEach((p) => {
+            const a = document.createElement("a");
+            a.className = "card";
+            a.href = `/versions/live/?id=${p.id}`;
+            a.dataset.tags = "proposed";
+            a.hidden = currentFilter !== "all" && currentFilter !== "proposed";
+            a.innerHTML = `<div class="pv p-un" style="aspect-ratio:4/3"><div class="glyph"><b>Proposed by ${esc(p.name)}</b>${esc(p.prompt)}</div></div>
+<div class="meta"><span class="no">▲ ${p.votes}</span><h2>${esc(p.prompt)}</h2><span class="tags">proposed</span></div>`;
+            wall.insertBefore(a, first);
+            arrive(a);
+          });
+          pill("proposed", ideas.length, unwrittenPill);
+        })
+        .catch(() => {});
       /* play previews only on screen */
       let io = null;
       if ("IntersectionObserver" in window) {
