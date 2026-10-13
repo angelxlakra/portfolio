@@ -308,6 +308,10 @@ globalThis.CONTENT.derive = () => {
   P.rolesLine = `${P.roles.slice(0, -1).join(", ")} or ${P.roles.at(-1)}`; // "contract, freelance or full-time"
   P.rolesDots = P.roles.join(" · "); // "contract · freelance · full-time"
   P.asOf = `${MON[nowYM[1] - 1]} ${nowYM[0]}`; // "Oct 2026"
+  // When the site last deployed, from deployed.js (written by the build);
+  // the current month when that file isn't there, e.g. running locally.
+  const dep = globalThis.DEPLOYED ? new Date(globalThis.DEPLOYED) : today;
+  P.updated = `${MON[dep.getUTCMonth()]} ${dep.getUTCFullYear()}`; // "Oct 2026"
   C.lead = {
     short: C.dur(C.exp.lead.months, "short"),
     mid: C.dur(C.exp.lead.months),

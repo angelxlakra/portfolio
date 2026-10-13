@@ -1,4 +1,5 @@
 {
+  "buildCommand": "node scripts/stamp-deploy.js",
   "redirects": [
     {
       "source": "/(receipt|desktop|signboard|scan|chat|ask|ink)\\.html",
